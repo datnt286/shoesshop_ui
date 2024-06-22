@@ -1,0 +1,7 @@
+src/Employee/resources/plugins/bootstrap/js/bootstrap.bundle.min.js
+src/Employee/resources/plugins/jquery-ui/jquery-ui.min.js
+src/Employee/resources/dist/js/adminlte.js
+src/Employee/resources/dist/js/demo.js
+src/Customer/resources/lib/easing/easing.min.js
+src/Customer/resources/lib/lightbox/js/lightbox.min.js
+src/Customer/resources/lib/waypoints/waypoints.min.js
