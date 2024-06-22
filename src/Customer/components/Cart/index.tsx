@@ -110,7 +110,7 @@ const Cart: React.FC = () => {
 
         if (confirmed.isConfirmed) {
             try {
-                const response = await AxiosInstance.delete(`/Carts/DeleteCartDetailById/${id}`, {
+                const response = await AxiosInstance.delete(`/Carts/DeleteCartDetail/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

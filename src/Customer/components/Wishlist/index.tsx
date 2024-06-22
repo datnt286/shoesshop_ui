@@ -6,7 +6,7 @@ import ProductCard from './ProductCard';
 import Pagination from '../Pagination/index';
 
 interface DecodedToken {
-    Id: string;
+    id: string;
 }
 
 interface WishlistDetail {
@@ -24,16 +24,17 @@ const Wishlist: React.FC = () => {
     const [wishlistDetails, setWishlistDetails] = useState<WishlistDetail[]>([]);
     const [totalPages, setTotalPages] = useState(1);
 
-    const fetchWishlistDetails = async (currentPage = 1) => {
+    const fetchWishlistDetails = async (currentPage = 1, pageSize = 12) => {
         try {
-            const response = await AxiosInstance.get(
-                `/Wishlists/GetWishlistDetails/${userId}?currentPage=${currentPage}&pageSize=12`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+            const response = await AxiosInstance.get(`/Wishlists/WishlistDetails/User/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
                 },
-            );
+                params: {
+                    currentPage,
+                    pageSize,
+                },
+            });
 
             if (response.status === 200) {
                 setWishlistDetails(response.data.items);
@@ -52,7 +53,7 @@ const Wishlist: React.FC = () => {
                 const decodedToken: DecodedToken = jwtDecode<DecodedToken>(token);
 
                 setToken(token);
-                setUserId(decodedToken.Id);
+                setUserId(decodedToken.id);
             } catch (error) {
                 console.error('Token không hợp lệ: ', token);
             }
@@ -82,7 +83,7 @@ const Wishlist: React.FC = () => {
 
         if (confirmed.isConfirmed) {
             try {
-                const response = await AxiosInstance.delete(`/Wishlists/DeleteWishlistDetailById/${id}`, {
+                const response = await AxiosInstance.delete(`/Wishlists/DeleteWishlistDetail/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

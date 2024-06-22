@@ -354,7 +354,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
                                     const customerAvatar = comment.customerAvatar
                                         ? `${config.baseURL}/images/avatar/${comment.customerAvatar}`
                                         : DefaultAvatar;
-                                    console.log(comment);
+
                                     return (
                                         <>
                                             <div className="d-flex">
