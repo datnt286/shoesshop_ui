@@ -172,6 +172,14 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
         fetchModels();
     };
 
+    const handleResetFilters = () => {
+        setSelectedBrandId(null);
+        setSelectedColorIds([]);
+        setSelectedSizeIds([]);
+        setSearchKeyword('');
+        fetchModels();
+    };
+
     return (
         <div className="container-fluid fruite py-5">
             <div className="container py-5">
@@ -196,15 +204,27 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                     </div>
                                 </form>
                             </div>
-                            <div className="col-6"></div>
-                            <div className="col-xl-3">
-                                <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-                                    <label htmlFor="sort">Sắp xếp theo:</label>
-                                    <select id="sort" className="border-0 form-select-sm bg-light outline-none me-3">
-                                        <option value={1}>Nổi bật</option>
-                                        <option value={2}>Mới nhất</option>
-                                        <option value={3}>Bán chạy</option>
-                                    </select>
+                            <div className="col-5"></div>
+                            <div className="col-xl-4">
+                                <div className="d-flex justify-content-between">
+                                    <button
+                                        className="btn btn-light mb-4"
+                                        style={{ color: '#45595b', fontWeight: '500' }}
+                                        onClick={handleResetFilters}
+                                    >
+                                        <i className="fas fa-redo me-2"></i>Làm mới
+                                    </button>
+                                    <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                        <label htmlFor="sort">Sắp xếp theo:</label>
+                                        <select
+                                            id="sort"
+                                            className="border-0 form-select-sm bg-light outline-none me-3"
+                                        >
+                                            <option value={1}>Nổi bật</option>
+                                            <option value={2}>Mới nhất</option>
+                                            <option value={3}>Bán chạy</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -265,6 +285,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                                         className="form-check-input"
                                                         id={`color-${color.id}`}
                                                         onChange={() => handleColorChange(color.id)}
+                                                        checked={selectedColorIds.includes(color.id)}
                                                     />
                                                     <label className="form-check-label" htmlFor={`color-${color.id}`}>
                                                         {color.name}
@@ -283,6 +304,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                                         className="form-check-input"
                                                         id={`size-${size.id}`}
                                                         onChange={() => handleSizeChange(size.id)}
+                                                        checked={selectedSizeIds.includes(size.id)}
                                                     />
                                                     <label className="form-check-label" htmlFor={`size-${size.id}`}>
                                                         {size.name}
@@ -301,7 +323,6 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                             <ProductCard model={model} />
                                         </div>
                                     ))}
-
                                     <div className="col-12">
                                         <Pagination totalPages={totalPages} onPageChange={handlePageChange} />
                                     </div>

@@ -356,7 +356,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
                                         : DefaultAvatar;
 
                                     return (
-                                        <>
+                                        <React.Fragment key={comment.id}>
                                             <div className="d-flex">
                                                 <img
                                                     src={customerAvatar}
@@ -432,90 +432,98 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
                                                     </div>
                                                 </div>
                                             )}
-                                            {comment.comments.map((reply) => (
-                                                <>
-                                                    <div className="d-flex" style={{ marginLeft: '34px' }}>
-                                                        <img
-                                                            src={customerAvatar}
-                                                            className="img-fluid rounded-circle p-3"
-                                                            style={{
-                                                                width: '100px',
-                                                                height: '100px',
-                                                                objectFit: 'cover',
-                                                            }}
-                                                            alt="Ảnh đại diện"
-                                                        />
-                                                        <div className="mb-3">
-                                                            <p className="mb-2" style={{ fontSize: '14px' }}>
-                                                                {reply.createDate}
-                                                            </p>
-                                                            <h5>{reply.customerName || reply.customerUserName}</h5>
-                                                            <p className="mb-2">{reply.content}</p>
-                                                            {token && (
-                                                                <span
-                                                                    className="btn-comment mx-2"
-                                                                    style={{ cursor: 'pointer' }}
-                                                                    onClick={() => handleReply(reply)}
-                                                                >
-                                                                    Trả lời
-                                                                </span>
-                                                            )}
-                                                            {user.id === reply.userId && (
-                                                                <span
-                                                                    className="btn-comment mx-1"
-                                                                    style={{ cursor: 'pointer' }}
-                                                                    onClick={() => handleDeleteCommment(reply.id)}
-                                                                >
-                                                                    Xoá
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    {replyToCommentId === reply.id && isReplying && (
-                                                        <div className="mt-3" style={{ marginLeft: '34px' }}>
-                                                            <div className="d-flex">
-                                                                <img
-                                                                    src={userAvatar}
-                                                                    className="img-fluid rounded-circle p-3"
-                                                                    style={{
-                                                                        width: '100px',
-                                                                        height: '100px',
-                                                                        objectFit: 'cover',
-                                                                    }}
-                                                                    alt="Ảnh đại diện"
-                                                                />
-                                                                <textarea
-                                                                    className="form-control border-1"
-                                                                    cols={30}
-                                                                    rows={4}
-                                                                    value={replyContent}
-                                                                    onChange={(e) => setReplyContent(e.target.value)}
-                                                                    placeholder={
-                                                                        replyValidationError
-                                                                            ? replyValidationError
-                                                                            : 'Nhập nội dung trả lời'
-                                                                    }
-                                                                ></textarea>
-                                                            </div>
-                                                            <div className="text-end mt-3">
-                                                                <button
-                                                                    className="btn border text-primary rounded-pill px-4 py-2 mx-3"
-                                                                    onClick={handleCancelReply}
-                                                                >
-                                                                    Huỷ
-                                                                </button>
-                                                                <button
-                                                                    className="btn border border-secondary text-primary rounded-pill px-4 py-2"
-                                                                    onClick={handlePostReply}
-                                                                >
-                                                                    Đăng
-                                                                </button>
+                                            {comment.comments.map((reply) => {
+                                                const customerAvatar = reply.customerAvatar
+                                                    ? `${config.baseURL}/images/avatar/${reply.customerAvatar}`
+                                                    : DefaultAvatar;
+
+                                                return (
+                                                    <React.Fragment key={reply.id}>
+                                                        <div className="d-flex" style={{ marginLeft: '34px' }}>
+                                                            <img
+                                                                src={customerAvatar}
+                                                                className="img-fluid rounded-circle p-3"
+                                                                style={{
+                                                                    width: '100px',
+                                                                    height: '100px',
+                                                                    objectFit: 'cover',
+                                                                }}
+                                                                alt="Ảnh đại diện"
+                                                            />
+                                                            <div className="mb-3">
+                                                                <p className="mb-2" style={{ fontSize: '14px' }}>
+                                                                    {reply.createDate}
+                                                                </p>
+                                                                <h5>{reply.customerName || reply.customerUserName}</h5>
+                                                                <p className="mb-2">{reply.content}</p>
+                                                                {token && (
+                                                                    <span
+                                                                        className="btn-comment mx-2"
+                                                                        style={{ cursor: 'pointer' }}
+                                                                        onClick={() => handleReply(reply)}
+                                                                    >
+                                                                        Trả lời
+                                                                    </span>
+                                                                )}
+                                                                {user.id === reply.userId && (
+                                                                    <span
+                                                                        className="btn-comment mx-1"
+                                                                        style={{ cursor: 'pointer' }}
+                                                                        onClick={() => handleDeleteCommment(reply.id)}
+                                                                    >
+                                                                        Xoá
+                                                                    </span>
+                                                                )}
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </>
-                                            ))}
-                                        </>
+                                                        {replyToCommentId === reply.id && isReplying && (
+                                                            <div className="mt-3" style={{ marginLeft: '34px' }}>
+                                                                <div className="d-flex">
+                                                                    <img
+                                                                        src={userAvatar}
+                                                                        className="img-fluid rounded-circle p-3"
+                                                                        style={{
+                                                                            width: '100px',
+                                                                            height: '100px',
+                                                                            objectFit: 'cover',
+                                                                        }}
+                                                                        alt="Ảnh đại diện"
+                                                                    />
+                                                                    <textarea
+                                                                        className="form-control border-1"
+                                                                        cols={30}
+                                                                        rows={4}
+                                                                        value={replyContent}
+                                                                        onChange={(e) =>
+                                                                            setReplyContent(e.target.value)
+                                                                        }
+                                                                        placeholder={
+                                                                            replyValidationError
+                                                                                ? replyValidationError
+                                                                                : 'Nhập nội dung trả lời'
+                                                                        }
+                                                                    ></textarea>
+                                                                </div>
+                                                                <div className="text-end mt-3">
+                                                                    <button
+                                                                        className="btn border text-primary rounded-pill px-4 py-2 mx-3"
+                                                                        onClick={handleCancelReply}
+                                                                    >
+                                                                        Huỷ
+                                                                    </button>
+                                                                    <button
+                                                                        className="btn border border-secondary text-primary rounded-pill px-4 py-2"
+                                                                        onClick={handlePostReply}
+                                                                    >
+                                                                        Đăng
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                        </React.Fragment>
                                     );
                                 })}
                                 <Pagination totalPages={totalCommentPages} onPageChange={handleCommentPageChange} />

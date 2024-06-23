@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
     const handleShow = () => setShow(true);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('employeeToken');
         navigate('/dang-nhap');
     };
 

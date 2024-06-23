@@ -60,7 +60,7 @@ const Header: React.FC = () => {
         });
 
         if (result.isConfirmed) {
-            localStorage.removeItem('token');
+            localStorage.removeItem('customerToken');
             setIsLoggedIn(false);
             setAvatar('');
             navigate('/');
@@ -166,21 +166,25 @@ const Header: React.FC = () => {
                                 </button>
                                 <Link to="/wishlist" className="position-relative me-4 my-auto">
                                     <i className="fas fa-heart fa-2x"></i>
-                                    <span
-                                        className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                        style={{ top: '-5px', left: '15px', height: '20px', minWidth: '20px' }}
-                                    >
-                                        3
-                                    </span>
+                                    {isLoggedIn && (
+                                        <span
+                                            className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                            style={{ top: '-5px', left: '15px', height: '20px', minWidth: '20px' }}
+                                        >
+                                            3
+                                        </span>
+                                    )}
                                 </Link>
                                 <Link to="/gio-hang" className="position-relative me-4 my-auto">
                                     <i className="fa fa-shopping-bag fa-2x"></i>
-                                    <span
-                                        className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                        style={{ top: '-5px', left: '15px', height: '20px', minWidth: '20px' }}
-                                    >
-                                        3
-                                    </span>
+                                    {isLoggedIn && (
+                                        <span
+                                            className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                            style={{ top: '-5px', left: '15px', height: '20px', minWidth: '20px' }}
+                                        >
+                                            3
+                                        </span>
+                                    )}
                                 </Link>
                                 {isLoggedIn ? (
                                     <div className="nav-item dropdown position-relative me-4 my-auto">
