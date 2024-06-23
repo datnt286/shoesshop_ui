@@ -1,5 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import AuthenticatedWrapper from './AuthenticatedWrapper';
+import PrivateWrapper from './PrivateWrapper';
 import HomePage from '../pages/HomePage';
 import ShopPage from '../pages/ShopPage';
 import SearchPage from './../pages/SearchPage';
@@ -22,16 +24,22 @@ const AppRoutes: React.FC = () => {
             <Route path="/cua-hang" element={<ShopPage />} />
             <Route path="/tim-kiem/:keyword" element={<SearchPage />} />
             <Route path="/san-pham/:modelId" element={<DetailPage />} />
-            <Route path="/gio-hang" element={<CartPage />} />
-            <Route path="/thanh-toan" element={<CheckoutPage />} />
-            <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/dang-ky" element={<RegisterPage />} />
-            <Route path="/dang-nhap" element={<LoginPage />} />
-            <Route path="/tai-khoan" element={<AccountPage />} />
-            <Route path="/doi-mat-khau" element={<ChangePasswordPage />} />
-            <Route path="/hoa-don" element={<InvoicePage />} />
             <Route path="/lien-he" element={<ContactPage />} />
             <Route path="*" element={<NotFoundPage />} />
+
+            <Route element={<AuthenticatedWrapper />}>
+                <Route path="/dang-nhap" element={<LoginPage />} />
+            </Route>
+
+            <Route element={<PrivateWrapper />}>
+                <Route path="/tai-khoan" element={<AccountPage />} />
+                <Route path="/doi-mat-khau" element={<ChangePasswordPage />} />
+                <Route path="/gio-hang" element={<CartPage />} />
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/thanh-toan" element={<CheckoutPage />} />
+                <Route path="/hoa-don" element={<InvoicePage />} />
+            </Route>
         </Routes>
     );
 };

@@ -46,7 +46,7 @@ const Cart: React.FC = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('customerToken');
 
         if (token) {
             try {

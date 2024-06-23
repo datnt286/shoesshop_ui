@@ -27,7 +27,7 @@ const Account: React.FC = () => {
     const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('customerToken');
 
         if (token) {
             try {
@@ -97,7 +97,7 @@ const Account: React.FC = () => {
             });
 
             if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('customerToken', response.data.token);
 
                 Swal.fire({
                     title: 'Cập nhật thông tin tài khoản thành công!',

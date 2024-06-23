@@ -17,8 +17,10 @@ const Sidebar: React.FC = () => {
         avatar: '',
     });
 
+    const avatarSrc = userData.avatar ? `${config.baseURL}/images/avatar/${userData.avatar}` : DefaultAvatar;
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('employeeToken');
 
         if (token) {
             try {
@@ -34,8 +36,6 @@ const Sidebar: React.FC = () => {
             }
         }
     }, []);
-
-    const avatarSrc = userData.avatar ? `${config.baseURL}/images/avatar/${userData.avatar}` : DefaultAvatar;
 
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">

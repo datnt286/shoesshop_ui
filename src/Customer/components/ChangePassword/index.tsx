@@ -13,7 +13,7 @@ const ChangePassword: React.FC = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('customerToken');
         setToken(token);
     }, []);
 

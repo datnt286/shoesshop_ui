@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
             const response = await AxiosInstance.post('/Users/Employee/login', { username, password });
 
             if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('employeeToken', response.data.token);
                 navigate('/');
 
                 Swal.fire({

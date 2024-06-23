@@ -17,7 +17,7 @@ const Header: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('customerToken');
 
         if (token) {
             try {

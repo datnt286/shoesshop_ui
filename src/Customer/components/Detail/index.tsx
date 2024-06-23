@@ -177,7 +177,7 @@ const Detail: React.FC = () => {
     }, [selectedProduct, quantity]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('customerToken');
 
         if (token) {
             try {

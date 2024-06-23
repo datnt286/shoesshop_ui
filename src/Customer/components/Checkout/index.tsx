@@ -57,7 +57,7 @@ const Checkout: React.FC = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('customerToken');
 
         if (token) {
             try {
@@ -100,8 +100,6 @@ const Checkout: React.FC = () => {
 
     const handleUpdateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        const token = localStorage.getItem('token');
 
         const formData = new FormData();
         formData.append('userName', user.userName);

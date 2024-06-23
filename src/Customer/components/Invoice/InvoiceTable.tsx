@@ -59,7 +59,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                                 Ngày đặt
                             </th>
                             <th className="text-primary" scope="col">
-                                Hình thức thanh toán
+                                Phí vận chuyển
                             </th>
                             <th className="text-primary" scope="col">
                                 Tổng thanh toán
