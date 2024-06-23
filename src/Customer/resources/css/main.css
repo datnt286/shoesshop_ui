@@ -241,6 +241,15 @@ a:hover {
     background-color: var(--primary-color) !important
 }
 
+.fa-star {
+    transition: color 0.3s;
+}
+
+/* .fa-star:hover,
+.fa-star:hover ~ .fa-star {
+    color: var(--bs-secondary) !important;
+} */
+
 .counter h4 {
     color: var(--primary-color);
 }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
-import Swal from 'sweetalert2';
 
 interface Model {
     id: number;
@@ -27,17 +27,30 @@ interface User {
     avatar?: string;
 }
 
+interface Review {
+    id: number;
+    userId: string;
+    customerUserName: string;
+    customerName: string;
+    customerAvatar: string;
+    modelId: number;
+    rating: number;
+    content: string;
+    createDate: string;
+    status: string;
+}
+
 interface Comment {
     id: number;
     userId: string;
+    customerUserName: string;
+    customerName: string;
+    customerAvatar: string;
     modelId: number;
     parentCommentId: number | null;
     content: string;
     createDate: string;
     status: string;
-    customerUserName: string;
-    customerName: string;
-    customerAvatar: string;
     comments: Comment[];
 }
 
@@ -47,7 +60,13 @@ interface ProductTabProps {
     user: User;
 }
 
-const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
+const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [rating, setRating] = useState<number>(5);
+    const [reviewContent, setReviewContent] = useState('');
+    const [totalReviewPages, setTotalReviewPages] = useState(1);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
     const [comments, setComments] = useState<Comment[]>([]);
     const [commentContent, setCommentContent] = useState('');
     const [replyContent, setReplyContent] = useState('');
@@ -59,6 +78,74 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
     const [replyValidationError, setReplyValidationError] = useState('');
 
     const userAvatar = user.avatar ? `${config.baseURL}/images/avatar/${user.avatar}` : DefaultAvatar;
+
+    const fetchReviews = async (currentPage = 1, pageSize = 5) => {
+        if (model) {
+            try {
+                const response = await AxiosInstance.get(`/Reviews/Model/${model.id}`, {
+                    params: {
+                        currentPage,
+                        pageSize,
+                    },
+                });
+
+                if (response.status === 200) {
+                    setReviews(response.data.items);
+                    setTotalReviewPages(response.data.totalPages);
+                }
+            } catch (error) {
+                console.error('Lỗi: ', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchReviews();
+    }, [model]);
+
+    useEffect(() => {
+        const userReview = reviews.find((review) => review.userId === user.id);
+        if (userReview) {
+            setIsEditing(true);
+            setRating(userReview.rating);
+            setReviewContent(userReview.content);
+        } else {
+            setIsEditing(false);
+            setRating(5);
+            setReviewContent('Nội dung *');
+        }
+    }, [user.id, reviews]);
+
+    const handleReviewPageChange = ({ selected }: { selected: number }) => {
+        const currentPage = selected + 1;
+        fetchReviews(currentPage);
+    };
+
+    const handlePostReview = async () => {
+        try {
+            const data = {
+                userId: user.id,
+                modelId: model?.id,
+                rating: rating,
+                content: reviewContent,
+            };
+
+            const response = await AxiosInstance.post('/Reviews', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 201) {
+                fetchReviews();
+                setIsEditing(false);
+                setRating(5);
+                setReviewContent('Nội dung *');
+            }
+        } catch (error) {
+            console.error('Lỗi: ', error);
+        }
+    };
 
     const fetchComments = async (currentPage = 1, pageSize = 5) => {
         if (model) {
@@ -258,93 +345,97 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
                     )}
                 </div>
                 <div id="nav-review" className="tab-pane" role="tabpanel" aria-labelledby="nav-review-tab">
-                    <div className="d-flex">
-                        <img
-                            src="img/avatar.jpg"
-                            className="img-fluid rounded-circle p-3"
-                            style={{ width: '100px', height: '100px' }}
-                            alt="Ảnh đại diện"
-                        />
-                        <div className="">
-                            <p className="mb-2" style={{ fontSize: '14px' }}>
-                                April 12, 2024
-                            </p>
-                            <div className="d-flex justify-content-between">
-                                <h5>Jason Smith</h5>
-                                <div className="d-flex mb-3">
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <p>
-                                The generated Lorem Ipsum is therefore always free from repetition injected humour, or
-                                non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit{' '}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="d-flex">
-                        <img
-                            src="img/avatar.jpg"
-                            className="img-fluid rounded-circle p-3"
-                            style={{ width: '100px', height: '100px' }}
-                            alt="Ảnh đại diện"
-                        />
-                        <div className="">
-                            <p className="mb-2" style={{ fontSize: '14px' }}>
-                                April 12, 2024
-                            </p>
-                            <div className="d-flex justify-content-between">
-                                <h5>Sam Peters</h5>
-                                <div className="d-flex mb-3">
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star text-secondary"></i>
-                                    <i className="fa fa-star"></i>
-                                    <i className="fa fa-star"></i>
-                                </div>
-                            </div>
-                            <p className="text-dark">
-                                The generated Lorem Ipsum is therefore always free from repetition injected humour, or
-                                non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit{' '}
-                            </p>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 className="my-5 fw-bold">Viết đánh giá của bạn</h4>
-                        <div className="row g-4">
-                            <div className="col-lg-12">
-                                <div className="border-bottom rounded my-4">
-                                    <textarea
-                                        className="form-control border-0"
-                                        cols={30}
-                                        rows={8}
-                                        placeholder="Nội dung *"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="d-flex justify-content-between py-3 mb-5">
-                                    <div className="d-flex align-items-center">
-                                        <p className="mb-0 me-3">Đánh giá:</p>
-                                        <div className="d-flex align-items-center" style={{ fontSize: '12px' }}>
-                                            <i className="fa fa-star text-muted"></i>
-                                            <i className="fa fa-star"></i>
-                                            <i className="fa fa-star"></i>
-                                            <i className="fa fa-star"></i>
-                                            <i className="fa fa-star"></i>
+                    {reviews.length > 0 ? (
+                        <>
+                            {reviews.map((review) => {
+                                const customerAvatar = review.customerAvatar
+                                    ? `${config.baseURL}/images/avatar/${review.customerAvatar}`
+                                    : DefaultAvatar;
+
+                                return (
+                                    <div className="d-flex">
+                                        <img
+                                            src={customerAvatar}
+                                            className="img-fluid rounded-circle p-3"
+                                            style={{ width: '100px', height: '100px' }}
+                                            alt="Ảnh đại diện"
+                                        />
+                                        <div className="w-100">
+                                            <p className="mb-2" style={{ fontSize: '14px' }}>
+                                                {review.createDate}
+                                            </p>
+                                            <div className="d-flex justify-content-between">
+                                                <h5>{review.customerName || review.customerUserName}</h5>
+                                                <div className="d-flex mb-3">
+                                                    {[...Array(5)].map((_, index) => (
+                                                        <i
+                                                            key={index}
+                                                            className={`fa fa-star ${
+                                                                index < review.rating ? 'text-secondary' : ''
+                                                            }`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <p className="text-break">{review.content}</p>
                                         </div>
                                     </div>
-                                    <button className="btn border border-secondary text-primary rounded-pill px-4 py-2">
-                                        {' '}
-                                        Đăng
-                                    </button>
+                                );
+                            })}
+                            <Pagination totalPages={totalReviewPages} onPageChange={handleReviewPageChange} />
+                        </>
+                    ) : (
+                        <p className="text-center pt-3">Sản phẩm chưa có đánh giá nào.</p>
+                    )}
+                    {token ? (
+                        <div>
+                            <h4 className="my-5 fw-bold">
+                                {isEditing ? 'Chỉnh sửa đánh giá của bạn' : 'Viết đánh giá của bạn'}
+                            </h4>
+                            <div className="row g-4">
+                                <div className="col-lg-12">
+                                    <div className="border-bottom rounded my-4">
+                                        <textarea
+                                            className="form-control border-0"
+                                            cols={30}
+                                            rows={8}
+                                            value={reviewContent}
+                                            onChange={(e) => setReviewContent(e.target.value)}
+                                            placeholder="Nội dung *"
+                                        ></textarea>
+                                    </div>
+                                </div>
+                                <div className="col-lg-12">
+                                    <div className="d-flex justify-content-between py-3 mb-5">
+                                        <div className="d-flex align-items-center">
+                                            <p className="mb-0 me-3">Đánh giá:</p>
+                                            <div className="d-flex align-items-center">
+                                                {[...Array(5)].map((_, index) => (
+                                                    <i
+                                                        key={index}
+                                                        className={`fa fa-star ${
+                                                            index < rating ? 'text-secondary' : ''
+                                                        }`}
+                                                        onClick={() => setRating(index + 1)}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <button
+                                            className="btn border border-secondary text-primary rounded-pill px-4 py-2"
+                                            onClick={handlePostReview}
+                                        >
+                                            {isEditing ? 'Cập nhật' : 'Đăng'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    ) : (
+                        <p className="text-center pt-3">
+                            Đăng nhập để đánh giá. <Link to="/dang-nhap">Đăng nhập</Link>
+                        </p>
+                    )}
                 </div>
                 <div id="nav-comment" className="tab-pane" role="tabpanel" aria-labelledby="nav-comment-tab">
                     <>
@@ -563,7 +654,6 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, model, user }) => {
                                                 className="btn border border-secondary text-primary rounded-pill px-4 py-2"
                                                 onClick={handlePostComment}
                                             >
-                                                {' '}
                                                 Đăng
                                             </button>
                                         </div>
