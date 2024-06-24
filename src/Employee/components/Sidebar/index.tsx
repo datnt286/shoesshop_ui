@@ -39,14 +39,14 @@ const Sidebar: React.FC = () => {
 
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
-            <Link to="/" className="brand-link">
+            <Link to="/admin" className="brand-link">
                 <img src="" className="brand-image img-circle elevation-3" style={{ opacity: 0.8 }} alt="Logo" />
                 <span className="brand-text font-weight-light">Double D Shop</span>
             </Link>
             <div className="sidebar">
                 <div className="user-panel mt-3 pb-3 d-flex">
                     <div className="info">
-                        <Link to="/tai-khoan" className="d-block">
+                        <Link to="/admin/tai-khoan" className="d-block">
                             <div className="image mr-1">
                                 <img
                                     src={avatarSrc}
@@ -82,7 +82,7 @@ const Sidebar: React.FC = () => {
                         data-accordion="false"
                     >
                         <li className="nav-item">
-                            <NavLink to="/" className="nav-link">
+                            <NavLink to="/admin" className="nav-link">
                                 <i className="nav-icon fas fa-home"></i>
                                 <p>Trang chủ</p>
                             </NavLink>
@@ -97,13 +97,13 @@ const Sidebar: React.FC = () => {
                             </a>
                             <ul className="nav nav-treeview ml-2">
                                 <li className="nav-item">
-                                    <NavLink to="/giay" className="nav-link">
+                                    <NavLink to="/admin/giay" className="nav-link">
                                         <i className="nav-icon fas fa-shoe-prints"></i>
                                         <p>Giày</p>
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/phu-kien" className="nav-link">
+                                    <NavLink to="/admin/phu-kien" className="nav-link">
                                         <i className="nav-icon fas fa-socks"></i>
                                         <p>Phụ kiện</p>
                                     </NavLink>
@@ -111,61 +111,61 @@ const Sidebar: React.FC = () => {
                             </ul>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/nhan-hieu" className="nav-link">
+                            <NavLink to="/admin/nhan-hieu" className="nav-link">
                                 <i className="nav-icon fas fa-tag"></i>
                                 <p>Quản lý nhãn hiệu</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/mau-sac" className="nav-link">
+                            <NavLink to="/admin/mau-sac" className="nav-link">
                                 <i className="nav-icon fas fa-palette"></i>
                                 <p>Quản lý màu sắc</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/size" className="nav-link">
+                            <NavLink to="/admin/size" className="nav-link">
                                 <i className="nav-icon fas fa-tshirt"></i>
                                 <p>Quản lý size</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/nha-cung-cap" className="nav-link">
+                            <NavLink to="/admin/nha-cung-cap" className="nav-link">
                                 <i className="nav-icon fas fa-shipping-fast"></i>
                                 <p>Quản lý nhà cung cấp</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/nhan-vien" className="nav-link">
+                            <NavLink to="/admin/nhan-vien" className="nav-link">
                                 <i className="nav-icon fas fa-user-tie"></i>
                                 <p>Quản lý nhân viên</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/khach-hang" className="nav-link">
+                            <NavLink to="/admin/khach-hang" className="nav-link">
                                 <i className="nav-icon fas fa-users"></i>
                                 <p>Quản lý khách hàng</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/hoa-don" className="nav-link">
+                            <NavLink to="/admin/hoa-don" className="nav-link">
                                 <i className="nav-icon fas fa-scroll"></i>
                                 <p>Quản lý hoá đơn</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/hoa-don-nhap" className="nav-link">
+                            <NavLink to="/admin/hoa-don-nhap" className="nav-link">
                                 <i className="nav-icon fas fa-clipboard"></i>
                                 <p>Quản lý hoá đơn nhập</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/binh-luan" className="nav-link">
+                            <NavLink to="/admin/binh-luan" className="nav-link">
                                 <i className="nav-icon fas fa-comments"></i>
                                 <p>Quản lý bình luận</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/slider" className="nav-link">
+                            <NavLink to="/admin/slider" className="nav-link">
                                 <i className="nav-icon fab fa-adversal"></i>
                                 <p>Quản lý slider</p>
                             </NavLink>

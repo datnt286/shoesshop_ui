@@ -47,17 +47,17 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, onAction, onCan
     const getActionBtnClassName = (status: InvoiceStatus): string => {
         switch (status) {
             case InvoiceStatus.Placed:
-                return 'btn-primary';
+                return 'btn-blue';
             case InvoiceStatus.Approved:
-                return 'btn-danger';
+                return 'btn-secondary';
             case InvoiceStatus.Shipped:
                 return 'btn-info';
             case InvoiceStatus.Received:
                 return 'btn-success';
             case InvoiceStatus.Cancelled:
-                return 'btn-secondary';
+                return 'btn-gray';
             default:
-                return 'btn-secondary';
+                return 'btn-gray';
         }
     };
 
@@ -108,7 +108,7 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, onAction, onCan
             </td>
             <td>
                 <div className="project-actions text-right">
-                    <button className="btn btn-info btn-sm mr-2" onClick={onDetail}>
+                    <button className="btn btn-gray btn-sm mr-2" onClick={onDetail}>
                         <i className="fas fa-info-circle"></i> Chi tiết
                     </button>
                     <button

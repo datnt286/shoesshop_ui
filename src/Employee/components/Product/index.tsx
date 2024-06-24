@@ -5,7 +5,6 @@ import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
-import TableRow from './TableRow';
 import Pagination from '../Pagination/index';
 import DeleteModal from '../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
@@ -233,8 +232,8 @@ const Product: React.FC = () => {
         resetFormData();
     };
 
-    const handleDeleteClick = (product: Product) => {
-        setDeleteEndpoint(`/Products/${product.id}`);
+    const handleDeleteClick = (id: number | null) => {
+        setDeleteEndpoint(`/Products/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -362,16 +361,18 @@ const Product: React.FC = () => {
         <>
             <div className="row my-4">
                 <div className="col-9">
-                    <img
-                        src={imageModelSrc}
-                        className="img img-thumbnail"
-                        style={{ maxWidth: '100px', maxHeight: '100px' }}
-                        alt="Ảnh sản phẩm"
-                    />
-                    <span className="h1 mx-3">{model?.name}</span>
+                    <div className="d-flex align-items-center">
+                        <img
+                            src={imageModelSrc}
+                            className="img img-thumbnail"
+                            style={{ maxWidth: '100px', maxHeight: '100px' }}
+                            alt="Ảnh sản phẩm"
+                        />
+                        <span className="h1 mx-3">{model?.name}</span>
+                    </div>
                 </div>
-                <div className="col-3 text-right">
-                    <button className="btn btn-success mt-2" onClick={handleAddClick}>
+                <div className="col-3 d-flex justify-content-end align-items-center">
+                    <button className="btn btn-success" onClick={handleAddClick}>
                         <i className="fas fa-plus-circle mr-1"></i> Thêm sản phẩm
                     </button>
                 </div>
@@ -386,7 +387,7 @@ const Product: React.FC = () => {
                             className="form-control form-control-sm"
                             onChange={handleSearchInputChange}
                         />
-                        <button type="submit" className="btn btn-secondary btn-sm text-nowrap ml-2">
+                        <button type="submit" className="btn btn-gray btn-sm text-nowrap ml-2">
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
@@ -406,17 +407,50 @@ const Product: React.FC = () => {
                         </thead>
                         <tbody>
                             {products.map((product, index) => {
+                                const colorName = colors.find((color) => color.id === product.colorId)?.name || 'N/A';
+                                const sizeName = sizes.find((size) => size.id === product.sizeId)?.name || 'N/A';
+                                const imageSrc = product.image
+                                    ? `${config.baseURL}/images/product/${product.image}`
+                                    : DefaultImage;
+
                                 return (
-                                    <TableRow
-                                        key={product.id}
-                                        index={index}
-                                        product={product}
-                                        colors={colors}
-                                        sizes={sizes}
-                                        onEdit={() => handleEditClick(product)}
-                                        onDelete={() => handleDeleteClick(product)}
-                                        onDetail={() => handleDetailClick(product)}
-                                    />
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <img
+                                                src={imageSrc}
+                                                className="img img-thumbnail"
+                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                alt="Ảnh sản phẩm"
+                                            />
+                                        </td>
+                                        <td>{product.name}</td>
+                                        <td>{colorName}</td>
+                                        <td>{sizeName}</td>
+                                        <td>{product.quantity}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-gray btn-sm mr-2"
+                                                    onClick={() => handleDetailClick(product)}
+                                                >
+                                                    <i className="fas fa-info-circle"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(product)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(product.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 );
                             })}
                         </tbody>
@@ -456,7 +490,7 @@ const Product: React.FC = () => {
                                 className="d-none"
                                 onChange={handleImageChange}
                             />
-                            <label htmlFor="image" className="btn btn-secondary font-weight-normal mt-2">
+                            <label htmlFor="image" className="btn btn-gray font-weight-normal mt-2">
                                 Chọn ảnh
                             </label>
                         </div>
@@ -561,11 +595,11 @@ const Product: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>
@@ -636,7 +670,7 @@ const Product: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseDetailModal}>
+                    <Button variant="gray" onClick={handleCloseDetailModal}>
                         <i className="fas fa-times-circle mr-1"></i>
                         Đóng
                     </Button>

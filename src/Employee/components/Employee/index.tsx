@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from './../../../services/AxiosInstance';
 import config from '../../../services/config';
-import TableRow from './TableRow';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
@@ -138,8 +137,8 @@ const Employee: React.FC = () => {
         resetFormData();
     };
 
-    const handleDeleteClick = (employee: Employee) => {
-        setDeleteEndpoint(`/Users/Employees/${employee.id}`);
+    const handleDeleteClick = (id: string | null) => {
+        setDeleteEndpoint(`/Users/Employees/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -295,7 +294,7 @@ const Employee: React.FC = () => {
                             className="form-control form-control-sm"
                             onChange={handleSearchInputChange}
                         />
-                        <button type="submit" className="btn btn-secondary btn-sm text-nowrap ml-2">
+                        <button type="submit" className="btn btn-gray btn-sm text-nowrap ml-2">
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
@@ -316,15 +315,48 @@ const Employee: React.FC = () => {
                         </thead>
                         <tbody>
                             {employees.map((employee, index) => {
+                                const avatarSrc = employee.avatar
+                                    ? `${config.baseURL}/images/avatar/${employee.avatar}`
+                                    : DefaultAvatar;
+
                                 return (
-                                    <TableRow
-                                        key={index}
-                                        index={index}
-                                        employee={employee}
-                                        onEdit={() => handleEditClick(employee)}
-                                        onDelete={() => handleDeleteClick(employee)}
-                                        onDetail={() => handleDetailClick(employee)}
-                                    />
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <img
+                                                src={avatarSrc}
+                                                className="img-thumbnail"
+                                                width={50}
+                                                height={50}
+                                                alt="Avatar"
+                                            />
+                                        </td>
+                                        <td>{employee.userName}</td>
+                                        <td>{employee.name}</td>
+                                        <td>{employee.phoneNumber}</td>
+                                        <td>{employee.email}</td>
+                                        <td>{employee.status === 1 ? 'Hoạt động' : 'Không hoạt động'}</td>
+                                        <td>
+                                            <button
+                                                className="btn btn-gray btn-sm mr-2"
+                                                onClick={() => handleDetailClick(employee)}
+                                            >
+                                                <i className="fas fa-info-circle"></i>
+                                            </button>
+                                            <button
+                                                className="btn btn-blue btn-sm mr-2"
+                                                onClick={() => handleEditClick(employee)}
+                                            >
+                                                <i className="fas fa-edit"></i>
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteClick(employee.id)}
+                                            >
+                                                <i className="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
                                 );
                             })}
                         </tbody>
@@ -364,7 +396,7 @@ const Employee: React.FC = () => {
                                 className="d-none"
                                 onChange={handleAvatarChange}
                             />
-                            <label htmlFor="avatar" className="btn btn-secondary font-weight-normal mt-2">
+                            <label htmlFor="avatar" className="btn btn-gray font-weight-normal mt-2">
                                 Chọn ảnh
                             </label>
                         </div>
@@ -471,11 +503,11 @@ const Employee: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>
@@ -544,7 +576,7 @@ const Employee: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseDetailModal}>
+                    <Button variant="gray" onClick={handleCloseDetailModal}>
                         <i className="fas fa-times-circle mr-1"></i>
                         Đóng
                     </Button>

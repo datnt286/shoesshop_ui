@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from './../../../services/AxiosInstance';
-import TableRow from './TableRow';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
@@ -85,8 +84,8 @@ const Size: React.FC = () => {
         resetFormData();
     };
 
-    const handleDeleteClick = (size: Size) => {
-        setDeleteEndpoint(`/Sizes/${size.id}`);
+    const handleDeleteClick = (id: number | null) => {
+        setDeleteEndpoint(`/Sizes/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -183,17 +182,28 @@ const Size: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sizes.map((size, index) => {
-                                return (
-                                    <TableRow
-                                        key={size.id}
-                                        index={index}
-                                        size={size}
-                                        onEdit={() => handleEditClick(size)}
-                                        onDelete={() => handleDeleteClick(size)}
-                                    />
-                                );
-                            })}
+                            {sizes.map((size, index) => (
+                                <tr>
+                                    <td>{index + 1}</td>
+                                    <td>{size.name}</td>
+                                    <td>
+                                        <div className="project-actions text-right">
+                                            <button
+                                                className="btn btn-blue btn-sm mr-2"
+                                                onClick={() => handleEditClick(size)}
+                                            >
+                                                <i className="fas fa-edit"></i>
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteClick(size.id)}
+                                            >
+                                                <i className="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -225,11 +235,11 @@ const Size: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>

@@ -170,11 +170,6 @@ a:hover {
     background-color: rgba(0, 0, 0, 0)
 }
 
-.btn-gray,
-.bg-gray {
-    background-color: rgba(108, 117, 125, .8) !important;
-}
-
 .btn-link {
     font-weight: 400;
     color: var(--primary-color);
@@ -191,6 +186,32 @@ a:hover {
 
 .btn-comment:hover {
     text-decoration: underline;
+}
+
+.btn-blue,
+.bg-blue {
+    background-color: #007bff !important;
+    color: #fff;
+}
+
+.btn-blue:hover {
+    background-color: #006ee6 !important;
+    color: #fff;
+}
+
+.btn-gray,
+.bg-gray {
+    background-color: #6c757d !important;
+    color: #fff;
+}
+
+.btn-gray:hover {
+    background-color: #616970 !important;
+    color: #fff;
+}
+
+.form-control {
+    height: auto;
 }
 
 .alert-primary {
@@ -239,6 +260,10 @@ a:hover {
 
 .bg-primary {
     background-color: var(--primary-color) !important
+}
+
+.breadcrumb {
+    background-color: transparent;
 }
 
 .fa-star {

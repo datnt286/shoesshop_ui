@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
-import TableRow from './TableRow';
 import Pagination from '../Pagination/index';
 import DeleteModal from '../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
@@ -208,8 +208,8 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         resetFormData();
     };
 
-    const handleDeleteClick = (model: Model) => {
-        setDeleteEndpoint(`/Models/${model.id}`);
+    const handleDeleteClick = (id: number | null) => {
+        setDeleteEndpoint(`/Models/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -377,7 +377,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                             className="form-control form-control-sm"
                             onChange={handleSearchInputChange}
                         />
-                        <button type="submit" className="btn btn-secondary btn-sm text-nowrap ml-2">
+                        <button type="submit" className="btn btn-gray btn-sm text-nowrap ml-2">
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
@@ -396,14 +396,47 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         </thead>
                         <tbody>
                             {models.map((model, index) => {
+                                const imageSrc =
+                                    model.images && model.images.length > 0
+                                        ? `${config.baseURL}/images/model/${model.images[0].name}`
+                                        : DefaultImage;
+
                                 return (
-                                    <TableRow
-                                        key={model.id}
-                                        index={index}
-                                        model={model}
-                                        onEdit={() => handleEditClick(model)}
-                                        onDelete={() => handleDeleteClick(model)}
-                                    />
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <img
+                                                src={imageSrc}
+                                                className="img img-thumbnail"
+                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                alt="Ảnh sản phẩm"
+                                            />
+                                        </td>
+                                        <td>{model.name}</td>
+                                        <td>{model.importPrice?.toLocaleString() + ' ₫'}</td>
+                                        <td>{model.price?.toLocaleString() + ' ₫'}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <Link to={`/admin/san-pham/${model.id}`}>
+                                                    <button className="btn btn-gray btn-sm mr-2">
+                                                        <i className="fas fa-info-circle"></i>
+                                                    </button>
+                                                </Link>
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(model)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(model.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 );
                             })}
                         </tbody>
@@ -467,7 +500,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                 onChange={handleImageChange}
                                 multiple
                             />
-                            <label htmlFor="images" className="btn btn-secondary font-weight-normal mt-2">
+                            <label htmlFor="images" className="btn btn-gray font-weight-normal mt-2">
                                 Chọn ảnh
                             </label>
                         </div>
@@ -577,11 +610,11 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>

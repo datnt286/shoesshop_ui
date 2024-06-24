@@ -11,7 +11,7 @@ import '../resources/dist/css/adminlte.min.css';
 import '../resources/plugins/jquery-ui/jquery-ui.min.js';
 import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
-import '../resources/dist/js/demo.js';
+// import '../resources/dist/js/demo.js';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
 
             if (response.status === 200) {
                 localStorage.setItem('employeeToken', response.data.token);
-                navigate('/');
+                navigate('/admin');
 
                 Swal.fire({
                     title: 'Đăng nhập thành công!',
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
             <HelmetInstance title="Đăng nhập" />
             <div className="hold-transition login-page">
                 <div className="login-box">
-                    <div className="card card-outline card-primary">
+                    <div className="card card-outline">
                         <div className="card-header text-center">
                             <span className="h1">Đăng nhập</span>
                         </div>
@@ -110,7 +110,7 @@ const LoginPage: React.FC = () => {
                                         </div>
                                     </div>
                                     <div className="col-6 text-right">
-                                        <button type="submit" className="btn btn-primary">
+                                        <button type="submit" className="btn btn-blue">
                                             <i className="fas fa-sign-in-alt mr-1"></i>
                                             Đăng nhập
                                         </button>

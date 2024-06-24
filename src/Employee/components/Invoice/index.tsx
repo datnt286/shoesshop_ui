@@ -322,12 +322,12 @@ const Invoice: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
+                    <Button variant="gray" onClick={handleCloseModal}>
                         <i className="fas fa-times-circle mr-1"></i>
                         Đóng
                     </Button>
                     {selectedInvoice && (selectedInvoice.status === 1 || selectedInvoice.status === 2) && (
-                        <Button variant="primary" onClick={handleStatusChange}>
+                        <Button variant="blue" onClick={handleStatusChange}>
                             <i className="fas fa-edit mr-1"></i>
                             {getActionButtonText(selectedInvoice.status)}
                         </Button>
@@ -413,7 +413,7 @@ const Invoice: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseDetailModal}>
+                    <Button variant="gray" onClick={handleCloseDetailModal}>
                         <i className="fas fa-times-circle mr-1"></i>
                         Đóng
                     </Button>

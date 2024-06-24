@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from './../../../services/AxiosInstance';
-import TableRow from './TableRow';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
@@ -85,8 +84,8 @@ const Brand: React.FC = () => {
         resetFormData();
     };
 
-    const handleDeleteClick = (brand: Brand) => {
-        setDeleteEndpoint(`/Brands/${brand.id}`);
+    const handleDeleteClick = (id: number | null) => {
+        setDeleteEndpoint(`/Brands/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -183,17 +182,28 @@ const Brand: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {brands.map((brand, index) => {
-                                return (
-                                    <TableRow
-                                        key={brand.id}
-                                        index={index}
-                                        brand={brand}
-                                        onEdit={() => handleEditClick(brand)}
-                                        onDelete={() => handleDeleteClick(brand)}
-                                    />
-                                );
-                            })}
+                            {brands.map((brand, index) => (
+                                <tr>
+                                    <td>{index + 1}</td>
+                                    <td>{brand.name}</td>
+                                    <td>
+                                        <div className="project-actions text-right">
+                                            <button
+                                                className="btn btn-blue btn-sm mr-2"
+                                                onClick={() => handleEditClick(brand)}
+                                            >
+                                                <i className="fas fa-edit"></i>
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteClick(brand.id)}
+                                            >
+                                                <i className="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -225,11 +235,11 @@ const Brand: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>

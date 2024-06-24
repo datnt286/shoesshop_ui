@@ -43,7 +43,7 @@ const ExportPDFButton: React.FC<{ data: any[] }> = ({ data }) => {
     };
 
     return (
-        <button className="btn btn-secondary btn-sm" onClick={handleExportPDF}>
+        <button className="btn btn-gray btn-sm" onClick={handleExportPDF}>
             Xuất PDF
         </button>
     );

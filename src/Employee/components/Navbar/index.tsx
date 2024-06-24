@@ -12,12 +12,12 @@ const Navbar: React.FC = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('employeeToken');
-        navigate('/dang-nhap');
+        navigate('/admin/dang-nhap');
     };
 
     return (
         <>
-            <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+            <nav className="main-header navbar navbar-expand navbar-white navbar-light h-auto">
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <a href="#" className="nav-link" data-widget="pushmenu" role="button">
@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
                     <h3>Bạn có chắc muốn đăng xuất?</h3>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="gray" onClick={handleClose}>
                         <i className="fas fa-times-circle mr-1"></i>
                         Huỷ
                     </Button>

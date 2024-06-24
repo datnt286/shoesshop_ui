@@ -58,7 +58,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, endpoint, handleClose, 
                 <h5>Xoá vĩnh viễn sẽ không thể khôi phục!</h5>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button variant="gray" onClick={handleClose}>
                     <i className="fas fa-times-circle mr-1"></i>
                     Huỷ
                 </Button>

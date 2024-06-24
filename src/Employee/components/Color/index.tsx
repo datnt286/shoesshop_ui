@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from './../../../services/AxiosInstance';
-import TableRow from './TableRow';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton';
@@ -85,8 +84,8 @@ const Color: React.FC = () => {
         resetFormData();
     };
 
-    const handleDeleteClick = (color: Color) => {
-        setDeleteEndpoint(`/Colors/${color.id}`);
+    const handleDeleteClick = (id: number | null) => {
+        setDeleteEndpoint(`/Colors/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -183,17 +182,28 @@ const Color: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {colors.map((color, index) => {
-                                return (
-                                    <TableRow
-                                        key={color.id}
-                                        index={index}
-                                        color={color}
-                                        onEdit={() => handleEditClick(color)}
-                                        onDelete={() => handleDeleteClick(color)}
-                                    />
-                                );
-                            })}
+                            {colors.map((color, index) => (
+                                <tr>
+                                    <td>{index + 1}</td>
+                                    <td>{color.name}</td>
+                                    <td>
+                                        <div className="project-actions text-right">
+                                            <button
+                                                className="btn btn-blue btn-sm mr-2"
+                                                onClick={() => handleEditClick(color)}
+                                            >
+                                                <i className="fas fa-edit"></i>
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteClick(color.id)}
+                                            >
+                                                <i className="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -225,11 +235,11 @@ const Color: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>

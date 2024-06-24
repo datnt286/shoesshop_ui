@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from './../../../services/AxiosInstance';
-import TableRow from './TableRow';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
@@ -94,8 +93,8 @@ const Supplier: React.FC = () => {
         resetFormData();
     };
 
-    const handleDeleteClick = (supplier: Supplier) => {
-        setDeleteEndpoint(`/Suppliers/${supplier.id}`);
+    const handleDeleteClick = (id: number | null) => {
+        setDeleteEndpoint(`/Suppliers/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -198,17 +197,31 @@ const Supplier: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {suppliers.map((supplier, index) => {
-                                return (
-                                    <TableRow
-                                        key={supplier.id}
-                                        index={index}
-                                        supplier={supplier}
-                                        onEdit={() => handleEditClick(supplier)}
-                                        onDelete={() => handleDeleteClick(supplier)}
-                                    />
-                                );
-                            })}
+                            {suppliers.map((supplier, index) => (
+                                <tr>
+                                    <td>{index + 1}</td>
+                                    <td>{supplier.name}</td>
+                                    <td>{supplier.phoneNumber}</td>
+                                    <td>{supplier.email}</td>
+                                    <td>{supplier.address}</td>
+                                    <td>
+                                        <div className="project-actions text-right">
+                                            <button
+                                                className="btn btn-blue btn-sm mr-2"
+                                                onClick={() => handleEditClick(supplier)}
+                                            >
+                                                <i className="fas fa-edit"></i>
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteClick(supplier.id)}
+                                            >
+                                                <i className="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -273,11 +286,11 @@ const Supplier: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>

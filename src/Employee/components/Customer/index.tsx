@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
-import TableRow from './TableRow';
 import Pagination from '../Pagination/index';
 import ExportPDFButton from '../ExportPDFButton/index';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
@@ -238,7 +237,7 @@ const Customer: React.FC = () => {
                             className="form-control form-control-sm"
                             onChange={handleSearchInputChange}
                         />
-                        <button type="submit" className="btn btn-secondary btn-sm text-nowrap ml-2">
+                        <button type="submit" className="btn btn-gray btn-sm text-nowrap ml-2">
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
@@ -259,14 +258,44 @@ const Customer: React.FC = () => {
                         </thead>
                         <tbody>
                             {customers.map((customer, index) => {
+                                const avatarSrc = customer.avatar
+                                    ? `${config.baseURL}/images/avatar/${customer.avatar}`
+                                    : DefaultAvatar;
+
                                 return (
-                                    <TableRow
-                                        key={customer.id}
-                                        index={index}
-                                        customer={customer}
-                                        onEdit={() => handleEditClick(customer)}
-                                        onDetail={() => handleDetailClick(customer)}
-                                    />
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <img
+                                                src={avatarSrc}
+                                                className="img-thumbnail"
+                                                width={50}
+                                                height={50}
+                                                alt="Avatar"
+                                            />
+                                        </td>
+                                        <td>{customer.userName}</td>
+                                        <td>{customer.name}</td>
+                                        <td>{customer.phoneNumber}</td>
+                                        <td>{customer.email}</td>
+                                        <td>{customer.status === 1 ? 'Hoạt động' : 'Bị khoá'}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-gray btn-sm mr-2"
+                                                    onClick={() => handleDetailClick(customer)}
+                                                >
+                                                    <i className="fas fa-info-circle"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(customer)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 );
                             })}
                         </tbody>
@@ -306,7 +335,7 @@ const Customer: React.FC = () => {
                                 className="d-none"
                                 onChange={handleAvatarChange}
                             />
-                            <label htmlFor="avatar" className="btn btn-secondary font-weight-normal mt-2">
+                            <label htmlFor="avatar" className="btn btn-gray font-weight-normal mt-2">
                                 Chọn ảnh
                             </label>
                         </div>
@@ -389,11 +418,11 @@ const Customer: React.FC = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button variant="gray" onClick={handleClose}>
                             <i className="fas fa-times-circle mr-1"></i>
                             Huỷ
                         </Button>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="blue">
                             <i className="fas fa-check-circle mr-1"></i>
                             Lưu
                         </Button>
@@ -458,7 +487,7 @@ const Customer: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseDetailModal}>
+                    <Button variant="gray" onClick={handleCloseDetailModal}>
                         <i className="fas fa-times-circle mr-1"></i>
                         Đóng
                     </Button>

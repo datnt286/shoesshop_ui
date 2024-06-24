@@ -191,7 +191,7 @@ const Account: React.FC = () => {
         <>
             <h1 className="text-center my-4">Thông tin tài khoản</h1>
 
-            <div className="card card-primary card-outline" style={{ minHeight: '490px' }}>
+            <div className="card card-outline" style={{ minHeight: '490px' }}>
                 <div className="card-header p-2">
                     <ul className="nav nav-pills">
                         <li className="nav-item">
@@ -211,9 +211,9 @@ const Account: React.FC = () => {
                     <div className="tab-content">
                         <div id="account" className="active tab-pane">
                             <form onSubmit={handleUpdateAccount} encType="multipart/form-data">
-                                <div className="row d-flex justify-content-center">
+                                <div className="row d-flex justify-content-center my-4">
                                     <div className="col-md-4">
-                                        <div className="card-body box-profile text-center ml-4">
+                                        <div className="card-body box-profile text-center">
                                             <img
                                                 src={avatarPreview}
                                                 id="avatar-preview"
@@ -231,7 +231,7 @@ const Account: React.FC = () => {
                                             <label
                                                 id="btn-change-avatar"
                                                 htmlFor="avatar"
-                                                className="btn btn-secondary my-3 font-weight-normal"
+                                                className="btn btn-gray my-3 font-weight-normal"
                                             >
                                                 Chọn ảnh
                                             </label>
@@ -239,11 +239,11 @@ const Account: React.FC = () => {
                                             <p className="text-muted">Admin</p>
                                         </div>
                                     </div>
-                                    <div className="col-md-8 mt-4">
+                                    <div className="col-md-8">
                                         <input type="hidden" name="id" id="id" value="" />
-                                        <div className="row ml-2 my-6">
+                                        <div className="row my-6">
                                             <label htmlFor="username" className="col-md-3 mt-2">
-                                                Tên đăng nhập:{' '}
+                                                Tên đăng nhập:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -255,9 +255,9 @@ const Account: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="row ml-2 my-4">
+                                        <div className="row my-4">
                                             <label htmlFor="name" className="col-md-3 mt-2">
-                                                Họ tên:{' '}
+                                                Họ tên:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -270,9 +270,9 @@ const Account: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="row ml-2 my-4">
+                                        <div className="row my-4">
                                             <label htmlFor="phone-number" className="col-md-3 mt-2">
-                                                Điện thoại:{' '}
+                                                Điện thoại:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -285,9 +285,9 @@ const Account: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="row ml-2 my-4">
+                                        <div className="row my-4">
                                             <label htmlFor="email" className="col-md-3 mt-2">
-                                                Email:{' '}
+                                                Email:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -300,9 +300,9 @@ const Account: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="row ml-2 my-2">
+                                        <div className="row my-2">
                                             <label htmlFor="address" className="col-md-3 mt-2">
-                                                Địa chỉ:{' '}
+                                                Địa chỉ:
                                             </label>
                                             <div className="col-md-6">
                                                 <textarea
@@ -316,8 +316,8 @@ const Account: React.FC = () => {
                                         </div>
 
                                         <div className="text-center">
-                                            <button type="submit" className="btn btn-primary mt-3">
-                                                <i className="fas fa-check"></i> Lưu
+                                            <button type="submit" className="btn btn-blue mt-3">
+                                                <i className="fas fa-check-circle mr-1"></i>Cập nhật
                                             </button>
                                         </div>
                                     </div>
@@ -329,7 +329,7 @@ const Account: React.FC = () => {
                             <form onSubmit={handleChangePassword}>
                                 <div className="row d-flex justify-content-center my-4">
                                     <label htmlFor="current-password" className="col-md-2 mt-2">
-                                        Mật khẩu cũ:{' '}
+                                        Mật khẩu cũ:
                                     </label>
                                     <div className="col-md-5">
                                         <input
@@ -344,7 +344,7 @@ const Account: React.FC = () => {
                                 </div>
                                 <div className="row d-flex justify-content-center my-4">
                                     <label htmlFor="new-password" className="col-md-2 mt-2">
-                                        Mật khẩu mới:{' '}
+                                        Mật khẩu mới:
                                     </label>
                                     <div className="col-md-5">
                                         <input
@@ -359,7 +359,7 @@ const Account: React.FC = () => {
                                 </div>
                                 <div className="row d-flex justify-content-center my-2">
                                     <label htmlFor="confirm-password" className="col-md-2">
-                                        Nhập lại mật khẩu:{' '}
+                                        Xác nhận mật khẩu:
                                     </label>
                                     <div className="col-md-5">
                                         <input
@@ -394,8 +394,8 @@ const Account: React.FC = () => {
                                     </label>
                                 </div>
                                 <div className="text-center">
-                                    <button type="submit" className="btn btn-primary mt-3">
-                                        <i className="fas fa-check"></i> Lưu
+                                    <button type="submit" className="btn btn-blue mt-3">
+                                        <i className="fas fa-check-circle mr-1"></i>Lưu
                                     </button>
                                 </div>
                             </form>

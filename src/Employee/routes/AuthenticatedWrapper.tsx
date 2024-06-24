@@ -5,7 +5,7 @@ const AuthenticatedWrapper: React.FC = () => {
     const token = localStorage.getItem('employeeToken');
     const isAuthenticated = !!token;
 
-    return isAuthenticated ? <Navigate to="/" /> : <Outlet />;
+    return isAuthenticated ? <Navigate to="/admin" /> : <Outlet />;
 };
 
 export default AuthenticatedWrapper;

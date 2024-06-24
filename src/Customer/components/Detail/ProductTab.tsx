@@ -357,7 +357,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                                         <img
                                             src={customerAvatar}
                                             className="img-fluid rounded-circle p-3"
-                                            style={{ width: '100px', height: '100px' }}
+                                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                             alt="Ảnh đại diện"
                                         />
                                         <div className="w-100">
