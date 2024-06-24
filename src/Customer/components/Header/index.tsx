@@ -208,7 +208,7 @@ const Header: React.FC = () => {
                                         </div>
                                         <ul
                                             className="dropdown-menu m-0 bg-secondary rounded-0 position-absolute"
-                                            style={{ right: '0' }}
+                                            style={{ left: '-120px' }}
                                             aria-labelledby="dropdownAccountMenu"
                                         >
                                             <li>

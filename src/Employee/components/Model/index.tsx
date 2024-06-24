@@ -104,7 +104,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
 
     const fetchProductTypes = async () => {
         try {
-            const response = await AxiosInstance.get('/ProductTypes');
+            const response = await AxiosInstance.get('/ProductTypes/ChildProductTypes');
 
             if (response.status === 200) {
                 setProductTypes(response.data);
@@ -402,7 +402,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                         : DefaultImage;
 
                                 return (
-                                    <tr>
+                                    <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>
                                             <img

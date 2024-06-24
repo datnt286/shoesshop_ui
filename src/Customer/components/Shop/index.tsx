@@ -215,7 +215,9 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                         <i className="fas fa-redo me-2"></i>Làm mới
                                     </button>
                                     <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-                                        <label htmlFor="sort">Sắp xếp theo:</label>
+                                        <label htmlFor="sort" className="mb-0" style={{ fontWeight: '500' }}>
+                                            Sắp xếp theo:
+                                        </label>
                                         <select
                                             id="sort"
                                             className="border-0 form-select-sm bg-light outline-none me-3"

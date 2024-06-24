@@ -7,7 +7,7 @@ import Pagination from '../Pagination/index';
 import InvoiceRow from './InvoiceRow';
 import InvoiceDetailRow from './InvoiceDetailRow';
 import ExportPDFButton from '../ExportPDFButton/index';
-import { getStatusText } from '../../../utils/getStatusText';
+import { getStatusText, getActionBtnIcon } from '../../../utils/getStatusInvoice';
 
 interface Invoice {
     id: number;
@@ -217,8 +217,6 @@ const Invoice: React.FC = () => {
                                 <th>Tên khách hàng</th>
                                 <th>Ngày đặt</th>
                                 <th>Thành tiền</th>
-                                <th>Phí vận chuyển</th>
-                                <th>Tổng thành tiền</th>
                                 <th>Trạng thái</th>
                                 <th></th>
                             </tr>
@@ -323,12 +321,11 @@ const Invoice: React.FC = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="gray" onClick={handleCloseModal}>
-                        <i className="fas fa-times-circle mr-1"></i>
-                        Đóng
+                        <i className="fas fa-times-circle"></i> Đóng
                     </Button>
                     {selectedInvoice && (selectedInvoice.status === 1 || selectedInvoice.status === 2) && (
-                        <Button variant="blue" onClick={handleStatusChange}>
-                            <i className="fas fa-edit mr-1"></i>
+                        <Button variant={selectedInvoice.status === 1 ? 'blue' : 'info'} onClick={handleStatusChange}>
+                            <i className={`${getActionBtnIcon(selectedInvoice.status)}`}></i>{' '}
                             {getActionButtonText(selectedInvoice.status)}
                         </Button>
                     )}

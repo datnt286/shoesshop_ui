@@ -263,7 +263,7 @@ const Customer: React.FC = () => {
                                     : DefaultAvatar;
 
                                 return (
-                                    <tr>
+                                    <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>
                                             <img

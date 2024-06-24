@@ -25,12 +25,14 @@ const InvoiceDetailRow: React.FC<InvoiceDetailRowProps> = ({ invoiceDetail, inde
     return (
         <tr>
             <td>{index + 1}</td>
-            <img
-                src={imageSrc}
-                className="img img-thumbnail"
-                style={{ maxWidth: '100px', maxHeight: '100px' }}
-                alt="Ảnh sản phẩm"
-            />
+            <td className="text-center">
+                <img
+                    src={imageSrc}
+                    className="img img-thumbnail"
+                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                    alt="Ảnh sản phẩm"
+                />
+            </td>
             <td>{invoiceDetail.productName}</td>
             <td>{invoiceDetail.price.toLocaleString() + ' ₫'}</td>
             <td>{invoiceDetail.quantity}</td>

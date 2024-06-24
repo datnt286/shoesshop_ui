@@ -36,7 +36,6 @@ const Checkout: React.FC = () => {
     });
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
     const [total, setTotal] = useState(0);
-    const [selectedTransportMethod, setSelectedTransportMethod] = useState(1);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
     const [note, setNote] = useState('');
 
@@ -137,10 +136,6 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const handleTransportMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedTransportMethod(parseInt(event.target.value));
-    };
-
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(parseInt(event.target.value));
     };
@@ -150,11 +145,7 @@ const Checkout: React.FC = () => {
             const data = {
                 userId: user.id,
                 total: total,
-                shippingFee: selectedTransportMethod === 2 ? 15000 : selectedTransportMethod === 3 ? 10000 : 0,
-                totalPayment:
-                    total + (selectedTransportMethod === 2 ? 15000 : selectedTransportMethod === 3 ? 10000 : 0),
                 note: note,
-                status: 1,
                 cartDetails: cartDetails.map((cartDetail) => ({
                     productId: cartDetail.productId,
                     price: cartDetail.price,
@@ -303,51 +294,14 @@ const Checkout: React.FC = () => {
                                     </tr>
                                     <tr>
                                         <th scope="row"></th>
-                                        <td className="py-5">
-                                            <p className="mb-0 text-dark py-4">Phí vận chuyển</p>
+                                        <td className="py-5" colSpan={2}>
+                                            <p className="mb-0 text-dark py-3">Phí vận chuyển</p>
                                         </td>
-                                        <td colSpan={3} className="py-5">
-                                            <div className="form-check text-start">
-                                                <input
-                                                    type="radio"
-                                                    name="transportMethod"
-                                                    id="free-shipping"
-                                                    className="form-check-input"
-                                                    value={1}
-                                                    onChange={handleTransportMethodChange}
-                                                    checked={selectedTransportMethod === 1}
-                                                />
-                                                <label className="form-check-label" htmlFor="free-shipping">
-                                                    Miễn phí vận chuyển
-                                                </label>
-                                            </div>
-                                            <div className="form-check text-start">
-                                                <input
-                                                    type="radio"
-                                                    name="transportMethod"
-                                                    id="flat-rate"
-                                                    className="form-check-input"
-                                                    value={2}
-                                                    onChange={handleTransportMethodChange}
-                                                    checked={selectedTransportMethod === 2}
-                                                />
-                                                <label className="form-check-label" htmlFor="flat-rate">
-                                                    Phí cố định: 15.000 ₫
-                                                </label>
-                                            </div>
-                                            <div className="form-check text-start">
-                                                <input
-                                                    type="radio"
-                                                    name="transportMethod"
-                                                    id="local-pickup"
-                                                    className="form-check-input"
-                                                    value={3}
-                                                    onChange={handleTransportMethodChange}
-                                                    checked={selectedTransportMethod === 3}
-                                                />
-                                                <label className="form-check-label" htmlFor="local-pickup">
-                                                    Nhận hàng tại địa phương: 10.000 ₫
-                                                </label>
+                                        <td className="py-5" colSpan={2}>
+                                            <div className="py-3 border-bottom border-top text-center">
+                                                <p className="mb-0 text-dark">
+                                                    Phí cố định: {(15000).toLocaleString() + ' ₫'}
+                                                </p>
                                             </div>
                                         </td>
                                     </tr>
@@ -358,7 +312,9 @@ const Checkout: React.FC = () => {
                                         </td>
                                         <td className="py-5" colSpan={2}>
                                             <div className="py-3 border-bottom border-top text-center">
-                                                <p className="mb-0 text-dark">{total.toLocaleString() + ' ₫'}</p>
+                                                <p className="mb-0 text-dark">
+                                                    {(total + 15000).toLocaleString() + ' ₫'}
+                                                </p>
                                             </div>
                                         </td>
                                     </tr>

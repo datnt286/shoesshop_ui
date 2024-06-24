@@ -198,7 +198,7 @@ const Supplier: React.FC = () => {
                         </thead>
                         <tbody>
                             {suppliers.map((supplier, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>{supplier.name}</td>
                                     <td>{supplier.phoneNumber}</td>

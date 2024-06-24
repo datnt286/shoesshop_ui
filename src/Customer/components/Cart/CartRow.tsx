@@ -48,14 +48,14 @@ const CartRow: React.FC<CartRowProps> = ({ cartDetail, onUpdateQuantity, onDelet
             </th>
             <td>
                 <Link to={`/san-pham/${cartDetail.modelId}`}>
-                    <p className="mb-0 mt-4">{cartDetail.productName}</p>
+                    <p className="mb-0">{cartDetail.productName}</p>
                 </Link>
             </td>
             <td>
-                <p className="mb-0 mt-4">{cartDetail.price.toLocaleString() + ' ₫'}</p>
+                <p className="mb-0">{cartDetail.price.toLocaleString() + ' ₫'}</p>
             </td>
             <td>
-                <div className="input-group quantity mt-4" style={{ width: '100px' }}>
+                <div className="input-group quantity" style={{ width: '100px' }}>
                     <div className="input-group-btn">
                         <button
                             className="btn btn-sm btn-minus rounded-circle bg-light border"
@@ -83,10 +83,10 @@ const CartRow: React.FC<CartRowProps> = ({ cartDetail, onUpdateQuantity, onDelet
                 </div>
             </td>
             <td>
-                <p className="mb-0 mt-4">{(cartDetail.price * quantity).toLocaleString() + ' ₫'}</p>
+                <p className="mb-0">{(cartDetail.price * quantity).toLocaleString() + ' ₫'}</p>
             </td>
             <td>
-                <button className="btn btn-md rounded-circle bg-light border mt-4" onClick={onDelete}>
+                <button className="btn btn-md rounded-circle bg-light border" onClick={onDelete}>
                     <i className="fa fa-times text-danger"></i>
                 </button>
             </td>

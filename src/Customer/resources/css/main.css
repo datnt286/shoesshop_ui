@@ -88,7 +88,9 @@ a:hover {
     box-shadow: var(--box-shadow-color);
 }
 
-.btn.active {
+.btn.active,
+.btn:not(:disabled):not(.disabled).active,
+.btn:not(:disabled):not(.disabled):active {
     box-shadow: var(--box-shadow-color);
 }
 
@@ -293,16 +295,6 @@ a:hover {
     box-shadow: var(--box-shadow-color);
 }
 
-.pagination a.active {
-    background-color: var(--primary-color);
-    border: 1px solid var(--secondary-color);
-}
-
-.pagination a:hover:not(.active) {
-    color: var(--bs-light);
-    background-color: var(--hover-color);
-}
-
 .vesitable .owl-nav .owl-next,
 .vesitable .owl-nav .owl-prev,
 .testimonial .owl-nav .owl-next,
@@ -348,6 +340,20 @@ a:hover {
     outline: none !important;
 }
 
+.nav-pills .nav-link:not(.active):hover {
+    color: var(--secondary-color);
+}
+
+.pagination a.active {
+    background-color: var(--primary-color);
+    border: 1px solid var(--secondary-color);
+}
+
+.pagination a:hover:not(.active) {
+    color: var(--bs-light);
+    background-color: var(--hover-color);
+}
+
 .page-item.active .page-link {
     background-color: var(--primary-color);
     border-color: var(--secondary-color);
@@ -359,6 +365,54 @@ a:hover {
 
 .page-link:focus {
     box-shadow: none;
+}
+
+/* EmployeePagination */
+.employee.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+
+.employee.pagination a {
+    margin: 0;
+}
+
+.employee .page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.employee.pagination li:not(.active) a:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.employee .page-link:focus {
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+}
+
+.employee .page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.employee .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #dee2e6;
 }
 
 /* Form range */

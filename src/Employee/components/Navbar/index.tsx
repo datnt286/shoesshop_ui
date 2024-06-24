@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Swal from 'sweetalert2';
 
 const Navbar: React.FC = () => {
     const [show, setShow] = useState(false);
@@ -13,6 +14,15 @@ const Navbar: React.FC = () => {
     const handleLogout = () => {
         localStorage.removeItem('employeeToken');
         navigate('/admin/dang-nhap');
+
+        Swal.fire({
+            title: 'Đăng xuất thành công!',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+        });
     };
 
     return (

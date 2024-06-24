@@ -183,7 +183,7 @@ const Size: React.FC = () => {
                         </thead>
                         <tbody>
                             {sizes.map((size, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>{size.name}</td>
                                     <td>

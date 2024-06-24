@@ -11,7 +11,6 @@ import '../resources/dist/css/adminlte.min.css';
 import '../resources/plugins/jquery-ui/jquery-ui.min.js';
 import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
-// import '../resources/dist/js/demo.js';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');

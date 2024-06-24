@@ -183,7 +183,7 @@ const Color: React.FC = () => {
                         </thead>
                         <tbody>
                             {colors.map((color, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>{color.name}</td>
                                     <td>

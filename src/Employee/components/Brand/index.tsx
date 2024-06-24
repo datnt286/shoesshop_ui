@@ -183,7 +183,7 @@ const Brand: React.FC = () => {
                         </thead>
                         <tbody>
                             {brands.map((brand, index) => (
-                                <tr>
+                                <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>{brand.name}</td>
                                     <td>

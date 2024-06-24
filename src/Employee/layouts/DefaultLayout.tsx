@@ -8,7 +8,6 @@ import '../resources/css/style.css';
 import '../resources/plugins/jquery-ui/jquery-ui.min.js';
 import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
-// import '../resources/dist/js/demo.js';
 
 import Navbar from './../components/Navbar/index';
 import Sidebar from './../components/Sidebar/index';

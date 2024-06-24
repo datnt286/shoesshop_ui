@@ -15,7 +15,7 @@ const NotFound: React.FC = () => {
                             tìm kiếm.
                         </p>
                         <Link to="/" className="btn border-secondary rounded-pill py-3 px-5">
-                            Quay lại trang chủ
+                            Quay lại Trang chủ
                         </Link>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange }) => 
         <ReactPaginate
             pageCount={totalPages}
             onPageChange={onPageChange}
-            containerClassName="pagination m-0 float-right"
+            containerClassName="pagination employee m-0 float-right"
             pageClassName="page-item"
             previousClassName="page-item"
             nextClassName="page-item"

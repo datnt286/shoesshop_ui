@@ -1,5 +1,5 @@
 import React from 'react';
-import { getStatusText, InvoiceStatus } from '../../../utils/getStatusText';
+import { getStatusText, InvoiceStatus } from '../../../utils/getStatusInvoice';
 
 interface InvoiceDetail {
     id: number;
