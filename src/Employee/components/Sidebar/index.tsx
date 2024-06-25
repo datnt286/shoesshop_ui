@@ -59,21 +59,6 @@ const Sidebar: React.FC = () => {
                         </Link>
                     </div>
                 </div>
-                <div className="form-inline">
-                    <div className="input-group" data-widget="sidebar-search">
-                        <input
-                            type="search"
-                            className="form-control form-control-sidebar"
-                            placeholder="Tìm kiếm"
-                            aria-label="Search"
-                        />
-                        <div className="input-group-append">
-                            <button className="btn btn-sidebar">
-                                <i className="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 <nav className="mt-2">
                     <ul
                         className="nav nav-pills nav-sidebar flex-column"

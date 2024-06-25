@@ -199,7 +199,7 @@ const Invoice: React.FC = () => {
                 <div className="card-header">
                     <ExportPDFButton data={invoices} />
                     <div className="float-right">
-                        <select className="form-control" value={statusFilter} onChange={handleStatusSelectChange}>
+                        <select className="form-select" value={statusFilter} onChange={handleStatusSelectChange}>
                             <option value={0}>Tất cả</option>
                             <option value={1}>Đã đặt</option>
                             <option value={2}>Đã duyệt</option>

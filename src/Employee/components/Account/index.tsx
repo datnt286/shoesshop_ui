@@ -14,6 +14,23 @@ interface User {
     avatar: File | null;
 }
 
+interface City {
+    Id: string;
+    Name: string;
+    Districts: District[];
+}
+
+interface District {
+    Id: string;
+    Name: string;
+    Wards: Ward[];
+}
+
+interface Ward {
+    Id: string;
+    Name: string;
+}
+
 const Account: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<User>({
@@ -32,6 +49,13 @@ const Account: React.FC = () => {
     const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+
+    const [cities, setCities] = useState<City[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+    const [selectedCity, setSelectedCity] = useState<string>('');
+    const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+    const [selectedWard, setSelectedWard] = useState<string>('');
 
     useEffect(() => {
         const token = localStorage.getItem('employeeToken');
@@ -52,9 +76,54 @@ const Account: React.FC = () => {
                 setAvatarPreview(
                     decodedToken.avatar ? `${config.baseURL}/images/avatar/${decodedToken.avatar}` : DefaultAvatar,
                 );
+
+                fetch('/address_data.json')
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setCities(data);
+
+                        if (decodedToken.address) {
+                            const addressParts = decodedToken.address.split(',').map((part) => part.trim());
+                            const wardName = addressParts[0];
+                            const districtName = addressParts[1];
+                            const cityName = addressParts[2];
+
+                            const selectedCity = data.find((city: City) => city.Name === cityName);
+
+                            if (selectedCity) {
+                                setSelectedCity(selectedCity.Name);
+                                setDistricts(selectedCity.Districts);
+
+                                const selectedDistrict = selectedCity.Districts.find(
+                                    (district: District) => district.Name === districtName,
+                                );
+
+                                if (selectedDistrict) {
+                                    setSelectedDistrict(selectedDistrict.Name);
+                                    setWards(selectedDistrict.Wards);
+
+                                    const selectedWard = selectedDistrict.Wards.find(
+                                        (ward: Ward) => ward.Name === wardName,
+                                    );
+
+                                    if (selectedWard) {
+                                        setSelectedWard(selectedWard.Name);
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch((error) => console.error('Error fetching the JSON:', error));
             } catch (error) {
                 console.error('Token không hợp lệ: ', token);
             }
+        } else {
+            fetch('/address_data.json')
+                .then((response) => response.json())
+                .then((data) => {
+                    setCities(data);
+                })
+                .catch((error) => console.error('Error fetching the JSON:', error));
         }
     }, []);
 
@@ -80,6 +149,65 @@ const Account: React.FC = () => {
                 });
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const updateAddress = (cityName: string, districtName: string, wardName: string) => {
+        const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
+        setUser({
+            ...user,
+            address,
+        });
+    };
+
+    const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const cityId = event.target.value;
+        const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (selectedCity) {
+            setDistricts(selectedCity.Districts);
+            setWards([]);
+            setSelectedCity(selectedCity.Name);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity.Name, '', '');
+        } else {
+            setDistricts([]);
+            setWards([]);
+            setSelectedCity('');
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress('', '', '');
+        }
+    };
+
+    const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const districtId = event.target.value;
+        const selectedDistrict = districts.find((district) => district.Id === districtId);
+
+        if (selectedDistrict) {
+            setWards(selectedDistrict.Wards);
+            setSelectedDistrict(selectedDistrict.Name);
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict.Name, '');
+        } else {
+            setWards([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity, '', '');
+        }
+    };
+
+    const handleWardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const wardId = event.target.value;
+        const selectedWard = wards.find((ward) => ward.Id === wardId);
+
+        if (selectedWard) {
+            setSelectedWard(selectedWard.Name);
+            updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
+        } else {
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict, '');
         }
     };
 
@@ -190,7 +318,6 @@ const Account: React.FC = () => {
     return (
         <>
             <h1 className="text-center my-4">Thông tin tài khoản</h1>
-
             <div className="card card-outline" style={{ minHeight: '490px' }}>
                 <div className="card-header p-2">
                     <ul className="nav nav-pills">
@@ -206,7 +333,6 @@ const Account: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-
                 <div className="card-body align-middle">
                     <div className="tab-content">
                         <div id="account" className="active tab-pane">
@@ -300,6 +426,77 @@ const Account: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
+                                        <div className="row my-4">
+                                            <label htmlFor="city" className="col-md-3 mt-2">
+                                                Tỉnh/Thành phố<sup>*</sup>
+                                            </label>
+                                            <div className="col-md-6">
+                                                <select
+                                                    id="city"
+                                                    className="form-select"
+                                                    value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
+                                                    onChange={handleCityChange}
+                                                >
+                                                    <option value="" disabled>
+                                                        Chọn Tỉnh/Thành phố
+                                                    </option>
+                                                    {cities.map((city) => (
+                                                        <option key={city.Id} value={city.Id}>
+                                                            {city.Name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="row my-4">
+                                            <label htmlFor="district" className="col-md-3 mt-2">
+                                                Quận/Huyện<sup>*</sup>
+                                            </label>
+                                            <div className="col-md-6">
+                                                <select
+                                                    id="district"
+                                                    className="form-select"
+                                                    value={
+                                                        districts.find((district) => district.Name === selectedDistrict)
+                                                            ?.Id || ''
+                                                    }
+                                                    onChange={handleDistrictChange}
+                                                    disabled={districts.length === 0}
+                                                >
+                                                    <option value="" disabled>
+                                                        Chọn Quận/Huyện
+                                                    </option>
+                                                    {districts.map((district) => (
+                                                        <option key={district.Id} value={district.Id}>
+                                                            {district.Name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="row my-4">
+                                            <label htmlFor="ward" className="col-md-3 mt-2">
+                                                Phường/Xã<sup>*</sup>
+                                            </label>
+                                            <div className="col-md-6">
+                                                <select
+                                                    id="ward"
+                                                    className="form-select"
+                                                    value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
+                                                    onChange={handleWardChange}
+                                                    disabled={wards.length === 0}
+                                                >
+                                                    <option value="" disabled>
+                                                        Chọn Phường/Xã
+                                                    </option>
+                                                    {wards.map((ward) => (
+                                                        <option key={ward.Id} value={ward.Id}>
+                                                            {ward.Name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div className="row my-2">
                                             <label htmlFor="address" className="col-md-3 mt-2">
                                                 Địa chỉ:
@@ -310,11 +507,10 @@ const Account: React.FC = () => {
                                                     id="address"
                                                     className="form-control"
                                                     value={user.address}
-                                                    onChange={handleUserInputChange}
+                                                    disabled
                                                 ></textarea>
                                             </div>
                                         </div>
-
                                         <div className="text-center">
                                             <button type="submit" className="btn btn-blue mt-3">
                                                 <i className="fas fa-check-circle mr-1"></i>Cập nhật
@@ -324,7 +520,6 @@ const Account: React.FC = () => {
                                 </div>
                             </form>
                         </div>
-
                         <div id="change-password" className="tab-pane">
                             <form onSubmit={handleChangePassword}>
                                 <div className="row d-flex justify-content-center my-4">

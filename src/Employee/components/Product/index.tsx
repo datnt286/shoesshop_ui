@@ -514,7 +514,7 @@ const Product: React.FC = () => {
                             <select
                                 name="colorId"
                                 id="color-id"
-                                className="form-control"
+                                className="form-select"
                                 value={productData.colorId || 0}
                                 onChange={handleInputChange}
                                 required
@@ -534,7 +534,7 @@ const Product: React.FC = () => {
                             <select
                                 name="sizeId"
                                 id="size-id"
-                                className="form-control"
+                                className="form-select"
                                 value={productData.sizeId || 0}
                                 onChange={handleInputChange}
                                 required

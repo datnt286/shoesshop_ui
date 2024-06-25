@@ -14,6 +14,23 @@ interface User {
     avatar: File | null;
 }
 
+interface City {
+    Id: string;
+    Name: string;
+    Districts: District[];
+}
+
+interface District {
+    Id: string;
+    Name: string;
+    Wards: Ward[];
+}
+
+interface Ward {
+    Id: string;
+    Name: string;
+}
+
 const Account: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<User>({
@@ -25,6 +42,13 @@ const Account: React.FC = () => {
         avatar: null,
     });
     const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
+
+    const [cities, setCities] = useState<City[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+    const [selectedCity, setSelectedCity] = useState<string>('');
+    const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+    const [selectedWard, setSelectedWard] = useState<string>('');
 
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
@@ -45,9 +69,54 @@ const Account: React.FC = () => {
                 setAvatarPreview(
                     decodedToken.avatar ? `${config.baseURL}/images/avatar/${decodedToken.avatar}` : DefaultAvatar,
                 );
+
+                fetch('/address_data.json')
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setCities(data);
+
+                        if (decodedToken.address) {
+                            const addressParts = decodedToken.address.split(',').map((part) => part.trim());
+                            const wardName = addressParts[0];
+                            const districtName = addressParts[1];
+                            const cityName = addressParts[2];
+
+                            const selectedCity = data.find((city: City) => city.Name === cityName);
+
+                            if (selectedCity) {
+                                setSelectedCity(selectedCity.Name);
+                                setDistricts(selectedCity.Districts);
+
+                                const selectedDistrict = selectedCity.Districts.find(
+                                    (district: District) => district.Name === districtName,
+                                );
+
+                                if (selectedDistrict) {
+                                    setSelectedDistrict(selectedDistrict.Name);
+                                    setWards(selectedDistrict.Wards);
+
+                                    const selectedWard = selectedDistrict.Wards.find(
+                                        (ward: Ward) => ward.Name === wardName,
+                                    );
+
+                                    if (selectedWard) {
+                                        setSelectedWard(selectedWard.Name);
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch((error) => console.error('Error fetching the JSON:', error));
             } catch (error) {
                 console.error('Token không hợp lệ: ', token);
             }
+        } else {
+            fetch('/address_data.json')
+                .then((response) => response.json())
+                .then((data) => {
+                    setCities(data);
+                })
+                .catch((error) => console.error('Error fetching the JSON:', error));
         }
     }, []);
 
@@ -73,6 +142,65 @@ const Account: React.FC = () => {
                 });
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const updateAddress = (cityName: string, districtName: string, wardName: string) => {
+        const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
+        setUser({
+            ...user,
+            address,
+        });
+    };
+
+    const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const cityId = event.target.value;
+        const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (selectedCity) {
+            setDistricts(selectedCity.Districts);
+            setWards([]);
+            setSelectedCity(selectedCity.Name);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity.Name, '', '');
+        } else {
+            setDistricts([]);
+            setWards([]);
+            setSelectedCity('');
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress('', '', '');
+        }
+    };
+
+    const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const districtId = event.target.value;
+        const selectedDistrict = districts.find((district) => district.Id === districtId);
+
+        if (selectedDistrict) {
+            setWards(selectedDistrict.Wards);
+            setSelectedDistrict(selectedDistrict.Name);
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict.Name, '');
+        } else {
+            setWards([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity, '', '');
+        }
+    };
+
+    const handleWardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const wardId = event.target.value;
+        const selectedWard = wards.find((ward) => ward.Id === wardId);
+
+        if (selectedWard) {
+            setSelectedWard(selectedWard.Name);
+            updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
+        } else {
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict, '');
         }
     };
 
@@ -123,7 +251,7 @@ const Account: React.FC = () => {
             <div className="container py-5">
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="row">
-                        <div className="col-md-12 col-lg-6 col-xl-6 offset-lg-3 offset-xl-3">
+                        <div className="col-md-12 col-lg-8 col-xl-8 offset-lg-2 offset-xl-2">
                             <div className="border border-1 rounded p-5">
                                 <div className="row">
                                     <div className="col-md-12 col-lg-4 col-xl-4">
@@ -204,6 +332,71 @@ const Account: React.FC = () => {
                                             />
                                         </div>
                                         <div className="form-item">
+                                            <label htmlFor="city" className="form-label my-3">
+                                                Tỉnh/Thành phố<sup>*</sup>
+                                            </label>
+                                            <select
+                                                id="city"
+                                                className="form-select"
+                                                value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
+                                                onChange={handleCityChange}
+                                            >
+                                                <option value="" disabled>
+                                                    Chọn Tỉnh/Thành phố
+                                                </option>
+                                                {cities.map((city) => (
+                                                    <option key={city.Id} value={city.Id}>
+                                                        {city.Name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-item">
+                                            <label htmlFor="district" className="form-label my-3">
+                                                Quận/Huyện<sup>*</sup>
+                                            </label>
+                                            <select
+                                                id="district"
+                                                className="form-select"
+                                                value={
+                                                    districts.find((district) => district.Name === selectedDistrict)
+                                                        ?.Id || ''
+                                                }
+                                                onChange={handleDistrictChange}
+                                                disabled={districts.length === 0}
+                                            >
+                                                <option value="" disabled>
+                                                    Chọn Quận/Huyện
+                                                </option>
+                                                {districts.map((district) => (
+                                                    <option key={district.Id} value={district.Id}>
+                                                        {district.Name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-item">
+                                            <label htmlFor="ward" className="form-label my-3">
+                                                Phường/Xã<sup>*</sup>
+                                            </label>
+                                            <select
+                                                id="ward"
+                                                className="form-select"
+                                                value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
+                                                onChange={handleWardChange}
+                                                disabled={wards.length === 0}
+                                            >
+                                                <option value="" disabled>
+                                                    Chọn Phường/Xã
+                                                </option>
+                                                {wards.map((ward) => (
+                                                    <option key={ward.Id} value={ward.Id}>
+                                                        {ward.Name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-item">
                                             <label htmlFor="address" className="form-label my-3">
                                                 Địa chỉ<sup>*</sup>
                                             </label>
@@ -212,13 +405,12 @@ const Account: React.FC = () => {
                                                 id="address"
                                                 className="form-control"
                                                 value={user.address}
-                                                onChange={handleInputChange}
+                                                disabled
                                             ></textarea>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="d-flex justify-content-center mt-4">
+                                <div className="d-flex justify-content-center mt-5">
                                     <button
                                         type="submit"
                                         className="btn border border-secondary px-4 py-3 rounded-pill text-primary text-uppercase w-75"

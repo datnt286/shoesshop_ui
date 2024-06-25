@@ -520,7 +520,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                             <select
                                 name="productTypeId"
                                 id="product-type-id"
-                                className="form-control"
+                                className="form-select"
                                 value={modelData.productTypeId}
                                 onChange={handleInputChange}
                                 required
@@ -540,7 +540,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                             <select
                                 name="brandId"
                                 id="brand-id"
-                                className="form-control"
+                                className="form-select"
                                 value={modelData.brandId}
                                 onChange={handleInputChange}
                                 required
@@ -560,7 +560,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                             <select
                                 name="supplierId"
                                 id="supplier-id"
-                                className="form-control"
+                                className="form-select"
                                 value={modelData.supplierId}
                                 onChange={handleInputChange}
                                 required
