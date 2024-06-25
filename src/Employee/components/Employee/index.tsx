@@ -24,6 +24,23 @@ interface Employee {
     avatar: File | null;
 }
 
+interface City {
+    Id: string;
+    Name: string;
+    Districts: District[];
+}
+
+interface District {
+    Id: string;
+    Name: string;
+    Wards: Ward[];
+}
+
+interface Ward {
+    Id: string;
+    Name: string;
+}
+
 const Employee: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -32,9 +49,9 @@ const Employee: React.FC = () => {
     const [modalTitle, setModalTitle] = useState('');
     const [employeeData, setEmployeeData] = useState<Employee>({
         id: null,
-        name: '',
         userName: '',
         password: '',
+        name: '',
         phoneNumber: '',
         email: '',
         address: '',
@@ -51,6 +68,13 @@ const Employee: React.FC = () => {
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [keyword, setKeyword] = useState('');
+
+    const [cities, setCities] = useState<City[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+    const [selectedCity, setSelectedCity] = useState<string>('');
+    const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+    const [selectedWard, setSelectedWard] = useState<string>('');
 
     const avatarSrc = selectedEmployee?.avatar
         ? `${config.baseURL}/images/avatar/${selectedEmployee.avatar}`
@@ -93,6 +117,15 @@ const Employee: React.FC = () => {
         fetchEmployees();
     }, [deletedSuccessfully]);
 
+    useEffect(() => {
+        fetch('/address_data.json')
+            .then((response) => response.json())
+            .then((data) => {
+                setCities(data);
+            })
+            .catch((error) => console.error('Lỗi khi tải dữ liệu địa chỉ: ', error));
+    }, []);
+
     const handlePageChange = ({ selected }: { selected: number }) => {
         const currentPage = selected + 1;
         fetchEmployees(currentPage);
@@ -102,6 +135,7 @@ const Employee: React.FC = () => {
         setModalTitle('Thêm nhân viên');
         setShowModal(true);
         setIsEditMode(false);
+        resetFormData();
     };
 
     const handleEditClick = (employee: Employee) => {
@@ -126,9 +160,42 @@ const Employee: React.FC = () => {
             avatar: null,
         });
 
-        const avatarUrl = employee.avatar ? `${config.baseURL}/images/avatar/${employee.avatar}` : DefaultAvatar;
+        const avatarSrc = employee.avatar ? `${config.baseURL}/images/avatar/${employee.avatar}` : DefaultAvatar;
+        setAvatarPreview(avatarSrc);
 
-        setAvatarPreview(avatarUrl);
+        const addressParts = employee.address.split(',').map((part) => part.trim());
+        const wardName = addressParts[0];
+        const districtName = addressParts[1];
+        const cityName = addressParts[2];
+
+        const selectedCity = cities.find((city) => city.Name === cityName);
+        if (selectedCity) {
+            setDistricts(selectedCity.Districts);
+            setSelectedCity(selectedCity.Name);
+
+            const selectedDistrict = selectedCity.Districts.find((district) => district.Name === districtName);
+            if (selectedDistrict) {
+                setWards(selectedDistrict.Wards);
+                setSelectedDistrict(selectedDistrict.Name);
+
+                const selectedWard = selectedDistrict.Wards.find((ward) => ward.Name === wardName);
+                if (selectedWard) {
+                    setSelectedWard(selectedWard.Name);
+                } else {
+                    setSelectedWard('');
+                }
+            } else {
+                setSelectedDistrict('');
+                setWards([]);
+                setSelectedWard('');
+            }
+        } else {
+            setSelectedCity('');
+            setDistricts([]);
+            setWards([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
+        }
     };
 
     const handleClose = () => {
@@ -171,6 +238,66 @@ const Employee: React.FC = () => {
                 });
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const updateAddress = (cityName: string, districtName: string, wardName: string) => {
+        const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
+
+        setEmployeeData({
+            ...employeeData,
+            address,
+        });
+    };
+
+    const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const cityId = event.target.value;
+        const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (selectedCity) {
+            setDistricts(selectedCity.Districts);
+            setWards([]);
+            setSelectedCity(selectedCity.Name);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity.Name, '', '');
+        } else {
+            setDistricts([]);
+            setWards([]);
+            setSelectedCity('');
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress('', '', '');
+        }
+    };
+
+    const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const districtId = event.target.value;
+        const selectedDistrict = districts.find((district) => district.Id === districtId);
+
+        if (selectedDistrict) {
+            setWards(selectedDistrict.Wards);
+            setSelectedDistrict(selectedDistrict.Name);
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict.Name, '');
+        } else {
+            setWards([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity, '', '');
+        }
+    };
+
+    const handleWardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const wardId = event.target.value;
+        const selectedWard = wards.find((ward) => ward.Id === wardId);
+
+        if (selectedWard) {
+            setSelectedWard(selectedWard.Name);
+            updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
+        } else {
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict, '');
         }
     };
 
@@ -241,9 +368,9 @@ const Employee: React.FC = () => {
     const resetFormData = () => {
         setEmployeeData({
             id: '',
-            name: '',
             userName: '',
             password: '',
+            name: '',
             phoneNumber: '',
             email: '',
             address: '',
@@ -254,6 +381,11 @@ const Employee: React.FC = () => {
             avatar: null,
         });
         setAvatarPreview(DefaultAvatar);
+        setSelectedCity('');
+        setSelectedDistrict('');
+        setSelectedWard('');
+        setDistricts([]);
+        setWards([]);
     };
 
     const handleDetailClick = (employee: Employee) => {
@@ -456,6 +588,62 @@ const Employee: React.FC = () => {
                             />
                         </div>
                         <div className="form-group">
+                            <label htmlFor="city">Tỉnh/Thành phố</label>
+                            <select
+                                id="city"
+                                className="form-select"
+                                value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
+                                onChange={handleCityChange}
+                            >
+                                <option value="" disabled>
+                                    Chọn Tỉnh/Thành phố
+                                </option>
+                                {cities.map((city) => (
+                                    <option key={city.Id} value={city.Id}>
+                                        {city.Name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="district">Quận/Huyện</label>
+                            <select
+                                id="district"
+                                className="form-select"
+                                value={districts.find((district) => district.Name === selectedDistrict)?.Id || ''}
+                                onChange={handleDistrictChange}
+                                disabled={districts.length === 0}
+                            >
+                                <option value="" disabled>
+                                    Chọn Quận/Huyện
+                                </option>
+                                {districts.map((district) => (
+                                    <option key={district.Id} value={district.Id}>
+                                        {district.Name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="ward">Phường/Xã</label>
+                            <select
+                                id="ward"
+                                className="form-select"
+                                value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
+                                onChange={handleWardChange}
+                                disabled={wards.length === 0}
+                            >
+                                <option value="" disabled>
+                                    Chọn Phường/Xã
+                                </option>
+                                {wards.map((ward) => (
+                                    <option key={ward.Id} value={ward.Id}>
+                                        {ward.Name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="address">Địa chỉ: </label>
                             <input
                                 type="text"
@@ -463,7 +651,7 @@ const Employee: React.FC = () => {
                                 id="address"
                                 className="form-control"
                                 value={employeeData.address}
-                                onChange={handleInputChange}
+                                disabled
                             />
                         </div>
                         <div className="form-group">

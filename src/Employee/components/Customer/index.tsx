@@ -21,6 +21,23 @@ interface Customer {
     avatar: File | null;
 }
 
+interface City {
+    Id: string;
+    Name: string;
+    Districts: District[];
+}
+
+interface District {
+    Id: string;
+    Name: string;
+    Wards: Ward[];
+}
+
+interface Ward {
+    Id: string;
+    Name: string;
+}
+
 const Customer: React.FC = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -29,9 +46,9 @@ const Customer: React.FC = () => {
     const [modalTitle, setModalTitle] = useState('');
     const [customerData, setCustomerData] = useState<Customer>({
         id: null,
-        name: '',
         userName: '',
         password: '',
+        name: '',
         phoneNumber: '',
         email: '',
         address: '',
@@ -42,6 +59,13 @@ const Customer: React.FC = () => {
     const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [keyword, setKeyword] = useState('');
+
+    const [cities, setCities] = useState<City[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+    const [selectedCity, setSelectedCity] = useState<string>('');
+    const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+    const [selectedWard, setSelectedWard] = useState<string>('');
 
     const avatarSrc = selectedCustomer?.avatar
         ? `${config.baseURL}/images/avatar/${selectedCustomer.avatar}`
@@ -84,6 +108,15 @@ const Customer: React.FC = () => {
         fetchCustomers();
     }, []);
 
+    useEffect(() => {
+        fetch('/address_data.json')
+            .then((response) => response.json())
+            .then((data) => {
+                setCities(data);
+            })
+            .catch((error) => console.error('Lỗi khi tải dữ liệu địa chỉ: ', error));
+    }, []);
+
     const handlePageChange = ({ selected }: { selected: number }) => {
         const currentPage = selected + 1;
         fetchCustomers(currentPage);
@@ -105,7 +138,43 @@ const Customer: React.FC = () => {
             description: customer.description,
             status: customer.status,
         });
+
+        const avatarSrc = customer.avatar ? `${config.baseURL}/images/avatar/${customer.avatar}` : DefaultAvatar;
         setAvatarPreview(avatarSrc);
+
+        const addressParts = customer.address.split(',').map((part) => part.trim());
+        const wardName = addressParts[0];
+        const districtName = addressParts[1];
+        const cityName = addressParts[2];
+
+        const selectedCity = cities.find((city) => city.Name === cityName);
+        if (selectedCity) {
+            setDistricts(selectedCity.Districts);
+            setSelectedCity(selectedCity.Name);
+
+            const selectedDistrict = selectedCity.Districts.find((district) => district.Name === districtName);
+            if (selectedDistrict) {
+                setWards(selectedDistrict.Wards);
+                setSelectedDistrict(selectedDistrict.Name);
+
+                const selectedWard = selectedDistrict.Wards.find((ward) => ward.Name === wardName);
+                if (selectedWard) {
+                    setSelectedWard(selectedWard.Name);
+                } else {
+                    setSelectedWard('');
+                }
+            } else {
+                setSelectedDistrict('');
+                setWards([]);
+                setSelectedWard('');
+            }
+        } else {
+            setSelectedCity('');
+            setDistricts([]);
+            setWards([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
+        }
     };
 
     const handleClose = () => {
@@ -136,6 +205,66 @@ const Customer: React.FC = () => {
                 });
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const updateAddress = (cityName: string, districtName: string, wardName: string) => {
+        const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
+
+        setCustomerData({
+            ...customerData,
+            address,
+        });
+    };
+
+    const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const cityId = event.target.value;
+        const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (selectedCity) {
+            setDistricts(selectedCity.Districts);
+            setWards([]);
+            setSelectedCity(selectedCity.Name);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity.Name, '', '');
+        } else {
+            setDistricts([]);
+            setWards([]);
+            setSelectedCity('');
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress('', '', '');
+        }
+    };
+
+    const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const districtId = event.target.value;
+        const selectedDistrict = districts.find((district) => district.Id === districtId);
+
+        if (selectedDistrict) {
+            setWards(selectedDistrict.Wards);
+            setSelectedDistrict(selectedDistrict.Name);
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict.Name, '');
+        } else {
+            setWards([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
+            updateAddress(selectedCity, '', '');
+        }
+    };
+
+    const handleWardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const wardId = event.target.value;
+        const selectedWard = wards.find((ward) => ward.Id === wardId);
+
+        if (selectedWard) {
+            setSelectedWard(selectedWard.Name);
+            updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
+        } else {
+            setSelectedWard('');
+            updateAddress(selectedCity, selectedDistrict, '');
         }
     };
 
@@ -192,9 +321,9 @@ const Customer: React.FC = () => {
     const resetFormData = () => {
         setCustomerData({
             id: null,
-            name: '',
             userName: '',
             password: '',
+            name: '',
             phoneNumber: '',
             email: '',
             address: '',
@@ -395,6 +524,62 @@ const Customer: React.FC = () => {
                             />
                         </div>
                         <div className="form-group">
+                            <label htmlFor="city">Tỉnh/Thành phố</label>
+                            <select
+                                id="city"
+                                className="form-select"
+                                value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
+                                onChange={handleCityChange}
+                            >
+                                <option value="" disabled>
+                                    Chọn Tỉnh/Thành phố
+                                </option>
+                                {cities.map((city) => (
+                                    <option key={city.Id} value={city.Id}>
+                                        {city.Name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="district">Quận/Huyện</label>
+                            <select
+                                id="district"
+                                className="form-select"
+                                value={districts.find((district) => district.Name === selectedDistrict)?.Id || ''}
+                                onChange={handleDistrictChange}
+                                disabled={districts.length === 0}
+                            >
+                                <option value="" disabled>
+                                    Chọn Quận/Huyện
+                                </option>
+                                {districts.map((district) => (
+                                    <option key={district.Id} value={district.Id}>
+                                        {district.Name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="ward">Phường/Xã</label>
+                            <select
+                                id="ward"
+                                className="form-select"
+                                value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
+                                onChange={handleWardChange}
+                                disabled={wards.length === 0}
+                            >
+                                <option value="" disabled>
+                                    Chọn Phường/Xã
+                                </option>
+                                {wards.map((ward) => (
+                                    <option key={ward.Id} value={ward.Id}>
+                                        {ward.Name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="address">Địa chỉ: </label>
                             <input
                                 type="text"
@@ -402,7 +587,7 @@ const Customer: React.FC = () => {
                                 id="address"
                                 className="form-control"
                                 value={customerData.address}
-                                onChange={handleInputChange}
+                                disabled
                             />
                         </div>
                         <div className="form-group">

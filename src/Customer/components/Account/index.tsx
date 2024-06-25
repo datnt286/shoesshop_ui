@@ -82,7 +82,6 @@ const Account: React.FC = () => {
                             const cityName = addressParts[2];
 
                             const selectedCity = data.find((city: City) => city.Name === cityName);
-
                             if (selectedCity) {
                                 setSelectedCity(selectedCity.Name);
                                 setDistricts(selectedCity.Districts);
@@ -106,7 +105,7 @@ const Account: React.FC = () => {
                             }
                         }
                     })
-                    .catch((error) => console.error('Error fetching the JSON:', error));
+                    .catch((error) => console.error('Lỗi khi tải dữ liệu địa chỉ: ', error));
             } catch (error) {
                 console.error('Token không hợp lệ: ', token);
             }
@@ -116,7 +115,7 @@ const Account: React.FC = () => {
                 .then((data) => {
                     setCities(data);
                 })
-                .catch((error) => console.error('Error fetching the JSON:', error));
+                .catch((error) => console.error('Lỗi khi tải dữ liệu địa chỉ: ', error));
         }
     }, []);
 
@@ -147,6 +146,7 @@ const Account: React.FC = () => {
 
     const updateAddress = (cityName: string, districtName: string, wardName: string) => {
         const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
+
         setUser({
             ...user,
             address,
