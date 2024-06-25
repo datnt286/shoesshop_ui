@@ -15,6 +15,7 @@ import ShoesPage from './../pages/ShoesPage';
 import AccessoriesPage from './../pages/AccessoriesPage';
 import ProductPage from './../pages/ProductPage';
 import InvoicePage from './../pages/InvoicePage';
+import CommentPage from './../pages/CommentPage';
 import NotFoundPage from './../pages/NotFoundPage';
 
 const AppRoutes: React.FC = () => {
@@ -37,6 +38,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/phu-kien" element={<AccessoriesPage />} />
                 <Route path="/san-pham/:modelId" element={<ProductPage />} />
                 <Route path="/hoa-don" element={<InvoicePage />} />
+                <Route path="/binh-luan" element={<CommentPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

@@ -175,7 +175,7 @@ const Supplier: React.FC = () => {
                 </div>
                 <div className="col-3 text-right">
                     <button className="btn btn-success mt-2" onClick={handleAddClick}>
-                        <i className="fas fa-plus-circle mr-1"></i> Thêm nhà cung cấp
+                        <i className="fas fa-plus-circle"></i> Thêm nhà cung cấp
                     </button>
                 </div>
             </div>
@@ -287,12 +287,10 @@ const Supplier: React.FC = () => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="gray" onClick={handleClose}>
-                            <i className="fas fa-times-circle mr-1"></i>
-                            Huỷ
+                            <i className="fas fa-times-circle"></i> Huỷ
                         </Button>
                         <Button type="submit" variant="blue">
-                            <i className="fas fa-check-circle mr-1"></i>
-                            Lưu
+                            <i className="fas fa-check-circle"></i> Lưu
                         </Button>
                     </Modal.Footer>
                 </form>

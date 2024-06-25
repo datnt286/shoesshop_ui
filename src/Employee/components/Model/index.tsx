@@ -363,7 +363,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 </div>
                 <div className="col-3 text-right">
                     <button className="btn btn-success mt-2" onClick={handleAddClick}>
-                        <i className="fas fa-plus-circle mr-1"></i> Thêm mẫu sản phẩm
+                        <i className="fas fa-plus-circle"></i> Thêm mẫu sản phẩm
                     </button>
                 </div>
             </div>
@@ -611,12 +611,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="gray" onClick={handleClose}>
-                            <i className="fas fa-times-circle mr-1"></i>
-                            Huỷ
+                            <i className="fas fa-times-circle"></i> Huỷ
                         </Button>
                         <Button type="submit" variant="blue">
-                            <i className="fas fa-check-circle mr-1"></i>
-                            Lưu
+                            <i className="fas fa-check-circle"></i> Lưu
                         </Button>
                     </Modal.Footer>
                 </form>

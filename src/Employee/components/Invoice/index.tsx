@@ -410,9 +410,8 @@ const Invoice: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="gray" onClick={handleCloseDetailModal}>
-                        <i className="fas fa-times-circle mr-1"></i>
-                        Đóng
+                    <Button variant="light" onClick={handleCloseDetailModal}>
+                        <i className="fas fa-times-circle"></i> Đóng
                     </Button>
                 </Modal.Footer>
             </Modal>

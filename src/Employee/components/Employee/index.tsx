@@ -412,7 +412,7 @@ const Employee: React.FC = () => {
                 </div>
                 <div className="col-3 text-right">
                     <button className="btn btn-success mt-2" onClick={handleAddClick}>
-                        <i className="fas fa-plus-circle mr-1"></i> Thêm nhân viên
+                        <i className="fas fa-plus-circle"></i> Thêm nhân viên
                     </button>
                 </div>
             </div>
@@ -692,12 +692,10 @@ const Employee: React.FC = () => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="gray" onClick={handleClose}>
-                            <i className="fas fa-times-circle mr-1"></i>
-                            Huỷ
+                            <i className="fas fa-times-circle"></i> Huỷ
                         </Button>
                         <Button type="submit" variant="blue">
-                            <i className="fas fa-check-circle mr-1"></i>
-                            Lưu
+                            <i className="fas fa-check-circle"></i> Lưu
                         </Button>
                     </Modal.Footer>
                 </form>
@@ -764,9 +762,8 @@ const Employee: React.FC = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="gray" onClick={handleCloseDetailModal}>
-                        <i className="fas fa-times-circle mr-1"></i>
-                        Đóng
+                    <Button variant="light" onClick={handleCloseDetailModal}>
+                        <i className="fas fa-times-circle"></i> Đóng
                     </Button>
                 </Modal.Footer>
             </Modal>
