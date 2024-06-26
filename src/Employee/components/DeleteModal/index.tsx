@@ -59,12 +59,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, endpoint, handleClose, 
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="gray" onClick={handleClose}>
-                    <i className="fas fa-times-circle mr-1"></i>
-                    Huỷ
+                    <i className="fas fa-times-circle"></i> Huỷ
                 </Button>
                 <Button variant="danger" onClick={handleConfirm}>
-                    <i className="fas fa-trash-alt mr-1"></i>
-                    Xác nhận
+                    <i className="fas fa-trash-alt"></i> Xác nhận
                 </Button>
             </Modal.Footer>
         </Modal>

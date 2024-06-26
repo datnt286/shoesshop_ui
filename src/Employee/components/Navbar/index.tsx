@@ -56,12 +56,10 @@ const Navbar: React.FC = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="gray" onClick={handleClose}>
-                        <i className="fas fa-times-circle mr-1"></i>
-                        Huỷ
+                        <i className="fas fa-times-circle"></i> Huỷ
                     </Button>
                     <Button variant="danger" onClick={handleLogout}>
-                        <i className="fas fa-sign-out-alt mr-1"></i>
-                        Xác nhận
+                        <i className="fas fa-sign-out-alt"></i> Xác nhận
                     </Button>
                 </Modal.Footer>
             </Modal>

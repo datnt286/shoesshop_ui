@@ -47,14 +47,14 @@ const Sidebar: React.FC = () => {
                 <div className="user-panel mt-3 pb-3 d-flex">
                     <div className="info">
                         <Link to="/admin/tai-khoan" className="d-block">
-                            <div className="image mr-1">
+                            <div className="image">
                                 <img
                                     src={avatarSrc}
                                     className="img-circle elevation-2"
                                     style={{ width: '34px', height: '34px', objectFit: 'cover' }}
                                     alt="Ảnh đại diện"
                                 />
-                            </div>
+                            </div>{' '}
                             {userData.name || userData.userName}
                         </Link>
                     </div>
@@ -135,12 +135,6 @@ const Sidebar: React.FC = () => {
                             <NavLink to="/admin/hoa-don" className="nav-link">
                                 <i className="nav-icon fas fa-scroll"></i>
                                 <p>Quản lý hoá đơn</p>
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/admin/hoa-don-nhap" className="nav-link">
-                                <i className="nav-icon fas fa-clipboard"></i>
-                                <p>Quản lý hoá đơn nhập</p>
                             </NavLink>
                         </li>
                         <li className="nav-item">

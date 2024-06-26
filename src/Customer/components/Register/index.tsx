@@ -111,13 +111,11 @@ const Register: React.FC = () => {
                                         onChange={handleInputChange}
                                     />
                                 </div>
-
                                 {error && (
                                     <div className="alert alert-danger mt-3" role="alert">
                                         {error}
                                     </div>
                                 )}
-
                                 <div className="d-flex justify-content-center mt-3">
                                     <div className="form-check text-start">
                                         <input
@@ -131,7 +129,6 @@ const Register: React.FC = () => {
                                         </label>
                                     </div>
                                 </div>
-
                                 <div className="d-flex justify-content-center mt-4">
                                     <button
                                         type="submit"
@@ -140,7 +137,6 @@ const Register: React.FC = () => {
                                         Đăng ký
                                     </button>
                                 </div>
-
                                 <div className="d-flex justify-content-center mt-4">
                                     <span className="mx-2">Đã có tài khoản?</span>
                                     <Link to="/dang-nhap">Đăng nhập</Link>

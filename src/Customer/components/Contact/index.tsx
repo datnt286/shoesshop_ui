@@ -56,7 +56,7 @@ const Contact: React.FC = () => {
                                 <i className="fas fa-envelope fa-2x text-primary me-4"></i>
                                 <div>
                                     <h4>Email</h4>
-                                    <p className="mb-2">Example@gmail.com</p>
+                                    <p className="mb-2">doube.d.shop@gmail.com</p>
                                 </div>
                             </div>
                             <div className="d-flex p-4 rounded bg-white">

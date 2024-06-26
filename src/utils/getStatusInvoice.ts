@@ -47,7 +47,7 @@ export const getActionBtnClassName = (status: InvoiceStatus): string => {
         case InvoiceStatus.Approved:
             return 'btn-info';
         case InvoiceStatus.Shipped:
-            return 'btn-secondary';
+            return 'btn-warning';
         case InvoiceStatus.Received:
             return 'btn-success';
         case InvoiceStatus.Cancelled:

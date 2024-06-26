@@ -71,13 +71,11 @@ const Login: React.FC = () => {
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
-
                                 {error && (
                                     <div className="alert alert-danger mt-3" role="alert">
                                         {error}
                                     </div>
                                 )}
-
                                 <div className="d-flex justify-content-between mt-3">
                                     <Link to="/quen-mat-khau">
                                         <span>Quên mật khẩu?</span>
@@ -94,7 +92,6 @@ const Login: React.FC = () => {
                                         </label>
                                     </div>
                                 </div>
-
                                 <div className="d-flex justify-content-center mt-4">
                                     <button
                                         type="submit"
@@ -103,7 +100,6 @@ const Login: React.FC = () => {
                                         Đăng nhập
                                     </button>
                                 </div>
-
                                 <div className="d-flex justify-content-between mt-4">
                                     <button
                                         className="btn px-5 py-2 mx-2 rounded-pill text-light w-50"
@@ -118,7 +114,6 @@ const Login: React.FC = () => {
                                         <i className="fab fa-facebook-square"></i> Facebook
                                     </button>
                                 </div>
-
                                 <div className="d-flex justify-content-center mt-4">
                                     <span className="mx-2">Chưa có tài khoản?</span>
                                     <Link to="/dang-ky">Đăng ký</Link>

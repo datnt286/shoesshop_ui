@@ -90,7 +90,7 @@ const Header: React.FC = () => {
                             <small className="me-3">
                                 <i className="fas fa-envelope me-2 text-secondary"></i>
                                 <Link to="/lien-he" className="text-white">
-                                    Example@gmail.com
+                                    doube.d.shop@gmail.com
                                 </Link>
                             </small>
                         </div>

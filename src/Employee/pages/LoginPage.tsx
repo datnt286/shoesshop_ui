@@ -102,16 +102,14 @@ const LoginPage: React.FC = () => {
                                             <input
                                                 type="checkbox"
                                                 id="show-password"
-                                                className="mr-1"
                                                 onChange={handleShowPasswordChange}
                                             />
-                                            <label htmlFor="show-password">Hiện mật khẩu</label>
+                                            <label htmlFor="show-password"> Hiện mật khẩu</label>
                                         </div>
                                     </div>
                                     <div className="col-6 text-right">
                                         <button type="submit" className="btn btn-blue">
-                                            <i className="fas fa-sign-in-alt mr-1"></i>
-                                            Đăng nhập
+                                            <i className="fas fa-sign-in-alt"></i> Đăng nhập
                                         </button>
                                     </div>
                                 </div>

@@ -12,6 +12,7 @@ interface User {
     phoneNumber?: string;
     address?: string;
     avatar: File | null;
+    role?: string;
 }
 
 interface City {
@@ -40,6 +41,7 @@ const Account: React.FC = () => {
         phoneNumber: '',
         address: '',
         avatar: null,
+        role: '',
     });
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
@@ -72,6 +74,7 @@ const Account: React.FC = () => {
                     phoneNumber: decodedToken.phoneNumber || '',
                     address: decodedToken.address || '',
                     avatar: null,
+                    role: decodedToken.role || '',
                 });
                 setAvatarPreview(
                     decodedToken.avatar ? `${config.baseURL}/images/avatar/${decodedToken.avatar}` : DefaultAvatar,
@@ -361,8 +364,8 @@ const Account: React.FC = () => {
                                             >
                                                 Chọn ảnh
                                             </label>
-                                            <h3 className="profile-username">Nguyễn Thành Đạt</h3>
-                                            <p className="text-muted">Admin</p>
+                                            <h3 className="profile-username">{user.name || user.userName}</h3>
+                                            <p className="text-muted">{user.role}</p>
                                         </div>
                                     </div>
                                     <div className="col-md-8">
@@ -513,7 +516,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="text-center">
                                             <button type="submit" className="btn btn-blue mt-3">
-                                                <i className="fas fa-check-circle mr-1"></i>Cập nhật
+                                                <i className="fas fa-check-circle"></i> Cập nhật
                                             </button>
                                         </div>
                                     </div>
@@ -590,7 +593,7 @@ const Account: React.FC = () => {
                                 </div>
                                 <div className="text-center">
                                     <button type="submit" className="btn btn-blue mt-3">
-                                        <i className="fas fa-check-circle mr-1"></i>Lưu
+                                        <i className="fas fa-check-circle"></i> Lưu
                                     </button>
                                 </div>
                             </form>

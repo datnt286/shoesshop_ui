@@ -107,7 +107,7 @@ const Comment: React.FC = () => {
                                             >
                                                 <i className="fas fa-info-circle"></i>
                                             </button>
-                                            <button className="btn btn-secondary btn-sm mr-2">
+                                            <button className="btn btn-warning btn-sm mr-2">
                                                 <i className="fas fa-lock"></i>
                                             </button>
                                             <button className="btn btn-danger btn-sm">
@@ -155,7 +155,7 @@ const Comment: React.FC = () => {
                                         <td>{comment.status}</td>
                                         <td>
                                             <div className="project-actions text-right">
-                                                <button className="btn btn-secondary btn-sm mr-2">
+                                                <button className="btn btn-warning btn-sm mr-2">
                                                     <i className="fas fa-lock"></i>
                                                 </button>
                                                 <button className="btn btn-danger btn-sm">
