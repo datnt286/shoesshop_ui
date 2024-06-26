@@ -326,6 +326,7 @@ const Checkout: React.FC = () => {
                                     className="form-control"
                                     value={user.name}
                                     onChange={handleInputChange}
+                                    required
                                 />
                             </div>
                             <div className="form-item">
@@ -339,6 +340,7 @@ const Checkout: React.FC = () => {
                                     className="form-control"
                                     value={user.phoneNumber}
                                     onChange={handleInputChange}
+                                    required
                                 />
                             </div>
                             <div className="form-item">
@@ -352,6 +354,7 @@ const Checkout: React.FC = () => {
                                     className="form-control"
                                     value={user.email}
                                     onChange={handleInputChange}
+                                    required
                                 />
                             </div>
                             <div className="form-item">
@@ -363,6 +366,7 @@ const Checkout: React.FC = () => {
                                     className="form-select"
                                     value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
                                     onChange={handleCityChange}
+                                    required
                                 >
                                     <option value="" disabled>
                                         Chọn Tỉnh/Thành phố
@@ -384,6 +388,7 @@ const Checkout: React.FC = () => {
                                     value={districts.find((district) => district.Name === selectedDistrict)?.Id || ''}
                                     onChange={handleDistrictChange}
                                     disabled={districts.length === 0}
+                                    required
                                 >
                                     <option value="" disabled>
                                         Chọn Quận/Huyện
@@ -405,6 +410,7 @@ const Checkout: React.FC = () => {
                                     value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
                                     onChange={handleWardChange}
                                     disabled={wards.length === 0}
+                                    required
                                 >
                                     <option value="" disabled>
                                         Chọn Phường/Xã

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from './../../../services/AxiosInstance';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
@@ -25,6 +26,7 @@ const Size: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
+    const [errors, setErrors] = useState<{ name?: string; uniqueName?: string }>({});
 
     const fetchSizes = async (currentPage = 1, pageSize = 10) => {
         try {
@@ -92,6 +94,27 @@ const Size: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên size không được để trống.' }));
+            } else {
+                const numberRegex = /^(3[0-9]|4[0-9]|50)$/;
+
+                if (!numberRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Tên size chỉ được chứa số từ 30 tới 50.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (errors.uniqueName) {
+            setErrors((prevErrors) => ({ ...prevErrors, uniqueName: undefined }));
+        }
+
         setSizeData({
             ...sizeData,
             [name]: value,
@@ -100,6 +123,15 @@ const Size: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (!sizeData.name) {
+            setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên size không được để trống.' }));
+            return;
+        }
+
+        if (errors.name) {
+            return;
+        }
 
         try {
             if (selectedSize) {
@@ -121,7 +153,7 @@ const Size: React.FC = () => {
 
                 if (response.status === 201) {
                     Swal.fire({
-                        title: 'Thêm nhãn size thành công!',
+                        title: 'Thêm size thành công!',
                         icon: 'success',
                         toast: true,
                         position: 'top-end',
@@ -137,14 +169,29 @@ const Size: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    setErrors({ ...errors, uniqueName: 'Tên size đã tồn tại.' });
+                } else {
+                    Swal.fire({
+                        title: 'Lỗi khi gửi dữ liệu!',
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -153,6 +200,7 @@ const Size: React.FC = () => {
             id: null,
             name: '',
         });
+        setErrors({});
     };
 
     return (
@@ -232,6 +280,8 @@ const Size: React.FC = () => {
                                 value={sizeData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
+                            {errors.uniqueName && <div className="text-danger">{errors.uniqueName}</div>}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

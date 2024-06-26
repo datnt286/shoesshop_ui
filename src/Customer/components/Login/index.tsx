@@ -57,6 +57,7 @@ const Login: React.FC = () => {
                                         className="form-control"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
+                                        required
                                     />
                                 </div>
                                 <div className="form-item">
@@ -69,6 +70,7 @@ const Login: React.FC = () => {
                                         className="form-control"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
+                                        required
                                     />
                                 </div>
                                 {error && (

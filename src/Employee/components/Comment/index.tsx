@@ -6,7 +6,7 @@ import AxiosInstance from './../../../services/AxiosInstance';
 import Pagination from './../Pagination/index';
 
 interface Comment {
-    id: number | null;
+    id: number;
     userId: string;
     customerUserName: string;
     customerName: string;
@@ -69,6 +69,35 @@ const Comment: React.FC = () => {
         setSelectedComment(null);
     };
 
+    const handleToggleComment = async (id: number, currentStatus: number) => {
+        try {
+            const newStatus = currentStatus === 1 ? 0 : 1;
+            const response = await AxiosInstance.put(`/Comments/UpdateStatus/${id}`, { status: newStatus });
+
+            if (response.status === 204) {
+                if (selectedComment) {
+                    const updatedComments = selectedComment.comments.map((comment) => {
+                        if (comment.id === id) {
+                            return { ...comment, status: newStatus };
+                        }
+                        return comment;
+                    });
+                    setSelectedComment({ ...selectedComment, comments: updatedComments });
+                }
+
+                const updatedMainComments = comments.map((comment) => {
+                    if (comment.id === id) {
+                        return { ...comment, status: newStatus };
+                    }
+                    return comment;
+                });
+                setComments(updatedMainComments);
+            }
+        } catch (error) {
+            console.error('Lỗi khi cập nhật trạng thái bình luận: ', error);
+        }
+    };
+
     return (
         <>
             <div className="row my-4">
@@ -98,20 +127,25 @@ const Comment: React.FC = () => {
                                     <td>{comment.customerName || comment.customerUserName}</td>
                                     <td>{comment.content}</td>
                                     <td>{comment.createDate}</td>
-                                    <td>{comment.status}</td>
+                                    <td>{comment.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
                                     <td>
                                         <div className="project-actions text-right">
                                             <button
                                                 className="btn btn-gray btn-sm mr-2"
                                                 onClick={() => handleDetailClick(comment)}
                                             >
-                                                <i className="fas fa-info-circle"></i>
+                                                <i className="fas fa-info-circle"></i> Chi tiết
                                             </button>
-                                            <button className="btn btn-warning btn-sm mr-2">
-                                                <i className="fas fa-lock"></i>
-                                            </button>
-                                            <button className="btn btn-danger btn-sm">
-                                                <i className="fas fa-trash-alt"></i>
+                                            <button
+                                                className={`btn ${
+                                                    comment.status === 1 ? 'btn-warning' : 'btn-success'
+                                                } btn-sm mr-2`}
+                                                onClick={() => handleToggleComment(comment.id, comment.status)}
+                                            >
+                                                <i
+                                                    className={comment.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'}
+                                                ></i>{' '}
+                                                {comment.status === 1 ? 'Ẩn' : 'Hiện'}
                                             </button>
                                         </div>
                                     </td>
@@ -152,14 +186,21 @@ const Comment: React.FC = () => {
                                         <td>{comment.customerName || comment.customerUserName}</td>
                                         <td>{comment.content}</td>
                                         <td>{comment.createDate}</td>
-                                        <td>{comment.status}</td>
+                                        <td>{comment.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
                                         <td>
                                             <div className="project-actions text-right">
-                                                <button className="btn btn-warning btn-sm mr-2">
-                                                    <i className="fas fa-lock"></i>
-                                                </button>
-                                                <button className="btn btn-danger btn-sm">
-                                                    <i className="fas fa-trash-alt"></i>
+                                                <button
+                                                    className={`btn ${
+                                                        comment.status === 1 ? 'btn-warning' : 'btn-success'
+                                                    } btn-sm mr-2`}
+                                                    onClick={() => handleToggleComment(comment.id, comment.status)}
+                                                >
+                                                    <i
+                                                        className={
+                                                            comment.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'
+                                                        }
+                                                    ></i>{' '}
+                                                    {comment.status === 1 ? 'Ẩn' : 'Hiện'}
                                                 </button>
                                             </div>
                                         </td>

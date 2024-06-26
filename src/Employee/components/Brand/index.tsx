@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from './../../../services/AxiosInstance';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
@@ -25,6 +26,7 @@ const Brand: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
+    const [errors, setErrors] = useState<{ name?: string; uniqueName?: string }>({});
 
     const fetchBrands = async (currentPage = 1, pageSize = 10) => {
         try {
@@ -92,6 +94,28 @@ const Brand: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên nhãn hiệu không được để trống.' }));
+            } else {
+                const vietnameseCharacterRegex =
+                    /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẮẰẲẴẶẸẺẼỀỀỂưăắằẳẵặẹẻẽềềểỄệỈịỌỏốớờởỡợụủứừửữựỳỵỷỹ\s]+$/;
+
+                if (!vietnameseCharacterRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Tên nhãn hiệu chỉ được chứa chữ cái tiếng Việt và dấu cách.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (errors.uniqueName) {
+            setErrors((prevErrors) => ({ ...prevErrors, uniqueName: undefined }));
+        }
+
         setBrandData({
             ...brandData,
             [name]: value,
@@ -100,6 +124,15 @@ const Brand: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (!brandData.name) {
+            setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên nhãn hiệu không được để trống.' }));
+            return;
+        }
+
+        if (errors.name) {
+            return;
+        }
 
         try {
             if (selectedBrand) {
@@ -137,14 +170,29 @@ const Brand: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    setErrors({ ...errors, uniqueName: 'Tên nhãn hiệu đã tồn tại.' });
+                } else {
+                    Swal.fire({
+                        title: 'Lỗi khi gửi dữ liệu!',
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -153,6 +201,7 @@ const Brand: React.FC = () => {
             id: null,
             name: '',
         });
+        setErrors({});
     };
 
     return (
@@ -232,6 +281,8 @@ const Brand: React.FC = () => {
                                 value={brandData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
+                            {errors.uniqueName && <div className="text-danger">{errors.uniqueName}</div>}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

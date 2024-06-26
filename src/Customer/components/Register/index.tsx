@@ -73,6 +73,7 @@ const Register: React.FC = () => {
                                         id="username"
                                         className="form-control"
                                         onChange={handleInputChange}
+                                        required
                                     />
                                 </div>
                                 <div className="form-item">
@@ -85,6 +86,7 @@ const Register: React.FC = () => {
                                         id="email"
                                         className="form-control"
                                         onChange={handleInputChange}
+                                        required
                                     />
                                 </div>
                                 <div className="form-item">
@@ -97,6 +99,7 @@ const Register: React.FC = () => {
                                         id="password"
                                         className="form-control"
                                         onChange={handleInputChange}
+                                        required
                                     />
                                 </div>
                                 <div className="form-item">
@@ -109,6 +112,7 @@ const Register: React.FC = () => {
                                         id="confirm-password"
                                         className="form-control"
                                         onChange={handleInputChange}
+                                        required
                                     />
                                 </div>
                                 {error && (
