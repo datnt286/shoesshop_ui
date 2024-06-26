@@ -26,7 +26,7 @@ const Size: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
-    const [errors, setErrors] = useState<{ name?: string; uniqueName?: string }>({});
+    const [errors, setErrors] = useState<{ name?: string }>({});
 
     const fetchSizes = async (currentPage = 1, pageSize = 10) => {
         try {
@@ -111,10 +111,6 @@ const Size: React.FC = () => {
             }
         }
 
-        if (errors.uniqueName) {
-            setErrors((prevErrors) => ({ ...prevErrors, uniqueName: undefined }));
-        }
-
         setSizeData({
             ...sizeData,
             [name]: value,
@@ -171,7 +167,7 @@ const Size: React.FC = () => {
 
             if (axios.isAxiosError(error)) {
                 if (error.response && error.response.status === 409) {
-                    setErrors({ ...errors, uniqueName: 'Tên size đã tồn tại.' });
+                    setErrors({ ...errors, name: 'Tên size đã tồn tại.' });
                 } else {
                     Swal.fire({
                         title: 'Lỗi khi gửi dữ liệu!',
@@ -281,7 +277,6 @@ const Size: React.FC = () => {
                                 onChange={handleInputChange}
                             />
                             {errors.name && <div className="text-danger">{errors.name}</div>}
-                            {errors.uniqueName && <div className="text-danger">{errors.uniqueName}</div>}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

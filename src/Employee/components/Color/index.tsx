@@ -26,7 +26,7 @@ const Color: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
-    const [errors, setErrors] = useState<{ name?: string; uniqueName?: string }>({});
+    const [errors, setErrors] = useState<{ name?: string }>({});
 
     const fetchColors = async (currentPage = 1, pageSize = 10) => {
         try {
@@ -104,16 +104,12 @@ const Color: React.FC = () => {
                 if (!vietnameseCharacterRegex.test(value)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
-                        name: 'Tên màu sắc chỉ được chứa chữ cái tiếng Việt và dấu cách.',
+                        name: 'Tên màu sắc không được chứa số và ký tự đặc biệt.',
                     }));
                 } else {
                     setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
                 }
             }
-        }
-
-        if (errors.uniqueName) {
-            setErrors((prevErrors) => ({ ...prevErrors, uniqueName: undefined }));
         }
 
         setColorData({
@@ -172,7 +168,7 @@ const Color: React.FC = () => {
 
             if (axios.isAxiosError(error)) {
                 if (error.response && error.response.status === 409) {
-                    setErrors({ ...errors, uniqueName: 'Tên màu sắc đã tồn tại.' });
+                    setErrors({ ...errors, name: 'Tên màu sắc đã tồn tại.' });
                 } else {
                     Swal.fire({
                         title: 'Lỗi khi gửi dữ liệu!',
@@ -282,7 +278,6 @@ const Color: React.FC = () => {
                                 onChange={handleInputChange}
                             />
                             {errors.name && <div className="text-danger">{errors.name}</div>}
-                            {errors.uniqueName && <div className="text-danger">{errors.uniqueName}</div>}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

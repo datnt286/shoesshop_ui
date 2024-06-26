@@ -6,6 +6,7 @@ import AxiosInstance from './../../../services/AxiosInstance';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
+import axios from 'axios';
 
 interface Supplier {
     id: number | null;
@@ -55,6 +56,16 @@ const Supplier: React.FC = () => {
     const [selectedCity, setSelectedCity] = useState<string>('');
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
+
+    const [errors, setErrors] = useState<{
+        name?: string;
+        phoneNumber?: string;
+        email?: string;
+        city?: string;
+        district?: string;
+        ward?: string;
+        address?: string;
+    }>({});
 
     const fetchSuppliers = async (currentPage = 1, pageSize = 10) => {
         try {
@@ -168,6 +179,58 @@ const Supplier: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên nhà cung cấp không được để trống.' }));
+            } else {
+                const vietnameseCharacterRegex =
+                    /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẮẰẲẴẶẸẺẼỀỀỂưăắằẳẵặẹẻẽềềểỄệỈịỌỏốớờởỡợụủứừửữựỳỵỷỹ\s]+$/;
+
+                if (!vietnameseCharacterRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Tên nhà cung cấp không được chứa ký tự đặc biệt.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (name === 'phoneNumber') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: 'Số điện thoại không được để trống.' }));
+            } else {
+                const phoneNumberRegex = /^0\d{9}$/;
+
+                if (!phoneNumberRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        phoneNumber: 'Số điện thoại phải bắt đầu bằng số 0 và đủ 10 chữ số.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: undefined }));
+                }
+            }
+        }
+
+        if (name === 'email') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        email: 'Email không hợp lệ.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                }
+            }
+        }
+
         setSupplierData({
             ...supplierData,
             [name]: value,
@@ -186,6 +249,12 @@ const Supplier: React.FC = () => {
     const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const cityId = event.target.value;
         const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (!cityId) {
+            setErrors((prevErrors) => ({ ...prevErrors, city: 'Vui lòng chọn Tỉnh/Thành phố.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, city: undefined }));
+        }
 
         if (selectedCity) {
             setDistricts(selectedCity.Districts);
@@ -208,6 +277,12 @@ const Supplier: React.FC = () => {
         const districtId = event.target.value;
         const selectedDistrict = districts.find((district) => district.Id === districtId);
 
+        if (!districtId) {
+            setErrors((prevErrors) => ({ ...prevErrors, district: 'Vui lòng chọn Quận/Huyện.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, district: undefined }));
+        }
+
         if (selectedDistrict) {
             setWards(selectedDistrict.Wards);
             setSelectedDistrict(selectedDistrict.Name);
@@ -225,6 +300,12 @@ const Supplier: React.FC = () => {
         const wardId = event.target.value;
         const selectedWard = wards.find((ward) => ward.Id === wardId);
 
+        if (!wardId) {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: 'Vui lòng chọn Phường/Xã.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: undefined }));
+        }
+
         if (selectedWard) {
             setSelectedWard(selectedWard.Name);
             updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
@@ -236,6 +317,45 @@ const Supplier: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        const newErrors: {
+            name?: string;
+            phoneNumber?: string;
+            email?: string;
+            city?: string;
+            district?: string;
+            ward?: string;
+        } = {};
+
+        if (!supplierData.name) {
+            newErrors.name = 'Tên nhà cung cấp không được để trống.';
+        }
+
+        if (!supplierData.phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được để trống.';
+        }
+
+        if (!supplierData.email) {
+            newErrors.email = 'Email không được để trống.';
+        }
+
+        if (!selectedCity) {
+            newErrors.city = 'Vui lòng chọn Tỉnh/Thành phố.';
+        }
+
+        if (!selectedDistrict) {
+            newErrors.district = 'Vui lòng chọn Quận/Huyện.';
+        }
+
+        if (!selectedWard) {
+            newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         try {
             if (selectedSupplier) {
@@ -273,14 +393,40 @@ const Supplier: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiErrors = error.response.data.messages;
+                    const newApiErrors: {
+                        name?: string;
+                        phoneNumber?: string;
+                        email?: string;
+                        address?: string;
+                    } = {};
+
+                    apiErrors.forEach((errorMessage: string) => {
+                        if (errorMessage.includes('Name')) {
+                            newApiErrors.name = 'Tên nhà cung cấp đã tồn tại.';
+                        } else if (errorMessage.includes('PhoneNumber')) {
+                            newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
+                        } else if (errorMessage.includes('Email')) {
+                            newApiErrors.email = 'Email đã tồn tại.';
+                        } else if (errorMessage.includes('Address')) {
+                            newApiErrors.address = 'Địa chỉ đã tồn tại.';
+                        }
+                    });
+
+                    setErrors(newApiErrors);
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -297,6 +443,7 @@ const Supplier: React.FC = () => {
         setSelectedWard('');
         setDistricts([]);
         setWards([]);
+        setErrors({});
     };
 
     return (
@@ -382,6 +529,7 @@ const Supplier: React.FC = () => {
                                 value={supplierData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="phone-number">Điện thoại: </label>
@@ -393,6 +541,7 @@ const Supplier: React.FC = () => {
                                 value={supplierData.phoneNumber}
                                 onChange={handleInputChange}
                             />
+                            {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="email">Email: </label>
@@ -404,6 +553,7 @@ const Supplier: React.FC = () => {
                                 value={supplierData.email}
                                 onChange={handleInputChange}
                             />
+                            {errors.email && <div className="text-danger">{errors.email}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="city">Tỉnh/Thành phố</label>
@@ -422,6 +572,7 @@ const Supplier: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.city && <div className="text-danger">{errors.city}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="district">Quận/Huyện</label>
@@ -441,6 +592,7 @@ const Supplier: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.district && <div className="text-danger">{errors.district}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="ward">Phường/Xã</label>
@@ -460,6 +612,7 @@ const Supplier: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.ward && <div className="text-danger">{errors.ward}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="address">Địa chỉ: </label>
@@ -471,6 +624,7 @@ const Supplier: React.FC = () => {
                                 value={supplierData.address}
                                 disabled
                             />
+                            {errors.address && <div className="text-danger">{errors.address}</div>}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
