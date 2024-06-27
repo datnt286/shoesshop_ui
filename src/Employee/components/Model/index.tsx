@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination/index';
@@ -67,7 +68,17 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
     const [keyword, setKeyword] = useState('');
+
+    const [errors, setErrors] = useState<{
+        name?: string;
+        productType?: string;
+        brand?: string;
+        supplier?: string;
+        importPrice?: string;
+        price?: string;
+    }>({});
 
     const fetchModels = async (currentPage = 1, pageSize = 10) => {
         try {
@@ -216,6 +227,60 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
 
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên mẫu sản phẩm không được để trống.' }));
+            } else {
+                setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+            }
+        }
+
+        if (name === 'importPrice') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, importPrice: 'Giá nhập không được để trống.' }));
+            } else {
+                const importPriceRegex = /^(?:[1-9]\d{0,7}|0)$/;
+
+                if (!importPriceRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        importPrice: 'Giá nhập phải là số nhỏ hơn 100.000.000.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, importPrice: undefined }));
+                }
+            }
+        }
+
+        if (name === 'price') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, price: 'Giá bán không được để trống.' }));
+            } else {
+                const priceRegex = /^(?:[1-9]\d{0,7}|0)$/;
+
+                if (!priceRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        price: 'Giá bán phải là số nhỏ hơn 100.000.000.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, price: undefined }));
+                }
+            }
+        }
+
+        if (name === 'productTypeId' && parseInt(value) !== 0) {
+            setErrors((prevErrors) => ({ ...prevErrors, productType: undefined }));
+        }
+
+        if (name === 'brandId' && parseInt(value) !== 0) {
+            setErrors((prevErrors) => ({ ...prevErrors, brand: undefined }));
+        }
+
+        if (name === 'supplierId' && parseInt(value) !== 0) {
+            setErrors((prevErrors) => ({ ...prevErrors, supplier: undefined }));
+        }
+
         setModelData({
             ...modelData,
             [name]: name === 'productTypeId' || name === 'brandId' || name === 'supplierId' ? parseInt(value) : value,
@@ -269,6 +334,45 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const newErrors: {
+            name?: string;
+            productType?: string;
+            brand?: string;
+            supplier?: string;
+            importPrice?: string;
+            price?: string;
+        } = {};
+
+        if (!modelData.name) {
+            newErrors.name = 'Tên mẫu sản phẩm không được để trống.';
+        }
+
+        if (!modelData.productTypeId) {
+            newErrors.productType = 'Vui lòng chọn loại sản phẩm.';
+        }
+
+        if (!modelData.brandId) {
+            newErrors.brand = 'Vui lòng chọn nhãn hiệu.';
+        }
+
+        if (!modelData.supplierId) {
+            newErrors.supplier = 'Vui lòng chọn nhà cung cấp.';
+        }
+
+        if (!modelData.importPrice) {
+            newErrors.importPrice = 'Giá nhập không được để trống.';
+        }
+
+        if (!modelData.price) {
+            newErrors.price = 'Giá bán không được để trống.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
+
         try {
             let formData = new FormData();
             formData.append('name', modelData.name);
@@ -320,14 +424,29 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    setErrors({ ...errors, name: 'Tên mẫu sản phẩm đã tồn tại.' });
+                } else {
+                    Swal.fire({
+                        title: 'Lỗi khi gửi dữ liệu!',
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -344,7 +463,15 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             images: [],
         });
         setImagePreviews([]);
+        setErrors({});
     };
+
+    const handleDetailClick = (model: Model) => {
+        setSelectedModel(model);
+        setShowDetailModal(true);
+    };
+
+    const handleCloseDetailModal = () => setShowDetailModal(false);
 
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setKeyword(event.target.value);
@@ -418,10 +545,16 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                         <td>
                                             <div className="project-actions text-right">
                                                 <Link to={`/admin/san-pham/${model.id}`}>
-                                                    <button className="btn btn-gray btn-sm mr-2">
-                                                        <i className="fas fa-info-circle"></i>
+                                                    <button className="btn btn-success btn-sm mr-2">
+                                                        <i className="fas fa-arrow-circle-right"></i>
                                                     </button>
                                                 </Link>
+                                                <button
+                                                    className="btn btn-gray btn-sm mr-2"
+                                                    onClick={() => handleDetailClick(model)}
+                                                >
+                                                    <i className="fas fa-info-circle"></i>
+                                                </button>
                                                 <button
                                                     className="btn btn-blue btn-sm mr-2"
                                                     onClick={() => handleEditClick(model)}
@@ -459,10 +592,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         <input type="hidden" name="id" id="id" value={modelData.id || ''} />
                         <div className="form-group text-center">
                             <label htmlFor="images" className="form-label d-block">
-                                Ảnh sản phẩm:
+                                Ảnh mẫu sản phẩm:
                             </label>
                             <div>
-                                {imagePreviews.length > 0 ? (
+                                {imagePreviews && imagePreviews.length > 0 ? (
                                     <>
                                         {imagePreviews.map((image, index) => (
                                             <span className="d-inline-flex flex-column align-items-center">
@@ -514,6 +647,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                 value={modelData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="product-type-id">Loại sản phẩm: </label>
@@ -534,9 +668,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.productType && <div className="text-danger">{errors.productType}</div>}
                         </div>
                         <div className="form-group">
-                            <label htmlFor="brand-id">Thương hiệu: </label>
+                            <label htmlFor="brand-id">Nhãn hiệu: </label>
                             <select
                                 name="brandId"
                                 id="brand-id"
@@ -546,7 +681,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                 required
                             >
                                 <option value={0} disabled>
-                                    -- Chọn thương hiệu --
+                                    -- Chọn nhãn hiệu --
                                 </option>
                                 {brands.map((brand) => (
                                     <option key={brand.id} value={brand.id}>
@@ -554,6 +689,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.brand && <div className="text-danger">{errors.brand}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="supplier-id">Nhà cung cấp: </label>
@@ -574,6 +710,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.supplier && <div className="text-danger">{errors.supplier}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="import-price">Giá nhập: </label>
@@ -585,6 +722,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                 value={modelData.importPrice || ''}
                                 onChange={handleInputChange}
                             />
+                            {errors.importPrice && <div className="text-danger">{errors.importPrice}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="price">Giá bán: </label>
@@ -596,6 +734,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                 value={modelData.price || ''}
                                 onChange={handleInputChange}
                             />
+                            {errors.price && <div className="text-danger">{errors.price}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="description">Mô tả: </label>
@@ -618,6 +757,93 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         </Button>
                     </Modal.Footer>
                 </form>
+            </Modal>
+
+            <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
+                <Modal.Header>
+                    <Modal.Title>Chi tiết mẫu sản phẩm</Modal.Title>
+                    <Button variant="light" className="close" aria-label="Close" onClick={handleCloseDetailModal}>
+                        <span>&times;</span>
+                    </Button>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedModel && (
+                        <>
+                            <div className="text-center">
+                                <div className="form-group">
+                                    <span className="text-lg font-weight-bold">Ảnh mẫu sản phẩm:</span>
+                                </div>
+                                <div className="form-group">
+                                    {selectedModel && selectedModel.images && selectedModel.images.length > 0 ? (
+                                        selectedModel.images.map((image, index) => {
+                                            const imageSrc = `${config.baseURL}/images/model/${image.name}`;
+
+                                            return (
+                                                <img
+                                                    key={index}
+                                                    src={imageSrc}
+                                                    className="img img-thumbnail my-2 mr-3"
+                                                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                    alt="Ảnh sản phẩm"
+                                                />
+                                            );
+                                        })
+                                    ) : (
+                                        <img
+                                            src={DefaultImage}
+                                            className="img img-thumbnail my-2"
+                                            style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                            alt="Ảnh sản phẩm"
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Tên mẫu sản phẩm: </span>
+                                <span className="text-lg">{selectedModel.name}</span>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Loại sản phẩm: </span>
+                                <span className="text-lg">
+                                    {
+                                        productTypes.find(
+                                            (productType) => productType.id === selectedModel.productTypeId,
+                                        )?.name
+                                    }
+                                </span>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Nhãn hiệu: </span>
+                                <span className="text-lg">
+                                    {brands.find((brand) => brand.id === selectedModel.brandId)?.name}
+                                </span>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Nhà cung cấp: </span>
+                                <span className="text-lg">
+                                    {suppliers.find((supplier) => supplier.id === selectedModel.supplierId)?.name}
+                                </span>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Giá nhập: </span>
+                                <span className="text-lg">{selectedModel.importPrice?.toLocaleString() + ' ₫'}</span>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Giá bán: </span>
+                                <span className="text-lg">{selectedModel.price?.toLocaleString() + ' ₫'}</span>
+                            </div>
+                            <div className="form-group">
+                                <span className="text-lg font-weight-bold">Mô tả: </span>
+                                <span className="text-lg">{selectedModel.description}</span>
+                            </div>
+                        </>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={handleCloseDetailModal}>
+                        <i className="fas fa-times-circle"></i> Đóng
+                    </Button>
+                </Modal.Footer>
             </Modal>
 
             <DeleteModal
