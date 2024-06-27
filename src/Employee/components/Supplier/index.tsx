@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from './../../../services/AxiosInstance';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
-import axios from 'axios';
 
 interface Supplier {
     id: number | null;
@@ -64,7 +64,6 @@ const Supplier: React.FC = () => {
         city?: string;
         district?: string;
         ward?: string;
-        address?: string;
     }>({});
 
     const fetchSuppliers = async (currentPage = 1, pageSize = 10) => {
@@ -400,7 +399,6 @@ const Supplier: React.FC = () => {
                         name?: string;
                         phoneNumber?: string;
                         email?: string;
-                        address?: string;
                     } = {};
 
                     apiErrors.forEach((errorMessage: string) => {
@@ -410,8 +408,6 @@ const Supplier: React.FC = () => {
                             newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
                         } else if (errorMessage.includes('Email')) {
                             newApiErrors.email = 'Email đã tồn tại.';
-                        } else if (errorMessage.includes('Address')) {
-                            newApiErrors.address = 'Địa chỉ đã tồn tại.';
                         }
                     });
 
@@ -624,7 +620,6 @@ const Supplier: React.FC = () => {
                                 value={supplierData.address}
                                 disabled
                             />
-                            {errors.address && <div className="text-danger">{errors.address}</div>}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

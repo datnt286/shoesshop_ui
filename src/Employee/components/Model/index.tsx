@@ -587,7 +587,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="import-price">Giá bán: </label>
+                            <label htmlFor="price">Giá bán: </label>
                             <input
                                 type="text"
                                 name="price"
