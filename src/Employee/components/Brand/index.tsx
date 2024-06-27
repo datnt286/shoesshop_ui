@@ -99,7 +99,7 @@ const Brand: React.FC = () => {
                 setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên nhãn hiệu không được để trống.' }));
             } else {
                 const vietnameseCharacterRegex =
-                    /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẮẰẲẴẶẸẺẼỀỀỂưăắằẳẵặẹẻẽềềểỄệỈịỌỏốớờởỡợụủứừửữựỳỵỷỹ\s]+$/;
+                    /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
 
                 if (!vietnameseCharacterRegex.test(value)) {
                     setErrors((prevErrors) => ({

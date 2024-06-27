@@ -37,8 +37,8 @@ const Account: React.FC = () => {
     const [user, setUser] = useState<User>({
         userName: '',
         name: '',
-        email: '',
         phoneNumber: '',
+        email: '',
         address: '',
         avatar: null,
         role: '',
@@ -70,8 +70,8 @@ const Account: React.FC = () => {
                 setUser({
                     userName: decodedToken.userName,
                     name: decodedToken.name || '',
-                    email: decodedToken.email,
                     phoneNumber: decodedToken.phoneNumber || '',
+                    email: decodedToken.email,
                     address: decodedToken.address || '',
                     avatar: null,
                     role: decodedToken.role || '',
@@ -266,10 +266,6 @@ const Account: React.FC = () => {
             ...passwordData,
             [name]: value,
         });
-    };
-
-    const handleShowPasswordChange = () => {
-        setShowPassword(!showPassword);
     };
 
     const handleChangePassword = async (event: React.FormEvent) => {
@@ -585,7 +581,7 @@ const Account: React.FC = () => {
                                         type="checkbox"
                                         id="show-password"
                                         className="custom-control-input"
-                                        onChange={handleShowPasswordChange}
+                                        onChange={() => setShowPassword(!showPassword)}
                                     />
                                     <label htmlFor="show-password" className="custom-control-label">
                                         Hiện mật khẩu

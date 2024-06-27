@@ -19,10 +19,6 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleShowPasswordChange = () => {
-        setShowPassword(!showPassword);
-    };
-
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -102,7 +98,7 @@ const LoginPage: React.FC = () => {
                                             <input
                                                 type="checkbox"
                                                 id="show-password"
-                                                onChange={handleShowPasswordChange}
+                                                onChange={() => setShowPassword(!showPassword)}
                                             />
                                             <label htmlFor="show-password"> Hiện mật khẩu</label>
                                         </div>

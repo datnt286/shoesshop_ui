@@ -183,7 +183,7 @@ const Supplier: React.FC = () => {
                 setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên nhà cung cấp không được để trống.' }));
             } else {
                 const vietnameseCharacterRegex =
-                    /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẮẰẲẴẶẸẺẼỀỀỂưăắằẳẵặẹẻẽềềểỄệỈịỌỏốớờởỡợụủứừửữựỳỵỷỹ\s]+$/;
+                    /^[a-zA-Z0-9àáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
 
                 if (!vietnameseCharacterRegex.test(value)) {
                     setErrors((prevErrors) => ({

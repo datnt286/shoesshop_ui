@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from './../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from './../Pagination/index';
@@ -67,6 +68,7 @@ const Employee: React.FC = () => {
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [keyword, setKeyword] = useState('');
 
     const [cities, setCities] = useState<City[]>([]);
@@ -75,6 +77,18 @@ const Employee: React.FC = () => {
     const [selectedCity, setSelectedCity] = useState<string>('');
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
+
+    const [errors, setErrors] = useState<{
+        userName?: string;
+        password?: string;
+        name?: string;
+        phoneNumber?: string;
+        email?: string;
+        city?: string;
+        district?: string;
+        ward?: string;
+        salary?: string;
+    }>({});
 
     const avatarSrc = selectedEmployee?.avatar
         ? `${config.baseURL}/images/avatar/${selectedEmployee.avatar}`
@@ -210,19 +224,117 @@ const Employee: React.FC = () => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, type } = event.target;
-        let value: string | number | boolean = '';
+        const { name, value, type } = event.target;
 
         if (type === 'checkbox') {
-            value = (event.target as HTMLInputElement).checked ? 1 : 0;
-        } else {
-            value = event.target.value;
-        }
+            const checkboxValue = (event.currentTarget as HTMLInputElement).checked ? 1 : 0;
 
-        setEmployeeData({
-            ...employeeData,
-            [name]: value,
-        });
+            setEmployeeData({
+                ...employeeData,
+                [name]: checkboxValue,
+            });
+        } else {
+            if (name === 'userName') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, userName: 'Tên đăng nhập không được để trống.' }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
+                }
+            }
+
+            if (name === 'password') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, password: 'Mật khẩu không được để trống.' }));
+                } else {
+                    const passwordRegex =
+                        /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
+
+                    if (!passwordRegex.test(value)) {
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            password:
+                                'Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số hoặc ký tự đặc biệt.',
+                        }));
+                    } else {
+                        setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+                    }
+                }
+            }
+
+            if (name === 'name') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: 'Họ tên không được để trống.' }));
+                } else {
+                    const vietnameseCharacterRegex =
+                        /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
+
+                    if (!vietnameseCharacterRegex.test(value)) {
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            name: 'Họ tên không được chứa số và ký tự đặc biệt.',
+                        }));
+                    } else {
+                        setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                    }
+                }
+            }
+
+            if (name === 'phoneNumber') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: 'Số điện thoại không được để trống.' }));
+                } else {
+                    const phoneNumberRegex = /^0\d{9}$/;
+
+                    if (!phoneNumberRegex.test(value)) {
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            phoneNumber: 'Số điện thoại phải bắt đầu bằng số 0 và đủ 10 chữ số.',
+                        }));
+                    } else {
+                        setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: undefined }));
+                    }
+                }
+            }
+
+            if (name === 'email') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    if (!emailRegex.test(value)) {
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            email: 'Email không hợp lệ.',
+                        }));
+                    } else {
+                        setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                    }
+                }
+            }
+
+            if (name === 'salary') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, salary: 'Lương không được để trống.' }));
+                } else {
+                    const salaryRegex = /^(?:[1-9]\d{0,7}|0)$/;
+
+                    if (!salaryRegex.test(value)) {
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            salary: 'Lương phải là số nhỏ hơn 100.000.000.',
+                        }));
+                    } else {
+                        setErrors((prevErrors) => ({ ...prevErrors, salary: undefined }));
+                    }
+                }
+            }
+
+            setEmployeeData({
+                ...employeeData,
+                [name]: value,
+            });
+        }
     };
 
     const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -254,6 +366,12 @@ const Employee: React.FC = () => {
         const cityId = event.target.value;
         const selectedCity = cities.find((city) => city.Id === cityId);
 
+        if (!cityId) {
+            setErrors((prevErrors) => ({ ...prevErrors, city: 'Vui lòng chọn Tỉnh/Thành phố.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, city: undefined }));
+        }
+
         if (selectedCity) {
             setDistricts(selectedCity.Districts);
             setWards([]);
@@ -275,6 +393,12 @@ const Employee: React.FC = () => {
         const districtId = event.target.value;
         const selectedDistrict = districts.find((district) => district.Id === districtId);
 
+        if (!districtId) {
+            setErrors((prevErrors) => ({ ...prevErrors, district: 'Vui lòng chọn Quận/Huyện.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, district: undefined }));
+        }
+
         if (selectedDistrict) {
             setWards(selectedDistrict.Wards);
             setSelectedDistrict(selectedDistrict.Name);
@@ -292,6 +416,12 @@ const Employee: React.FC = () => {
         const wardId = event.target.value;
         const selectedWard = wards.find((ward) => ward.Id === wardId);
 
+        if (!wardId) {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: 'Vui lòng chọn Phường/Xã.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: undefined }));
+        }
+
         if (selectedWard) {
             setSelectedWard(selectedWard.Name);
             updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
@@ -303,6 +433,60 @@ const Employee: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        const newErrors: {
+            userName?: string;
+            password?: string;
+            name?: string;
+            phoneNumber?: string;
+            email?: string;
+            city?: string;
+            district?: string;
+            ward?: string;
+            salary?: string;
+        } = {};
+
+        if (!employeeData.userName) {
+            newErrors.userName = 'Tên đăng nhập không được để trống.';
+        }
+
+        if (!employeeData.password && !isEditMode) {
+            newErrors.password = 'Mật khẩu không được để trống.';
+        }
+
+        if (!employeeData.name) {
+            newErrors.name = 'Họ tên không được để trống.';
+        }
+
+        if (!employeeData.phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được để trống.';
+        }
+
+        if (!employeeData.email) {
+            newErrors.email = 'Email không được để trống.';
+        }
+
+        if (!selectedCity) {
+            newErrors.city = 'Vui lòng chọn Tỉnh/Thành phố.';
+        }
+
+        if (!selectedDistrict) {
+            newErrors.district = 'Vui lòng chọn Quận/Huyện.';
+        }
+
+        if (!selectedWard) {
+            newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        if (!employeeData.salary) {
+            newErrors.salary = 'Lương không được để trống.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         try {
             let formData = new FormData();
@@ -354,14 +538,37 @@ const Employee: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiErrors = error.response.data.messages;
+                    const newApiErrors: {
+                        userName?: string;
+                        phoneNumber?: string;
+                        email?: string;
+                    } = {};
+
+                    apiErrors.forEach((errorMessage: string) => {
+                        if (errorMessage.includes('DuplicateUserName')) {
+                            newApiErrors.userName = 'Tên tài khoản đã tồn tại.';
+                        } else if (errorMessage.includes('PhoneNumber')) {
+                            newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
+                        } else if (errorMessage.includes('Email')) {
+                            newApiErrors.email = 'Email đã tồn tại.';
+                        }
+                    });
+
+                    setErrors(newApiErrors);
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -386,6 +593,8 @@ const Employee: React.FC = () => {
         setSelectedWard('');
         setDistricts([]);
         setWards([]);
+        setIsEditMode(false);
+        setErrors({});
     };
 
     const handleDetailClick = (employee: Employee) => {
@@ -543,16 +752,30 @@ const Employee: React.FC = () => {
                                 onChange={handleInputChange}
                                 readOnly={isEditMode}
                             />
+                            {errors.userName && <div className="text-danger">{errors.userName}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="password">Mật khẩu: </label>
                             <input
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 name="password"
                                 id="password"
                                 className="form-control"
                                 onChange={handleInputChange}
                             />
+                            {errors.password && <div className="text-danger">{errors.password}</div>}
+                        </div>
+                        <div className="custom-control custom-checkbox text-center">
+                            <input
+                                type="checkbox"
+                                id="show-password"
+                                className="custom-control-input"
+                                onChange={() => setShowPassword(!showPassword)}
+                            />
+                            <label htmlFor="show-password" className="custom-control-label">
+                                {' '}
+                                Hiện mật khẩu
+                            </label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="name">Họ tên: </label>
@@ -564,6 +787,7 @@ const Employee: React.FC = () => {
                                 value={employeeData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="phone-number">Điện thoại: </label>
@@ -575,6 +799,7 @@ const Employee: React.FC = () => {
                                 value={employeeData.phoneNumber}
                                 onChange={handleInputChange}
                             />
+                            {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="email">Email: </label>
@@ -586,6 +811,7 @@ const Employee: React.FC = () => {
                                 value={employeeData.email}
                                 onChange={handleInputChange}
                             />
+                            {errors.email && <div className="text-danger">{errors.email}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="city">Tỉnh/Thành phố</label>
@@ -604,6 +830,7 @@ const Employee: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.city && <div className="text-danger">{errors.city}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="district">Quận/Huyện</label>
@@ -623,6 +850,7 @@ const Employee: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.district && <div className="text-danger">{errors.district}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="ward">Phường/Xã</label>
@@ -642,6 +870,7 @@ const Employee: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.ward && <div className="text-danger">{errors.ward}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="address">Địa chỉ: </label>
@@ -664,6 +893,7 @@ const Employee: React.FC = () => {
                                 value={employeeData.salary}
                                 onChange={handleInputChange}
                             />
+                            {errors.salary && <div className="text-danger">{errors.salary}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="description">Mô tả: </label>

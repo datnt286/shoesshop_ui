@@ -58,6 +58,7 @@ const Customer: React.FC = () => {
     });
     const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [keyword, setKeyword] = useState('');
 
     const [cities, setCities] = useState<City[]>([]);
@@ -482,13 +483,25 @@ const Customer: React.FC = () => {
                         <div className="form-group">
                             <label htmlFor="password">Mật khẩu: </label>
                             <input
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 name="password"
                                 id="password"
                                 className="form-control"
                                 value={customerData.password}
                                 onChange={handleInputChange}
                             />
+                        </div>
+                        <div className="custom-control custom-checkbox text-center">
+                            <input
+                                type="checkbox"
+                                id="show-password"
+                                className="custom-control-input"
+                                onChange={() => setShowPassword(!showPassword)}
+                            />
+                            <label htmlFor="show-password" className="custom-control-label">
+                                {' '}
+                                Hiện mật khẩu
+                            </label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="name">Họ tên: </label>
