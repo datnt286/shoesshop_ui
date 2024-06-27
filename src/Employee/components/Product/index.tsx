@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination/index';
@@ -56,7 +57,7 @@ const Product: React.FC = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
-    const [productData, serProductData] = useState<Product>({
+    const [productData, setProductData] = useState<Product>({
         id: null,
         name: model?.name || '',
         modelId: model?.id || null,
@@ -75,6 +76,15 @@ const Product: React.FC = () => {
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [keyword, setKeyword] = useState('');
     const { modelId } = useParams();
+
+    const [errors, setErrors] = useState<{
+        name?: string;
+        color?: string;
+        size?: string;
+        importPrice?: string;
+        price?: string;
+        quantity?: string;
+    }>({});
 
     const imageSrc = selectedProduct?.image
         ? `${config.baseURL}/images/product/${selectedProduct.image}`
@@ -186,7 +196,7 @@ const Product: React.FC = () => {
     }, [deletedSuccessfully]);
 
     useEffect(() => {
-        serProductData({
+        setProductData({
             ...productData,
             modelId: model?.id || null,
             name: model?.name + ' - ',
@@ -211,7 +221,7 @@ const Product: React.FC = () => {
         setSelectedProduct(product);
         setModalTitle('Cập nhật sản phẩm');
         setShowModal(true);
-        serProductData({
+        setProductData({
             ...productData,
             id: product.id,
             name: product.name,
@@ -240,10 +250,93 @@ const Product: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
 
-        serProductData({
+        let updatedProductData = {
             ...productData,
-            [name]: name === 'modelId' || name === 'colorId' || name === 'sizeId' ? parseInt(value) : value,
-        });
+            [name]: name === 'colorId' || name === 'sizeId' ? parseInt(value) : value,
+        };
+
+        if (name === 'colorId' || name === 'sizeId') {
+            const selectedColorName =
+                name === 'colorId'
+                    ? colors.find((color) => color.id === parseInt(value))?.name || ''
+                    : colors.find((color) => color.id === updatedProductData.colorId)?.name || '';
+            const selectedSizeName =
+                name === 'sizeId'
+                    ? sizes.find((size) => size.id === parseInt(value))?.name || ''
+                    : sizes.find((size) => size.id === updatedProductData.sizeId)?.name || '';
+
+            const baseName = model?.name || '';
+            updatedProductData.name = `${baseName} - ${selectedColorName} - ${selectedSizeName}`.trim();
+        }
+
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên sản phẩm không được để trống.' }));
+            } else {
+                setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+            }
+        }
+
+        if (name === 'importPrice') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, importPrice: 'Giá nhập không được để trống.' }));
+            } else {
+                const importPriceRegex = /^(?:[1-9]\d{0,7}|0)$/;
+
+                if (!importPriceRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        importPrice: 'Giá nhập phải là số nhỏ hơn 100.000.000.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, importPrice: undefined }));
+                }
+            }
+        }
+
+        if (name === 'price') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, price: 'Giá bán không được để trống.' }));
+            } else {
+                const priceRegex = /^(?:[1-9]\d{0,7}|0)$/;
+
+                if (!priceRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        price: 'Giá bán phải là số nhỏ hơn 100.000.000.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, price: undefined }));
+                }
+            }
+        }
+
+        if (name === 'quantity') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, quantity: 'Số lượng không được để trống.' }));
+            } else {
+                const quantityRegex = /^[0-9]+$/;
+
+                if (!quantityRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        quantity: 'Số lượng phải là số.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, quantity: undefined }));
+                }
+            }
+        }
+
+        if (name === 'colorId' && parseInt(value) !== 0) {
+            setErrors((prevErrors) => ({ ...prevErrors, color: undefined }));
+        }
+
+        if (name === 'sizeId' && parseInt(value) !== 0) {
+            setErrors((prevErrors) => ({ ...prevErrors, size: undefined }));
+        }
+
+        setProductData(updatedProductData);
     };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -253,7 +346,7 @@ const Product: React.FC = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result as string);
-                serProductData({
+                setProductData({
                     ...productData,
                     image: file,
                 });
@@ -264,6 +357,45 @@ const Product: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        const newErrors: {
+            name?: string;
+            color?: string;
+            size?: string;
+            importPrice?: string;
+            price?: string;
+            quantity?: string;
+        } = {};
+
+        if (!productData.name) {
+            newErrors.name = 'Tên sản phẩm không được để trống.';
+        }
+
+        if (!productData.colorId) {
+            newErrors.color = 'Vui lòng chọn màu sắc.';
+        }
+
+        if (!productData.sizeId) {
+            newErrors.size = 'Vui lòng chọn size.';
+        }
+
+        if (!productData.importPrice) {
+            newErrors.importPrice = 'Giá nhập không được để trống.';
+        }
+
+        if (!productData.price) {
+            newErrors.price = 'Giá bán không được để trống.';
+        }
+
+        if (!productData.quantity) {
+            newErrors.quantity = 'Số lượng không được để trống.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         try {
             const formData = new FormData();
@@ -314,19 +446,40 @@ const Product: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiError = error.response.data.message;
+
+                    if (apiError.includes('A product with the same ModelId, ColorId, and SizeId already exists.')) {
+                        setErrors({ ...errors, name: 'Sản phẩm với cùng mẫu sản phẩm, màu sắc, size đã tồn tại.' });
+                    } else if (apiError.includes('Product name already exists.')) {
+                        setErrors({ ...errors, name: 'Tên sản phẩm đã tồn tại.' });
+                    }
+                } else {
+                    Swal.fire({
+                        title: 'Lỗi khi gửi dữ liệu!',
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
     const resetFormData = () => {
-        serProductData({
+        setProductData({
             id: null,
             name: model?.name || '',
             modelId: model?.id || null,
@@ -339,6 +492,7 @@ const Product: React.FC = () => {
             image: null,
         });
         setImagePreview(DefaultImage);
+        setErrors({});
     };
 
     const handleDetailClick = (product: Product) => {
@@ -508,6 +662,7 @@ const Product: React.FC = () => {
                                 value={productData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="color-id">Màu sắc: </label>
@@ -528,6 +683,7 @@ const Product: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.color && <div className="text-danger">{errors.color}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="size-id">Size: </label>
@@ -548,6 +704,7 @@ const Product: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.size && <div className="text-danger">{errors.size}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="import-price">Giá nhập: </label>
@@ -559,6 +716,7 @@ const Product: React.FC = () => {
                                 value={productData.importPrice || ''}
                                 onChange={handleInputChange}
                             />
+                            {errors.importPrice && <div className="text-danger">{errors.importPrice}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="import-price">Giá bán: </label>
@@ -570,6 +728,7 @@ const Product: React.FC = () => {
                                 value={productData.price || ''}
                                 onChange={handleInputChange}
                             />
+                            {errors.price && <div className="text-danger">{errors.price}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="quantity">Số lượng: </label>
@@ -581,6 +740,7 @@ const Product: React.FC = () => {
                                 value={productData.quantity || ''}
                                 onChange={handleInputChange}
                             />
+                            {errors.quantity && <div className="text-danger">{errors.quantity}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="description">Mô tả: </label>
