@@ -80,7 +80,6 @@ const Customer: React.FC = () => {
         city?: string;
         district?: string;
         ward?: string;
-        salary?: string;
         avatar?: string;
     }>({});
 

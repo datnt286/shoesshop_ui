@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
+
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 interface User {
     userName: string;
@@ -34,7 +38,7 @@ interface Ward {
 
 const Account: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<User>({
+    const [userData, setUserData] = useState<User>({
         userName: '',
         name: '',
         phoneNumber: '',
@@ -59,6 +63,22 @@ const Account: React.FC = () => {
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
 
+    const [userErrors, setUserErrors] = useState<{
+        name?: string;
+        phoneNumber?: string;
+        email?: string;
+        city?: string;
+        district?: string;
+        ward?: string;
+        avatar?: string;
+    }>({});
+
+    const [passwordErrors, setPasswordErrors] = useState<{
+        currentPassword?: string;
+        newPassword?: string;
+        confirmPassword?: string;
+    }>({});
+
     useEffect(() => {
         const token = localStorage.getItem('employeeToken');
 
@@ -67,7 +87,7 @@ const Account: React.FC = () => {
                 const decodedToken: User = jwtDecode<User>(token);
 
                 setToken(token);
-                setUser({
+                setUserData({
                     userName: decodedToken.userName,
                     name: decodedToken.name || '',
                     phoneNumber: decodedToken.phoneNumber || '',
@@ -132,8 +152,60 @@ const Account: React.FC = () => {
     const handleUserInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
 
-        setUser({
-            ...user,
+        if (name === 'name') {
+            if (!value) {
+                setUserErrors((prevErrors) => ({ ...prevErrors, name: 'Họ tên không được để trống.' }));
+            } else {
+                const vietnameseCharacterRegex =
+                    /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
+
+                if (!vietnameseCharacterRegex.test(value)) {
+                    setUserErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Họ tên không được chứa số và ký tự đặc biệt.',
+                    }));
+                } else {
+                    setUserErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (name === 'phoneNumber') {
+            if (!value) {
+                setUserErrors((prevErrors) => ({ ...prevErrors, phoneNumber: 'Số điện thoại không được để trống.' }));
+            } else {
+                const phoneNumberRegex = /^0\d{9}$/;
+
+                if (!phoneNumberRegex.test(value)) {
+                    setUserErrors((prevErrors) => ({
+                        ...prevErrors,
+                        phoneNumber: 'Số điện thoại phải bắt đầu bằng số 0 và đủ 10 chữ số.',
+                    }));
+                } else {
+                    setUserErrors((prevErrors) => ({ ...prevErrors, phoneNumber: undefined }));
+                }
+            }
+        }
+
+        if (name === 'email') {
+            if (!value) {
+                setUserErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(value)) {
+                    setUserErrors((prevErrors) => ({
+                        ...prevErrors,
+                        email: 'Email không hợp lệ.',
+                    }));
+                } else {
+                    setUserErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                }
+            }
+        }
+
+        setUserData({
+            ...userData,
             [name]: value,
         });
     };
@@ -142,13 +214,33 @@ const Account: React.FC = () => {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                setUserErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Chỉ được chọn các tệp hình ảnh (jpg, jpeg, png, webp).',
+                }));
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                setUserErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Dung lượng ảnh phải nhỏ hơn 2MB.',
+                }));
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setAvatarPreview(reader.result as string);
-                setUser({
-                    ...user,
+                setUserData({
+                    ...userData,
                     avatar: file,
                 });
+                setUserErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: undefined,
+                }));
             };
             reader.readAsDataURL(file);
         }
@@ -157,8 +249,8 @@ const Account: React.FC = () => {
     const updateAddress = (cityName: string, districtName: string, wardName: string) => {
         const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
 
-        setUser({
-            ...user,
+        setUserData({
+            ...userData,
             address,
         });
     };
@@ -166,6 +258,12 @@ const Account: React.FC = () => {
     const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const cityId = event.target.value;
         const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (!cityId) {
+            setUserErrors((prevErrors) => ({ ...prevErrors, city: 'Vui lòng chọn Tỉnh/Thành phố.' }));
+        } else {
+            setUserErrors((prevErrors) => ({ ...prevErrors, city: undefined }));
+        }
 
         if (selectedCity) {
             setDistricts(selectedCity.Districts);
@@ -188,6 +286,12 @@ const Account: React.FC = () => {
         const districtId = event.target.value;
         const selectedDistrict = districts.find((district) => district.Id === districtId);
 
+        if (!districtId) {
+            setUserErrors((prevErrors) => ({ ...prevErrors, district: 'Vui lòng chọn Quận/Huyện.' }));
+        } else {
+            setUserErrors((prevErrors) => ({ ...prevErrors, district: undefined }));
+        }
+
         if (selectedDistrict) {
             setWards(selectedDistrict.Wards);
             setSelectedDistrict(selectedDistrict.Name);
@@ -205,6 +309,12 @@ const Account: React.FC = () => {
         const wardId = event.target.value;
         const selectedWard = wards.find((ward) => ward.Id === wardId);
 
+        if (!wardId) {
+            setUserErrors((prevErrors) => ({ ...prevErrors, ward: 'Vui lòng chọn Phường/Xã.' }));
+        } else {
+            setUserErrors((prevErrors) => ({ ...prevErrors, ward: undefined }));
+        }
+
         if (selectedWard) {
             setSelectedWard(selectedWard.Name);
             updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
@@ -217,13 +327,57 @@ const Account: React.FC = () => {
     const handleUpdateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const newErrors: {
+            name?: string;
+            phoneNumber?: string;
+            email?: string;
+            city?: string;
+            district?: string;
+            ward?: string;
+            avatar?: string;
+        } = {};
+
+        if (!userData.name) {
+            newErrors.name = 'Họ tên không được để trống.';
+        }
+
+        if (!userData.phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được để trống.';
+        }
+
+        if (!userData.email) {
+            newErrors.email = 'Email không được để trống.';
+        }
+
+        if (!selectedCity) {
+            newErrors.city = 'Vui lòng chọn Tỉnh/Thành phố.';
+        }
+
+        if (!selectedDistrict) {
+            newErrors.district = 'Vui lòng chọn Quận/Huyện.';
+        }
+
+        if (!selectedWard) {
+            newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        if (userErrors.avatar) {
+            newErrors.avatar = userErrors.avatar;
+        }
+
+        setUserErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
+
         const formData = new FormData();
-        formData.append('name', user.name || '');
-        formData.append('email', user.email);
-        formData.append('phoneNumber', user.phoneNumber || '');
-        formData.append('address', user.address || '');
-        if (user.avatar) {
-            formData.append('avatar', user.avatar);
+        formData.append('name', userData.name || '');
+        formData.append('email', userData.email);
+        formData.append('phoneNumber', userData.phoneNumber || '');
+        formData.append('address', userData.address || '');
+        if (userData.avatar) {
+            formData.append('avatar', userData.avatar);
         }
 
         try {
@@ -248,19 +402,72 @@ const Account: React.FC = () => {
         } catch (error) {
             console.error('Lỗi: ', error);
 
-            Swal.fire({
-                title: 'Cập nhật thông tin tài khoản thất bại!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiErrors = error.response.data.messages;
+                    const newApiErrors: {
+                        phoneNumber?: string;
+                        email?: string;
+                    } = {};
+
+                    apiErrors.forEach((errorMessage: string) => {
+                        if (errorMessage.includes('PhoneNumber')) {
+                            newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
+                        } else if (errorMessage.includes('Email')) {
+                            newApiErrors.email = 'Email đã tồn tại.';
+                        }
+                    });
+
+                    setUserErrors(newApiErrors);
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
     const handlePasswordInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
+
+        if (name === 'currentPassword') {
+            if (!value) {
+                setPasswordErrors((prevErrors) => ({
+                    ...prevErrors,
+                    currentPassword: 'Mật khẩu cũ không được để trống.',
+                }));
+            } else {
+                setPasswordErrors((prevErrors) => ({ ...prevErrors, currentPassword: undefined }));
+            }
+        }
+
+        if (name === 'newPassword') {
+            if (!value) {
+                setPasswordErrors((prevErrors) => ({
+                    ...prevErrors,
+                    newPassword: 'Mật khẩu mới không được để trống.',
+                }));
+            } else {
+                setPasswordErrors((prevErrors) => ({ ...prevErrors, newPassword: undefined }));
+            }
+        }
+
+        if (name === 'confirmPassword') {
+            if (!value) {
+                setPasswordErrors((prevErrors) => ({
+                    ...prevErrors,
+                    confirmPassword: 'Xác nhận mật khẩu không được để trống.',
+                }));
+            } else {
+                setPasswordErrors((prevErrors) => ({ ...prevErrors, confirmPassword: undefined }));
+            }
+        }
 
         setPasswordData({
             ...passwordData,
@@ -270,6 +477,30 @@ const Account: React.FC = () => {
 
     const handleChangePassword = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        const newErrors: {
+            currentPassword?: string;
+            newPassword?: string;
+            confirmPassword?: string;
+        } = {};
+
+        if (!passwordData.currentPassword) {
+            newErrors.currentPassword = 'Mật khẩu cũ không được để trống.';
+        }
+
+        if (!passwordData.newPassword) {
+            newErrors.newPassword = 'Mật khẩu mới không được để trống.';
+        }
+
+        if (!passwordData.confirmPassword) {
+            newErrors.confirmPassword = 'Xác nhận mật khẩu không được để trống.';
+        }
+
+        setPasswordErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
             setError('Mật khẩu và mật khẩu xác nhận không khớp'!);
@@ -346,6 +577,9 @@ const Account: React.FC = () => {
                                                 style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                                 alt="Ảnh đại diện"
                                             />
+                                            {userErrors.avatar && (
+                                                <div className="text-danger">{userErrors.avatar}</div>
+                                            )}
                                             <input
                                                 type="file"
                                                 name="avatar"
@@ -360,8 +594,8 @@ const Account: React.FC = () => {
                                             >
                                                 Chọn ảnh
                                             </label>
-                                            <h3 className="profile-username">{user.name || user.userName}</h3>
-                                            <p className="text-muted">{user.role}</p>
+                                            <h3 className="profile-username">{userData.name || userData.userName}</h3>
+                                            <p className="text-muted">{userData.role}</p>
                                         </div>
                                     </div>
                                     <div className="col-md-8">
@@ -375,7 +609,7 @@ const Account: React.FC = () => {
                                                     type="text"
                                                     id="username"
                                                     className="form-control"
-                                                    value={user.userName}
+                                                    value={userData.userName}
                                                     readOnly
                                                 />
                                             </div>
@@ -390,9 +624,12 @@ const Account: React.FC = () => {
                                                     name="name"
                                                     id="name"
                                                     className="form-control"
-                                                    value={user.name}
+                                                    value={userData.name}
                                                     onChange={handleUserInputChange}
                                                 />
+                                                {userErrors.name && (
+                                                    <div className="text-danger">{userErrors.name}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="row my-4">
@@ -405,9 +642,12 @@ const Account: React.FC = () => {
                                                     name="phoneNumber"
                                                     id="phone-number"
                                                     className="form-control"
-                                                    value={user.phoneNumber}
+                                                    value={userData.phoneNumber}
                                                     onChange={handleUserInputChange}
                                                 />
+                                                {userErrors.phoneNumber && (
+                                                    <div className="text-danger">{userErrors.phoneNumber}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="row my-4">
@@ -420,9 +660,12 @@ const Account: React.FC = () => {
                                                     name="email"
                                                     id="email"
                                                     className="form-control"
-                                                    value={user.email}
+                                                    value={userData.email}
                                                     onChange={handleUserInputChange}
                                                 />
+                                                {userErrors.email && (
+                                                    <div className="text-danger">{userErrors.email}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="row my-4">
@@ -445,6 +688,9 @@ const Account: React.FC = () => {
                                                         </option>
                                                     ))}
                                                 </select>
+                                                {userErrors.city && (
+                                                    <div className="text-danger">{userErrors.city}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="row my-4">
@@ -471,6 +717,9 @@ const Account: React.FC = () => {
                                                         </option>
                                                     ))}
                                                 </select>
+                                                {userErrors.district && (
+                                                    <div className="text-danger">{userErrors.district}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="row my-4">
@@ -494,6 +743,9 @@ const Account: React.FC = () => {
                                                         </option>
                                                     ))}
                                                 </select>
+                                                {userErrors.ward && (
+                                                    <div className="text-danger">{userErrors.ward}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="row my-2">
@@ -505,7 +757,7 @@ const Account: React.FC = () => {
                                                     name="address"
                                                     id="address"
                                                     className="form-control"
-                                                    value={user.address}
+                                                    value={userData.address}
                                                     disabled
                                                 ></textarea>
                                             </div>
@@ -534,6 +786,9 @@ const Account: React.FC = () => {
                                             value={passwordData.currentPassword}
                                             onChange={handlePasswordInputChange}
                                         />
+                                        {passwordErrors.currentPassword && (
+                                            <div className="text-danger">{passwordErrors.currentPassword}</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="row d-flex justify-content-center my-4">
@@ -549,6 +804,9 @@ const Account: React.FC = () => {
                                             value={passwordData.newPassword}
                                             onChange={handlePasswordInputChange}
                                         />
+                                        {passwordErrors.newPassword && (
+                                            <div className="text-danger">{passwordErrors.newPassword}</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="row d-flex justify-content-center my-2">
@@ -564,18 +822,20 @@ const Account: React.FC = () => {
                                             value={passwordData.confirmPassword}
                                             onChange={handlePasswordInputChange}
                                         />
+                                        {passwordErrors.confirmPassword && (
+                                            <div className="text-danger">{passwordErrors.confirmPassword}</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="row d-flex justify-content-center">
-                                    <div id="alert-message" className="col-md-7"></div>
-                                </div>
-
-                                {error && (
-                                    <div className="alert alert-danger mt-3" role="alert">
-                                        {error}
+                                    <div id="alert-message" className="col-md-7">
+                                        {error && (
+                                            <div className="alert alert-danger mt-3" role="alert">
+                                                {error}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-
+                                </div>
                                 <div className="custom-control custom-checkbox text-center my-2">
                                     <input
                                         type="checkbox"

@@ -11,6 +11,11 @@ const ChangePassword: React.FC = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [errors, setErrors] = useState<{
+        currentPassword?: string;
+        newPassword?: string;
+        confirmPassword?: string;
+    }>({});
 
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
@@ -20,6 +25,39 @@ const ChangePassword: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
+        if (name === 'currentPassword') {
+            if (!value) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    currentPassword: 'Mật khẩu cũ không được để trống.',
+                }));
+            } else {
+                setErrors((prevErrors) => ({ ...prevErrors, currentPassword: undefined }));
+            }
+        }
+
+        if (name === 'newPassword') {
+            if (!value) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    newPassword: 'Mật khẩu mới không được để trống.',
+                }));
+            } else {
+                setErrors((prevErrors) => ({ ...prevErrors, newPassword: undefined }));
+            }
+        }
+
+        if (name === 'confirmPassword') {
+            if (!value) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    confirmPassword: 'Xác nhận mật khẩu không được để trống.',
+                }));
+            } else {
+                setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: undefined }));
+            }
+        }
+
         setPasswordData({
             ...passwordData,
             [name]: value,
@@ -27,12 +65,32 @@ const ChangePassword: React.FC = () => {
         setError('');
     };
 
-    const handleShowPasswordChange = () => {
-        setShowPassword(!showPassword);
-    };
-
     const handleChangePassword = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        const newErrors: {
+            currentPassword?: string;
+            newPassword?: string;
+            confirmPassword?: string;
+        } = {};
+
+        if (!passwordData.currentPassword) {
+            newErrors.currentPassword = 'Mật khẩu cũ không được để trống.';
+        }
+
+        if (!passwordData.newPassword) {
+            newErrors.newPassword = 'Mật khẩu mới không được để trống.';
+        }
+
+        if (!passwordData.confirmPassword) {
+            newErrors.confirmPassword = 'Xác nhận mật khẩu không được để trống.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
             setError('Mật khẩu và mật khẩu xác nhận không khớp'!);
@@ -86,6 +144,9 @@ const ChangePassword: React.FC = () => {
                                         value={passwordData.currentPassword}
                                         onChange={handleInputChange}
                                     />
+                                    {errors.currentPassword && (
+                                        <div className="text-danger">{errors.currentPassword}</div>
+                                    )}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="new-password" className="form-label my-3">
@@ -99,6 +160,7 @@ const ChangePassword: React.FC = () => {
                                         value={passwordData.newPassword}
                                         onChange={handleInputChange}
                                     />
+                                    {errors.newPassword && <div className="text-danger">{errors.newPassword}</div>}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="confirm-password" className="form-label my-3">
@@ -112,28 +174,28 @@ const ChangePassword: React.FC = () => {
                                         value={passwordData.confirmPassword}
                                         onChange={handleInputChange}
                                     />
+                                    {errors.confirmPassword && (
+                                        <div className="text-danger">{errors.confirmPassword}</div>
+                                    )}
                                 </div>
-
                                 {error && (
                                     <div className="alert alert-danger mt-3" role="alert">
                                         {error}
                                     </div>
                                 )}
-
                                 <div className="d-flex justify-content-center mt-3">
                                     <div className="form-check text-start">
                                         <input
                                             type="checkbox"
                                             className="form-check-input"
                                             id="show-password"
-                                            onChange={handleShowPasswordChange}
+                                            onChange={() => setShowPassword(!showPassword)}
                                         />
                                         <label htmlFor="show-password" className="form-check-label">
                                             Hiện mật khẩu
                                         </label>
                                     </div>
                                 </div>
-
                                 <div className="d-flex justify-content-center mt-4">
                                     <button
                                         type="submit"

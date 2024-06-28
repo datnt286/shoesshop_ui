@@ -25,7 +25,6 @@ const AppRoutes: React.FC = () => {
                 <Route path="/dang-nhap" element={<LoginPage />} />
             </Route>
 
-            <Route element={<PrivateWrapper />}>
                 <Route path="/" element={<BrandPage />} />
                 <Route path="/tai-khoan" element={<AccountPage />} />
                 <Route path="/nhan-hieu" element={<BrandPage />} />
@@ -39,6 +38,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/san-pham/:modelId" element={<ProductPage />} />
                 <Route path="/hoa-don" element={<InvoicePage />} />
                 <Route path="/binh-luan" element={<CommentPage />} />
+            <Route element={<PrivateWrapper />}>
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

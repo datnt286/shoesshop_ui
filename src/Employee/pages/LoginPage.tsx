@@ -13,17 +13,74 @@ import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
 
 const LoginPage: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [credentials, setCredentials] = useState({
+        userName: '',
+        password: '',
+    });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [validationErrors, setValidationErrors] = useState<{
+        userName?: string;
+        password?: string;
+    }>({});
     const navigate = useNavigate();
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+
+        if (name === 'userName') {
+            if (!value) {
+                setValidationErrors((prevErrors) => ({
+                    ...prevErrors,
+                    userName: 'Tên đăng nhập không được để trống.',
+                }));
+            } else {
+                setValidationErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
+            }
+        }
+
+        if (name === 'password') {
+            if (!value) {
+                setValidationErrors((prevErrors) => ({
+                    ...prevErrors,
+                    password: 'Mật khẩu không được để trống.',
+                }));
+            } else {
+                setValidationErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+            }
+        }
+
+        setCredentials({
+            ...credentials,
+            [name]: value,
+        });
+        setError('');
+    };
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        const newErrors: {
+            userName?: string;
+            password?: string;
+        } = {};
+
+        if (!credentials.userName) {
+            newErrors.userName = 'Tên đăng nhập không được để trống.';
+        }
+
+        if (!credentials.password) {
+            newErrors.password = 'Mật khẩu không được để trống.';
+        }
+
+        setValidationErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
+
         try {
-            const response = await AxiosInstance.post('/Users/Employee/login', { username, password });
+            const response = await AxiosInstance.post('/Users/Employee/login', credentials);
 
             if (response.status === 200) {
                 localStorage.setItem('employeeToken', response.data.token);
@@ -55,49 +112,58 @@ const LoginPage: React.FC = () => {
                         </div>
                         <div className="card-body">
                             <form id="form-login" onSubmit={handleLogin}>
-                                <div className="input-group mb-3">
-                                    <input
-                                        name="username"
-                                        className="form-control"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        placeholder="Tên đăng nhập"
-                                    />
-                                    <div className="input-group-append">
-                                        <div className="input-group-text">
-                                            <span className="fas fa-user"></span>
+                                <div className="mb-3">
+                                    <div className="input-group">
+                                        <input
+                                            name="userName"
+                                            className="form-control"
+                                            value={credentials.userName}
+                                            onChange={handleInputChange}
+                                            placeholder="Tên đăng nhập"
+                                        />
+                                        <div className="input-group-append">
+                                            <div className="input-group-text">
+                                                <span className="fas fa-user"></span>
+                                            </div>
                                         </div>
                                     </div>
+                                    {validationErrors.userName && (
+                                        <div className="text-danger mt-1 ml-1">{validationErrors.userName}</div>
+                                    )}
                                 </div>
-                                <div className="input-group mb-3">
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        id="password"
-                                        className="form-control"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Mật khẩu"
-                                    />
-                                    <div className="input-group-append">
-                                        <div className="input-group-text">
-                                            <span className="fas fa-lock"></span>
+                                <div className="mb-3">
+                                    <div className="input-group">
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password"
+                                            id="password"
+                                            className="form-control"
+                                            value={credentials.password}
+                                            onChange={handleInputChange}
+                                            placeholder="Mật khẩu"
+                                        />
+                                        <div className="input-group-append">
+                                            <div className="input-group-text">
+                                                <span className="fas fa-lock"></span>
+                                            </div>
                                         </div>
                                     </div>
+                                    {validationErrors.password && (
+                                        <div className="text-danger mt-1 ml-1">{validationErrors.password}</div>
+                                    )}
                                 </div>
-
                                 {error && (
                                     <div className="alert alert-danger mt-3" role="alert">
                                         {error}
                                     </div>
                                 )}
-
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="icheck-primary">
                                             <input
                                                 type="checkbox"
                                                 id="show-password"
+                                                className="mr-1"
                                                 onChange={() => setShowPassword(!showPassword)}
                                             />
                                             <label htmlFor="show-password"> Hiện mật khẩu</label>

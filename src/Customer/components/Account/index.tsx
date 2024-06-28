@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
+
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 interface User {
     userName: string;
@@ -33,7 +37,7 @@ interface Ward {
 
 const Account: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<User>({
+    const [userData, setUserData] = useState<User>({
         userName: '',
         name: '',
         email: '',
@@ -50,6 +54,16 @@ const Account: React.FC = () => {
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
 
+    const [errors, setErrors] = useState<{
+        name?: string;
+        phoneNumber?: string;
+        email?: string;
+        city?: string;
+        district?: string;
+        ward?: string;
+        avatar?: string;
+    }>({});
+
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
 
@@ -58,7 +72,7 @@ const Account: React.FC = () => {
                 const decodedToken: User = jwtDecode<User>(token);
 
                 setToken(token);
-                setUser({
+                setUserData({
                     userName: decodedToken.userName,
                     name: decodedToken.name || '',
                     email: decodedToken.email,
@@ -122,8 +136,60 @@ const Account: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
 
-        setUser({
-            ...user,
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Họ tên không được để trống.' }));
+            } else {
+                const vietnameseCharacterRegex =
+                    /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
+
+                if (!vietnameseCharacterRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Họ tên không được chứa số và ký tự đặc biệt.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (name === 'phoneNumber') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: 'Số điện thoại không được để trống.' }));
+            } else {
+                const phoneNumberRegex = /^0\d{9}$/;
+
+                if (!phoneNumberRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        phoneNumber: 'Số điện thoại phải bắt đầu bằng số 0 và đủ 10 chữ số.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: undefined }));
+                }
+            }
+        }
+
+        if (name === 'email') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        email: 'Email không hợp lệ.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                }
+            }
+        }
+
+        setUserData({
+            ...userData,
             [name]: value,
         });
     };
@@ -132,13 +198,33 @@ const Account: React.FC = () => {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Chỉ được chọn các tệp hình ảnh (jpg, jpeg, png, webp).',
+                }));
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Dung lượng ảnh phải nhỏ hơn 2MB.',
+                }));
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setAvatarPreview(reader.result as string);
-                setUser({
-                    ...user,
+                setUserData({
+                    ...userData,
                     avatar: file,
                 });
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: undefined,
+                }));
             };
             reader.readAsDataURL(file);
         }
@@ -147,8 +233,8 @@ const Account: React.FC = () => {
     const updateAddress = (cityName: string, districtName: string, wardName: string) => {
         const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
 
-        setUser({
-            ...user,
+        setUserData({
+            ...userData,
             address,
         });
     };
@@ -156,6 +242,12 @@ const Account: React.FC = () => {
     const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const cityId = event.target.value;
         const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (!cityId) {
+            setErrors((prevErrors) => ({ ...prevErrors, city: 'Vui lòng chọn Tỉnh/Thành phố.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, city: undefined }));
+        }
 
         if (selectedCity) {
             setDistricts(selectedCity.Districts);
@@ -178,6 +270,12 @@ const Account: React.FC = () => {
         const districtId = event.target.value;
         const selectedDistrict = districts.find((district) => district.Id === districtId);
 
+        if (!districtId) {
+            setErrors((prevErrors) => ({ ...prevErrors, district: 'Vui lòng chọn Quận/Huyện.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, district: undefined }));
+        }
+
         if (selectedDistrict) {
             setWards(selectedDistrict.Wards);
             setSelectedDistrict(selectedDistrict.Name);
@@ -195,6 +293,12 @@ const Account: React.FC = () => {
         const wardId = event.target.value;
         const selectedWard = wards.find((ward) => ward.Id === wardId);
 
+        if (!wardId) {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: 'Vui lòng chọn Phường/Xã.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: undefined }));
+        }
+
         if (selectedWard) {
             setSelectedWard(selectedWard.Name);
             updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
@@ -207,14 +311,58 @@ const Account: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const newErrors: {
+            name?: string;
+            phoneNumber?: string;
+            email?: string;
+            city?: string;
+            district?: string;
+            ward?: string;
+            avatar?: string;
+        } = {};
+
+        if (!userData.name) {
+            newErrors.name = 'Họ tên không được để trống.';
+        }
+
+        if (!userData.phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được để trống.';
+        }
+
+        if (!userData.email) {
+            newErrors.email = 'Email không được để trống.';
+        }
+
+        if (!selectedCity) {
+            newErrors.city = 'Vui lòng chọn Tỉnh/Thành phố.';
+        }
+
+        if (!selectedDistrict) {
+            newErrors.district = 'Vui lòng chọn Quận/Huyện.';
+        }
+
+        if (!selectedWard) {
+            newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        if (errors.avatar) {
+            newErrors.avatar = errors.avatar;
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
+
         const formData = new FormData();
-        formData.append('userName', user.userName);
-        formData.append('name', user.name || '');
-        formData.append('email', user.email);
-        formData.append('phoneNumber', user.phoneNumber || '');
-        formData.append('address', user.address || '');
-        if (user.avatar) {
-            formData.append('avatar', user.avatar);
+        formData.append('userName', userData.userName);
+        formData.append('name', userData.name || '');
+        formData.append('email', userData.email);
+        formData.append('phoneNumber', userData.phoneNumber || '');
+        formData.append('address', userData.address || '');
+        if (userData.avatar) {
+            formData.append('avatar', userData.avatar);
         }
 
         try {
@@ -237,12 +385,32 @@ const Account: React.FC = () => {
         } catch (error) {
             console.error('Lỗi: ', error);
 
-            Swal.fire({
-                title: 'Cập nhật thông tin tài khoản thất bại! Vui lòng thử lại.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiErrors = error.response.data.messages;
+                    const newApiErrors: {
+                        phoneNumber?: string;
+                        email?: string;
+                    } = {};
+
+                    apiErrors.forEach((errorMessage: string) => {
+                        if (errorMessage.includes('PhoneNumber')) {
+                            newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
+                        } else if (errorMessage.includes('Email')) {
+                            newApiErrors.email = 'Email đã tồn tại.';
+                        }
+                    });
+
+                    setErrors(newApiErrors);
+                }
+            } else {
+                Swal.fire({
+                    title: 'Cập nhật thông tin tài khoản thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',
+                });
+            }
         }
     };
 
@@ -264,6 +432,9 @@ const Account: React.FC = () => {
                                                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                                         alt="Ảnh đại diện"
                                                     />
+                                                    {errors.avatar && (
+                                                        <div className="text-danger">{errors.avatar}</div>
+                                                    )}
                                                 </div>
                                                 <div className="col-12">
                                                     <input
@@ -288,7 +459,7 @@ const Account: React.FC = () => {
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                value={user.userName}
+                                                value={userData.userName}
                                                 readOnly
                                             />
                                         </div>
@@ -301,10 +472,10 @@ const Account: React.FC = () => {
                                                 name="name"
                                                 id="name"
                                                 className="form-control"
-                                                value={user.name}
+                                                value={userData.name}
                                                 onChange={handleInputChange}
-                                                required
                                             />
+                                            {errors.name && <div className="text-danger">{errors.name}</div>}
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="email" className="form-label my-3">
@@ -315,10 +486,10 @@ const Account: React.FC = () => {
                                                 name="email"
                                                 id="email"
                                                 className="form-control"
-                                                value={user.email}
+                                                value={userData.email}
                                                 onChange={handleInputChange}
-                                                required
                                             />
+                                            {errors.email && <div className="text-danger">{errors.email}</div>}
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="phone-number" className="form-label my-3">
@@ -329,10 +500,12 @@ const Account: React.FC = () => {
                                                 name="phoneNumber"
                                                 id="phone-number"
                                                 className="form-control"
-                                                value={user.phoneNumber}
+                                                value={userData.phoneNumber}
                                                 onChange={handleInputChange}
-                                                required
                                             />
+                                            {errors.phoneNumber && (
+                                                <div className="text-danger">{errors.phoneNumber}</div>
+                                            )}
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="city" className="form-label my-3">
@@ -343,7 +516,6 @@ const Account: React.FC = () => {
                                                 className="form-select"
                                                 value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
                                                 onChange={handleCityChange}
-                                                required
                                             >
                                                 <option value="" disabled>
                                                     Chọn Tỉnh/Thành phố
@@ -354,6 +526,7 @@ const Account: React.FC = () => {
                                                     </option>
                                                 ))}
                                             </select>
+                                            {errors.city && <div className="text-danger">{errors.city}</div>}
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="district" className="form-label my-3">
@@ -368,7 +541,6 @@ const Account: React.FC = () => {
                                                 }
                                                 onChange={handleDistrictChange}
                                                 disabled={districts.length === 0}
-                                                required
                                             >
                                                 <option value="" disabled>
                                                     Chọn Quận/Huyện
@@ -379,6 +551,7 @@ const Account: React.FC = () => {
                                                     </option>
                                                 ))}
                                             </select>
+                                            {errors.district && <div className="text-danger">{errors.district}</div>}
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="ward" className="form-label my-3">
@@ -390,7 +563,6 @@ const Account: React.FC = () => {
                                                 value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
                                                 onChange={handleWardChange}
                                                 disabled={wards.length === 0}
-                                                required
                                             >
                                                 <option value="" disabled>
                                                     Chọn Phường/Xã
@@ -401,6 +573,7 @@ const Account: React.FC = () => {
                                                     </option>
                                                 ))}
                                             </select>
+                                            {errors.ward && <div className="text-danger">{errors.ward}</div>}
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="address" className="form-label my-3">
@@ -410,7 +583,7 @@ const Account: React.FC = () => {
                                                 name="address"
                                                 id="address"
                                                 className="form-control"
-                                                value={user.address}
+                                                value={userData.address}
                                                 disabled
                                             ></textarea>
                                         </div>

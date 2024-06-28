@@ -4,24 +4,82 @@ import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 
 const Login: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [credentials, setCredentials] = useState({
+        userName: '',
+        password: '',
+    });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [validationErrors, setValidationErrors] = useState<{
+        userName?: string;
+        password?: string;
+    }>({});
     const navigate = useNavigate();
 
-    const handleShowPasswordChange = () => {
-        setShowPassword(!showPassword);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+
+        if (name === 'userName') {
+            if (!value) {
+                setValidationErrors((prevErrors) => ({
+                    ...prevErrors,
+                    userName: 'Tên đăng nhập không được để trống.',
+                }));
+            } else {
+                setValidationErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
+            }
+        }
+
+        if (name === 'password') {
+            if (!value) {
+                setValidationErrors((prevErrors) => ({ ...prevErrors, email: 'Mật khẩu không được để trống.' }));
+            } else {
+                const passwordRegex =
+                    /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
+
+                if (!passwordRegex.test(value)) {
+                    setValidationErrors((prevErrors) => ({
+                        ...prevErrors,
+                        password:
+                            'Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số hoặc ký tự đặc biệt.',
+                    }));
+                } else {
+                    setValidationErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+                }
+            }
+        }
+
+        setCredentials({
+            ...credentials,
+            [name]: value,
+        });
+        setError('');
     };
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        const newErrors: {
+            userName?: string;
+            password?: string;
+        } = {};
+
+        if (!credentials.userName) {
+            newErrors.userName = 'Tên đăng nhập không được để trống.';
+        }
+
+        if (!credentials.password) {
+            newErrors.password = 'Mật khẩu không được để trống.';
+        }
+
+        setValidationErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
+
         try {
-            const response = await AxiosInstance.post('/Users/Customer/login', {
-                username,
-                password,
-            });
+            const response = await AxiosInstance.post('/Users/Customer/login', credentials);
 
             if (response.status === 200) {
                 localStorage.setItem('customerToken', response.data.token);
@@ -53,12 +111,15 @@ const Login: React.FC = () => {
                                     </label>
                                     <input
                                         type="text"
+                                        name="userName"
                                         id="username"
                                         className="form-control"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        required
+                                        value={credentials.userName}
+                                        onChange={handleInputChange}
                                     />
+                                    {validationErrors.userName && (
+                                        <div className="text-danger">{validationErrors.userName}</div>
+                                    )}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="password" className="form-label my-3">
@@ -66,12 +127,15 @@ const Login: React.FC = () => {
                                     </label>
                                     <input
                                         type={showPassword ? 'text' : 'password'}
+                                        name="password"
                                         id="password"
                                         className="form-control"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
+                                        value={credentials.password}
+                                        onChange={handleInputChange}
                                     />
+                                    {validationErrors.password && (
+                                        <div className="text-danger">{validationErrors.password}</div>
+                                    )}
                                 </div>
                                 {error && (
                                     <div className="alert alert-danger mt-3" role="alert">
@@ -87,7 +151,7 @@ const Login: React.FC = () => {
                                             type="checkbox"
                                             id="show-password"
                                             className="form-check-input"
-                                            onChange={handleShowPasswordChange}
+                                            onChange={() => setShowPassword(!showPassword)}
                                         />
                                         <label htmlFor="show-password" className="form-check-label">
                                             Hiện mật khẩu
