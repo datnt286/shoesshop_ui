@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination/index';
@@ -67,6 +68,17 @@ const Customer: React.FC = () => {
     const [selectedCity, setSelectedCity] = useState<string>('');
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
+
+    const [errors, setErrors] = useState<{
+        password?: string;
+        name?: string;
+        phoneNumber?: string;
+        email?: string;
+        city?: string;
+        district?: string;
+        ward?: string;
+        salary?: string;
+    }>({});
 
     const avatarSrc = selectedCustomer?.avatar
         ? `${config.baseURL}/images/avatar/${selectedCustomer.avatar}`
@@ -187,6 +199,77 @@ const Customer: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
+        if (name === 'password') {
+            if (value) {
+                const passwordRegex =
+                    /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
+
+                if (!passwordRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        password:
+                            'Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số hoặc ký tự đặc biệt.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+                }
+            } else {
+                setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+            }
+        }
+
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Họ tên không được để trống.' }));
+            } else {
+                const vietnameseCharacterRegex =
+                    /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
+
+                if (!vietnameseCharacterRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Họ tên không được chứa số và ký tự đặc biệt.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (name === 'phoneNumber') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: 'Số điện thoại không được để trống.' }));
+            } else {
+                const phoneNumberRegex = /^0\d{9}$/;
+
+                if (!phoneNumberRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        phoneNumber: 'Số điện thoại phải bắt đầu bằng số 0 và đủ 10 chữ số.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: undefined }));
+                }
+            }
+        }
+
+        if (name === 'email') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        email: 'Email không hợp lệ.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                }
+            }
+        }
+
         setCustomerData({
             ...customerData,
             [name]: value,
@@ -222,6 +305,12 @@ const Customer: React.FC = () => {
         const cityId = event.target.value;
         const selectedCity = cities.find((city) => city.Id === cityId);
 
+        if (!cityId) {
+            setErrors((prevErrors) => ({ ...prevErrors, city: 'Vui lòng chọn Tỉnh/Thành phố.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, city: undefined }));
+        }
+
         if (selectedCity) {
             setDistricts(selectedCity.Districts);
             setWards([]);
@@ -243,6 +332,12 @@ const Customer: React.FC = () => {
         const districtId = event.target.value;
         const selectedDistrict = districts.find((district) => district.Id === districtId);
 
+        if (!districtId) {
+            setErrors((prevErrors) => ({ ...prevErrors, district: 'Vui lòng chọn Quận/Huyện.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, district: undefined }));
+        }
+
         if (selectedDistrict) {
             setWards(selectedDistrict.Wards);
             setSelectedDistrict(selectedDistrict.Name);
@@ -260,6 +355,12 @@ const Customer: React.FC = () => {
         const wardId = event.target.value;
         const selectedWard = wards.find((ward) => ward.Id === wardId);
 
+        if (!wardId) {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: 'Vui lòng chọn Phường/Xã.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: undefined }));
+        }
+
         if (selectedWard) {
             setSelectedWard(selectedWard.Name);
             updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
@@ -271,6 +372,45 @@ const Customer: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        const newErrors: {
+            name?: string;
+            phoneNumber?: string;
+            email?: string;
+            city?: string;
+            district?: string;
+            ward?: string;
+        } = {};
+
+        if (!customerData.name) {
+            newErrors.name = 'Họ tên không được để trống.';
+        }
+
+        if (!customerData.phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được để trống.';
+        }
+
+        if (!customerData.email) {
+            newErrors.email = 'Email không được để trống.';
+        }
+
+        if (!selectedCity) {
+            newErrors.city = 'Vui lòng chọn Tỉnh/Thành phố.';
+        }
+
+        if (!selectedDistrict) {
+            newErrors.district = 'Vui lòng chọn Quận/Huyện.';
+        }
+
+        if (!selectedWard) {
+            newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         try {
             let formData = new FormData();
@@ -308,14 +448,34 @@ const Customer: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi gửi dữ liệu:', error);
 
-            Swal.fire({
-                title: 'Lỗi khi gửi dữ liệu!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiErrors = error.response.data.messages;
+                    const newApiErrors: {
+                        phoneNumber?: string;
+                        email?: string;
+                    } = {};
+
+                    apiErrors.forEach((errorMessage: string) => {
+                        if (errorMessage.includes('PhoneNumber')) {
+                            newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
+                        } else if (errorMessage.includes('Email')) {
+                            newApiErrors.email = 'Email đã tồn tại.';
+                        }
+                    });
+
+                    setErrors(newApiErrors);
+                }
+            } else {
+                Swal.fire({
+                    title: 'Lỗi không xác định!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -332,6 +492,7 @@ const Customer: React.FC = () => {
             status: 1,
             avatar: null,
         });
+        setErrors({});
     };
 
     const handleDetailClick = (customer: Customer) => {
@@ -490,6 +651,7 @@ const Customer: React.FC = () => {
                                 value={customerData.password}
                                 onChange={handleInputChange}
                             />
+                            {errors.password && <div className="text-danger">{errors.password}</div>}
                         </div>
                         <div className="custom-control custom-checkbox text-center">
                             <input
@@ -513,6 +675,7 @@ const Customer: React.FC = () => {
                                 value={customerData.name}
                                 onChange={handleInputChange}
                             />
+                            {errors.name && <div className="text-danger">{errors.name}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="phone-number">Điện thoại: </label>
@@ -524,6 +687,7 @@ const Customer: React.FC = () => {
                                 value={customerData.phoneNumber}
                                 onChange={handleInputChange}
                             />
+                            {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="email">Email: </label>
@@ -535,6 +699,7 @@ const Customer: React.FC = () => {
                                 value={customerData.email}
                                 onChange={handleInputChange}
                             />
+                            {errors.email && <div className="text-danger">{errors.email}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="city">Tỉnh/Thành phố</label>
@@ -553,6 +718,7 @@ const Customer: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.city && <div className="text-danger">{errors.city}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="district">Quận/Huyện</label>
@@ -572,6 +738,7 @@ const Customer: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.district && <div className="text-danger">{errors.district}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="ward">Phường/Xã</label>
@@ -591,6 +758,7 @@ const Customer: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.ward && <div className="text-danger">{errors.ward}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="address">Địa chỉ: </label>

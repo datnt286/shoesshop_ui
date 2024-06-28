@@ -243,9 +243,7 @@ const Employee: React.FC = () => {
             }
 
             if (name === 'password') {
-                if (!value) {
-                    setErrors((prevErrors) => ({ ...prevErrors, password: 'Mật khẩu không được để trống.' }));
-                } else {
+                if (value) {
                     const passwordRegex =
                         /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
 
@@ -258,6 +256,10 @@ const Employee: React.FC = () => {
                     } else {
                         setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
                     }
+                } else if (!value && !isEditMode) {
+                    setErrors((prevErrors) => ({ ...prevErrors, password: 'Mật khẩu không được để trống.' }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
                 }
             }
 
