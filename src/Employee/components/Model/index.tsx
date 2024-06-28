@@ -11,6 +11,9 @@ import DeleteModal from '../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
 import DefaultImage from '../../resources/img/default-image.jpg';
 
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
 interface Model {
     id: number | null;
     name: string;
@@ -78,6 +81,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         supplier?: string;
         importPrice?: string;
         price?: string;
+        images?: string;
     }>({});
 
     const fetchModels = async (currentPage = 1, pageSize = 10) => {
@@ -292,8 +296,29 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
 
         if (files) {
             const filesArray: File[] = Array.from(files);
+            const invalidFiles = filesArray.filter(
+                (file) => !ALLOWED_IMAGE_TYPES.includes(file.type) || file.size > MAX_FILE_SIZE,
+            );
 
-            setSelectedImageFiles(filesArray);
+            if (invalidFiles.length > 0) {
+                const errorMessages = invalidFiles
+                    .map((file) => {
+                        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                            return `File ${file.name} không phải là hình ảnh hợp lệ.`;
+                        } else if (file.size > MAX_FILE_SIZE) {
+                            return `Dung lượng file ${file.name} vượt quá 2MB.`;
+                        }
+                        return '';
+                    })
+                    .join(' ');
+
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    images: errorMessages,
+                }));
+
+                return;
+            }
 
             const imagesArray: string[] = [];
             const promises = filesArray.map((file) => {
@@ -313,6 +338,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                     ...modelData,
                     images: filesArray,
                 });
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    images: undefined,
+                }));
             });
         }
     };
@@ -341,6 +370,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             supplier?: string;
             importPrice?: string;
             price?: string;
+            images?: string;
         } = {};
 
         if (!modelData.name) {
@@ -365,6 +395,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
 
         if (!modelData.price) {
             newErrors.price = 'Giá bán không được để trống.';
+        }
+
+        if (errors.images) {
+            newErrors.images = errors.images;
         }
 
         setErrors(newErrors);
@@ -595,35 +629,38 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                 Ảnh mẫu sản phẩm:
                             </label>
                             <div>
-                                {imagePreviews && imagePreviews.length > 0 ? (
-                                    <>
-                                        {imagePreviews.map((image, index) => (
-                                            <span className="d-inline-flex flex-column align-items-center">
-                                                <img
-                                                    key={index}
-                                                    src={image}
-                                                    className="img img-thumbnail mx-1 my-2"
-                                                    style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                                    alt={`Ảnh sản phẩm ${index + 1}`}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-sm btn-danger my-1"
-                                                    onClick={() => handleImageDelete(index)}
-                                                >
-                                                    Xoá
-                                                </button>
-                                            </span>
-                                        ))}
-                                    </>
-                                ) : (
-                                    <img
-                                        src={DefaultImage}
-                                        className="img img-thumbnail my-2"
-                                        style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                        alt={'Ảnh sản phẩm'}
-                                    />
-                                )}
+                                <>
+                                    {imagePreviews && imagePreviews.length > 0 ? (
+                                        <>
+                                            {imagePreviews.map((image, index) => (
+                                                <span className="d-inline-flex flex-column align-items-center">
+                                                    <img
+                                                        key={index}
+                                                        src={image}
+                                                        className="img img-thumbnail mx-1 my-2"
+                                                        style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                        alt={`Ảnh sản phẩm ${index + 1}`}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-danger my-1"
+                                                        onClick={() => handleImageDelete(index)}
+                                                    >
+                                                        Xoá
+                                                    </button>
+                                                </span>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <img
+                                            src={DefaultImage}
+                                            className="img img-thumbnail my-2"
+                                            style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                            alt={'Ảnh sản phẩm'}
+                                        />
+                                    )}
+                                    {errors.images && <div className="text-danger">{errors.images}</div>}
+                                </>
                             </div>
                             <input
                                 type="file"

@@ -11,6 +11,9 @@ import DeleteModal from '../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
 import DefaultImage from '../../resources/img/default-image.jpg';
 
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
 interface Product {
     id: number | null;
     name: string;
@@ -84,6 +87,7 @@ const Product: React.FC = () => {
         importPrice?: string;
         price?: string;
         quantity?: string;
+        image?: string;
     }>({});
 
     const imageSrc = selectedProduct?.image
@@ -343,6 +347,22 @@ const Product: React.FC = () => {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    image: 'Chỉ được chọn các tệp hình ảnh (jpg, jpeg, png, webp).',
+                }));
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    image: 'Dung lượng ảnh phải nhỏ hơn 2MB.',
+                }));
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result as string);
@@ -350,6 +370,10 @@ const Product: React.FC = () => {
                     ...productData,
                     image: file,
                 });
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    image: undefined,
+                }));
             };
             reader.readAsDataURL(file);
         }
@@ -365,6 +389,7 @@ const Product: React.FC = () => {
             importPrice?: string;
             price?: string;
             quantity?: string;
+            image?: string;
         } = {};
 
         if (!productData.name) {
@@ -389,6 +414,10 @@ const Product: React.FC = () => {
 
         if (!productData.quantity) {
             newErrors.quantity = 'Số lượng không được để trống.';
+        }
+
+        if (errors.image) {
+            newErrors.image = errors.image;
         }
 
         setErrors(newErrors);
@@ -636,6 +665,7 @@ const Product: React.FC = () => {
                                     style={{ maxWidth: '100px', maxHeight: '100px' }}
                                     alt="Ảnh sản phẩm"
                                 />
+                                {errors.image && <div className="text-danger">{errors.image}</div>}
                             </div>
                             <input
                                 type="file"

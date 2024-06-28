@@ -10,6 +10,9 @@ import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
 
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
 interface Employee {
     id: string | null;
     userName: string;
@@ -88,6 +91,7 @@ const Employee: React.FC = () => {
         district?: string;
         ward?: string;
         salary?: string;
+        avatar?: string;
     }>({});
 
     const avatarSrc = selectedEmployee?.avatar
@@ -343,6 +347,22 @@ const Employee: React.FC = () => {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Chỉ được chọn các tệp hình ảnh (jpg, jpeg, png, webp).',
+                }));
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Dung lượng ảnh phải nhỏ hơn 2MB.',
+                }));
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setAvatarPreview(reader.result as string);
@@ -350,6 +370,10 @@ const Employee: React.FC = () => {
                     ...employeeData,
                     avatar: file,
                 });
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: undefined,
+                }));
             };
             reader.readAsDataURL(file);
         }
@@ -446,6 +470,7 @@ const Employee: React.FC = () => {
             district?: string;
             ward?: string;
             salary?: string;
+            avatar?: string;
         } = {};
 
         if (!employeeData.userName) {
@@ -482,6 +507,10 @@ const Employee: React.FC = () => {
 
         if (!employeeData.salary) {
             newErrors.salary = 'Lương không được để trống.';
+        }
+
+        if (errors.avatar) {
+            newErrors.avatar = errors.avatar;
         }
 
         setErrors(newErrors);
@@ -731,6 +760,7 @@ const Employee: React.FC = () => {
                                     style={{ maxWidth: '100px', maxHeight: '100px' }}
                                     alt="Ảnh đại diện"
                                 />
+                                {errors.avatar && <div className="text-danger">{errors.avatar}</div>}
                             </div>
                             <input
                                 type="file"

@@ -9,6 +9,9 @@ import Pagination from '../Pagination/index';
 import ExportPDFButton from '../ExportPDFButton/index';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
 
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
 interface Customer {
     id: string | null;
     userName: string;
@@ -78,6 +81,7 @@ const Customer: React.FC = () => {
         district?: string;
         ward?: string;
         salary?: string;
+        avatar?: string;
     }>({});
 
     const avatarSrc = selectedCustomer?.avatar
@@ -280,6 +284,22 @@ const Customer: React.FC = () => {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Chỉ được chọn các tệp hình ảnh (jpg, jpeg, png, webp).',
+                }));
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: 'Dung lượng ảnh phải nhỏ hơn 2MB.',
+                }));
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setAvatarPreview(reader.result as string);
@@ -287,6 +307,10 @@ const Customer: React.FC = () => {
                     ...customerData,
                     avatar: file,
                 });
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    avatar: undefined,
+                }));
             };
             reader.readAsDataURL(file);
         }
@@ -380,6 +404,7 @@ const Customer: React.FC = () => {
             city?: string;
             district?: string;
             ward?: string;
+            avatar?: string;
         } = {};
 
         if (!customerData.name) {
@@ -404,6 +429,10 @@ const Customer: React.FC = () => {
 
         if (!selectedWard) {
             newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        if (errors.avatar) {
+            newErrors.avatar = errors.avatar;
         }
 
         setErrors(newErrors);
@@ -618,6 +647,7 @@ const Customer: React.FC = () => {
                                     style={{ maxWidth: '100px', maxHeight: '100px' }}
                                     alt="Ảnh đại diện"
                                 />
+                                {errors.avatar && <div className="text-danger">{errors.avatar}</div>}
                             </div>
                             <input
                                 type="file"
