@@ -12,8 +12,8 @@ const Register: React.FC = () => {
         confirmPassword: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
-    const [validationErrors, setValidationErrors] = useState<{
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState<{
         userName?: string;
         email?: string;
         password?: string;
@@ -26,59 +26,59 @@ const Register: React.FC = () => {
 
         if (name === 'userName') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({
+                setErrors((prevErrors) => ({
                     ...prevErrors,
                     userName: 'Tên đăng nhập không được để trống.',
                 }));
             } else {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
+                setErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
             }
         }
 
         if (name === 'email') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+                setErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
             } else {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 if (!emailRegex.test(value)) {
-                    setValidationErrors((prevErrors) => ({
+                    setErrors((prevErrors) => ({
                         ...prevErrors,
                         email: 'Email không hợp lệ.',
                     }));
                 } else {
-                    setValidationErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
                 }
             }
         }
 
         if (name === 'password') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, email: 'Mật khẩu không được để trống.' }));
+                setErrors((prevErrors) => ({ ...prevErrors, email: 'Mật khẩu không được để trống.' }));
             } else {
                 const passwordRegex =
                     /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
 
                 if (!passwordRegex.test(value)) {
-                    setValidationErrors((prevErrors) => ({
+                    setErrors((prevErrors) => ({
                         ...prevErrors,
                         password:
                             'Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số hoặc ký tự đặc biệt.',
                     }));
                 } else {
-                    setValidationErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+                    setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
                 }
             }
         }
 
         if (name === 'confirmPassword') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({
+                setErrors((prevErrors) => ({
                     ...prevErrors,
                     confirmPassword: 'Xác nhận mật khẩu không được để trống.',
                 }));
             } else {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, confirmPassword: undefined }));
+                setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: undefined }));
             }
         }
 
@@ -86,11 +86,7 @@ const Register: React.FC = () => {
             ...credentials,
             [name]: value,
         });
-        setError('');
-    };
-
-    const handleShowPasswordChange = () => {
-        setShowPassword(!showPassword);
+        setErrorMessage('');
     };
 
     const handleRegister = async (event: React.FormEvent) => {
@@ -119,14 +115,14 @@ const Register: React.FC = () => {
             newErrors.confirmPassword = 'Xác nhận mật khẩu không được để trống.';
         }
 
-        setValidationErrors(newErrors);
+        setErrors(newErrors);
 
         if (Object.values(newErrors).some((error) => error)) {
             return;
         }
 
         if (credentials.password !== credentials.confirmPassword) {
-            setError('Mật khẩu và mật khẩu xác nhận không khớp'!);
+            setErrorMessage('Mật khẩu và xác nhận mật khẩu không khớp'!);
             return;
         }
 
@@ -152,7 +148,6 @@ const Register: React.FC = () => {
                     const apiErrors = error.response.data.messages;
                     const newApiErrors: {
                         userName?: string;
-                        phoneNumber?: string;
                         email?: string;
                     } = {};
 
@@ -164,10 +159,15 @@ const Register: React.FC = () => {
                         }
                     });
 
-                    setValidationErrors(newApiErrors);
+                    setErrors(newApiErrors);
                 }
             } else {
-                setError('Đăng ký thất bại! Vui lòng thử lại.');
+                Swal.fire({
+                    title: 'Đăng ký thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',
+                });
             }
         }
     };
@@ -190,9 +190,7 @@ const Register: React.FC = () => {
                                         className="form-control"
                                         onChange={handleInputChange}
                                     />
-                                    {validationErrors.userName && (
-                                        <div className="text-danger">{validationErrors.userName}</div>
-                                    )}
+                                    {errors.userName && <div className="text-danger">{errors.userName}</div>}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="email" className="form-label my-3">
@@ -205,9 +203,7 @@ const Register: React.FC = () => {
                                         className="form-control"
                                         onChange={handleInputChange}
                                     />
-                                    {validationErrors.email && (
-                                        <div className="text-danger">{validationErrors.email}</div>
-                                    )}
+                                    {errors.email && <div className="text-danger">{errors.email}</div>}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="password" className="form-label my-3">
@@ -220,9 +216,7 @@ const Register: React.FC = () => {
                                         className="form-control"
                                         onChange={handleInputChange}
                                     />
-                                    {validationErrors.password && (
-                                        <div className="text-danger">{validationErrors.password}</div>
-                                    )}
+                                    {errors.password && <div className="text-danger">{errors.password}</div>}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="confirm-password" className="form-label my-3">
@@ -235,13 +229,13 @@ const Register: React.FC = () => {
                                         className="form-control"
                                         onChange={handleInputChange}
                                     />
-                                    {validationErrors.confirmPassword && (
-                                        <div className="text-danger">{validationErrors.confirmPassword}</div>
+                                    {errors.confirmPassword && (
+                                        <div className="text-danger">{errors.confirmPassword}</div>
                                     )}
                                 </div>
-                                {error && (
+                                {errorMessage && (
                                     <div className="alert alert-danger mt-3" role="alert">
-                                        {error}
+                                        {errorMessage}
                                     </div>
                                 )}
                                 <div className="d-flex justify-content-center mt-3">
@@ -250,7 +244,7 @@ const Register: React.FC = () => {
                                             type="checkbox"
                                             id="show-password"
                                             className="form-check-input"
-                                            onChange={handleShowPasswordChange}
+                                            onChange={() => setShowPassword(!showPassword)}
                                         />
                                         <label htmlFor="show-password" className="form-check-label">
                                             Hiện mật khẩu

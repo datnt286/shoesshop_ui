@@ -54,7 +54,7 @@ const Account: React.FC = () => {
     });
     const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [cities, setCities] = useState<City[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
@@ -422,7 +422,7 @@ const Account: React.FC = () => {
                 }
             } else {
                 Swal.fire({
-                    title: 'Lỗi không xác định!',
+                    title: 'Cập nhật thông tin tài khoản thất bại! Vui lòng thử lại.',
                     icon: 'error',
                     toast: true,
                     position: 'top-end',
@@ -503,7 +503,7 @@ const Account: React.FC = () => {
         }
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            setError('Mật khẩu và mật khẩu xác nhận không khớp'!);
+            setErrorMessage('Mật khẩu và xác nhận mật khẩu không khớp'!);
             return;
         }
 
@@ -530,18 +530,31 @@ const Account: React.FC = () => {
                     newPassword: '',
                     confirmPassword: '',
                 });
+                setErrorMessage('');
             }
         } catch (error) {
             console.error('Lỗi: ', error);
 
-            Swal.fire({
-                title: 'Đổi mật khẩu thất bại!',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 400) {
+                    const apiErrors = error.response.data;
+
+                    apiErrors.forEach((apiError: { code: string; description: string }) => {
+                        if (apiError.code === 'PasswordMismatch') {
+                            setErrorMessage('Mật khẩu hiện tại không khớp.');
+                        }
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Đổi mật khẩu thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -829,9 +842,9 @@ const Account: React.FC = () => {
                                 </div>
                                 <div className="row d-flex justify-content-center">
                                     <div id="alert-message" className="col-md-7">
-                                        {error && (
+                                        {errorMessage && (
                                             <div className="alert alert-danger mt-3" role="alert">
-                                                {error}
+                                                {errorMessage}
                                             </div>
                                         )}
                                     </div>

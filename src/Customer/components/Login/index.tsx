@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 
 const Login: React.FC = () => {
@@ -9,8 +10,8 @@ const Login: React.FC = () => {
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
-    const [validationErrors, setValidationErrors] = useState<{
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState<{
         userName?: string;
         password?: string;
     }>({});
@@ -21,31 +22,23 @@ const Login: React.FC = () => {
 
         if (name === 'userName') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({
+                setErrors((prevErrors) => ({
                     ...prevErrors,
                     userName: 'Tên đăng nhập không được để trống.',
                 }));
             } else {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
+                setErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
             }
         }
 
         if (name === 'password') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, email: 'Mật khẩu không được để trống.' }));
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    password: 'Mật khẩu không được để trống.',
+                }));
             } else {
-                const passwordRegex =
-                    /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
-
-                if (!passwordRegex.test(value)) {
-                    setValidationErrors((prevErrors) => ({
-                        ...prevErrors,
-                        password:
-                            'Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số hoặc ký tự đặc biệt.',
-                    }));
-                } else {
-                    setValidationErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
-                }
+                setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
             }
         }
 
@@ -53,7 +46,7 @@ const Login: React.FC = () => {
             ...credentials,
             [name]: value,
         });
-        setError('');
+        setErrorMessage('');
     };
 
     const handleLogin = async (event: React.FormEvent) => {
@@ -72,7 +65,7 @@ const Login: React.FC = () => {
             newErrors.password = 'Mật khẩu không được để trống.';
         }
 
-        setValidationErrors(newErrors);
+        setErrors(newErrors);
 
         if (Object.values(newErrors).some((error) => error)) {
             return;
@@ -93,8 +86,24 @@ const Login: React.FC = () => {
                 });
             }
         } catch (error) {
-            setError('Đăng nhập thất bại! Vui lòng thử lại.');
             console.error('Lỗi đăng nhập: ', error);
+
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 401) {
+                    const apiError = error.response.data;
+
+                    if (apiError === 'Invalid username or password.') {
+                        setErrorMessage('Sai tên đăng nhập hoặc mật khẩu.');
+                    }
+                }
+            } else {
+                Swal.fire({
+                    title: 'Đăng nhập thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',
+                });
+            }
         }
     };
 
@@ -117,9 +126,7 @@ const Login: React.FC = () => {
                                         value={credentials.userName}
                                         onChange={handleInputChange}
                                     />
-                                    {validationErrors.userName && (
-                                        <div className="text-danger">{validationErrors.userName}</div>
-                                    )}
+                                    {errors.userName && <div className="text-danger">{errors.userName}</div>}
                                 </div>
                                 <div className="form-item">
                                     <label htmlFor="password" className="form-label my-3">
@@ -133,13 +140,11 @@ const Login: React.FC = () => {
                                         value={credentials.password}
                                         onChange={handleInputChange}
                                     />
-                                    {validationErrors.password && (
-                                        <div className="text-danger">{validationErrors.password}</div>
-                                    )}
+                                    {errors.password && <div className="text-danger">{errors.password}</div>}
                                 </div>
-                                {error && (
+                                {errorMessage && (
                                     <div className="alert alert-danger mt-3" role="alert">
-                                        {error}
+                                        {errorMessage}
                                     </div>
                                 )}
                                 <div className="d-flex justify-content-between mt-3">

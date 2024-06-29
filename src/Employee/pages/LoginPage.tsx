@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../services/AxiosInstance';
 import HelmetInstance from '../../utils/HelmetInstance';
 
@@ -18,8 +19,8 @@ const LoginPage: React.FC = () => {
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
-    const [validationErrors, setValidationErrors] = useState<{
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState<{
         userName?: string;
         password?: string;
     }>({});
@@ -30,23 +31,23 @@ const LoginPage: React.FC = () => {
 
         if (name === 'userName') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({
+                setErrors((prevErrors) => ({
                     ...prevErrors,
                     userName: 'Tên đăng nhập không được để trống.',
                 }));
             } else {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
+                setErrors((prevErrors) => ({ ...prevErrors, userName: undefined }));
             }
         }
 
         if (name === 'password') {
             if (!value) {
-                setValidationErrors((prevErrors) => ({
+                setErrors((prevErrors) => ({
                     ...prevErrors,
                     password: 'Mật khẩu không được để trống.',
                 }));
             } else {
-                setValidationErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+                setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
             }
         }
 
@@ -54,7 +55,7 @@ const LoginPage: React.FC = () => {
             ...credentials,
             [name]: value,
         });
-        setError('');
+        setErrorMessage('');
     };
 
     const handleLogin = async (event: React.FormEvent) => {
@@ -73,7 +74,7 @@ const LoginPage: React.FC = () => {
             newErrors.password = 'Mật khẩu không được để trống.';
         }
 
-        setValidationErrors(newErrors);
+        setErrors(newErrors);
 
         if (Object.values(newErrors).some((error) => error)) {
             return;
@@ -96,8 +97,28 @@ const LoginPage: React.FC = () => {
                 });
             }
         } catch (error) {
-            setError('Đăng nhập thất bại! Vui lòng thử lại.');
             console.error('Lỗi đăng nhập: ', error);
+
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 401) {
+                    const apiError = error.response.data;
+
+                    if (apiError === 'Invalid username or password.') {
+                        setErrorMessage('Sai tên đăng nhập hoặc mật khẩu.');
+                    } else if (apiError === 'User is not an employee.') {
+                        setErrorMessage('Tài khoản không có quyền truy cập.');
+                    }
+                }
+            } else {
+                Swal.fire({
+                    title: 'Đăng nhập thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         }
     };
 
@@ -127,9 +148,7 @@ const LoginPage: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {validationErrors.userName && (
-                                        <div className="text-danger mt-1 ml-1">{validationErrors.userName}</div>
-                                    )}
+                                    {errors.userName && <div className="text-danger mt-1 ml-1">{errors.userName}</div>}
                                 </div>
                                 <div className="mb-3">
                                     <div className="input-group">
@@ -148,13 +167,11 @@ const LoginPage: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {validationErrors.password && (
-                                        <div className="text-danger mt-1 ml-1">{validationErrors.password}</div>
-                                    )}
+                                    {errors.password && <div className="text-danger mt-1 ml-1">{errors.password}</div>}
                                 </div>
-                                {error && (
+                                {errorMessage && (
                                     <div className="alert alert-danger mt-3" role="alert">
-                                        {error}
+                                        {errorMessage}
                                     </div>
                                 )}
                                 <div className="row">

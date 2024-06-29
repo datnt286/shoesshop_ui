@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 
 const ChangePassword: React.FC = () => {
@@ -10,7 +11,7 @@ const ChangePassword: React.FC = () => {
         confirmPassword: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [errors, setErrors] = useState<{
         currentPassword?: string;
         newPassword?: string;
@@ -62,7 +63,7 @@ const ChangePassword: React.FC = () => {
             ...passwordData,
             [name]: value,
         });
-        setError('');
+        setErrorMessage('');
     };
 
     const handleChangePassword = async (event: React.FormEvent) => {
@@ -93,7 +94,7 @@ const ChangePassword: React.FC = () => {
         }
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            setError('Mật khẩu và mật khẩu xác nhận không khớp'!);
+            setErrorMessage('Mật khẩu mới và xác nhận mật khẩu không khớp.');
             return;
         }
 
@@ -118,10 +119,29 @@ const ChangePassword: React.FC = () => {
                     newPassword: '',
                     confirmPassword: '',
                 });
+                setErrorMessage('');
             }
         } catch (error) {
-            setError('Đổi mật khẩu thất bại! Vui lòng thử lại.');
             console.error('Lỗi: ', error);
+
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 400) {
+                    const apiErrors = error.response.data;
+
+                    apiErrors.forEach((apiError: { code: string; description: string }) => {
+                        if (apiError.code === 'PasswordMismatch') {
+                            setErrorMessage('Mật khẩu hiện tại không khớp.');
+                        }
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: 'Đổi mật khẩu thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',
+                });
+            }
         }
     };
 
@@ -178,9 +198,9 @@ const ChangePassword: React.FC = () => {
                                         <div className="text-danger">{errors.confirmPassword}</div>
                                     )}
                                 </div>
-                                {error && (
+                                {errorMessage && (
                                     <div className="alert alert-danger mt-3" role="alert">
-                                        {error}
+                                        {errorMessage}
                                     </div>
                                 )}
                                 <div className="d-flex justify-content-center mt-3">
