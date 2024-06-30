@@ -37,6 +37,7 @@ interface Model {
     name: string;
     price: number;
     images: Image[];
+    isInWishlist: boolean;
 }
 
 interface Image {
@@ -46,6 +47,7 @@ interface Image {
 
 const ProductSlider: React.FC = () => {
     const [models, setModels] = useState<Model[]>([]);
+    const [token, setToken] = useState<string | null>(null);
 
     const fetchModels = async () => {
         try {
@@ -63,13 +65,18 @@ const ProductSlider: React.FC = () => {
         fetchModels();
     }, []);
 
+    useEffect(() => {
+        const token = localStorage.getItem('customerToken');
+        setToken(token);
+    }, []);
+
     return (
         <div className="container-fluid product py-5">
             <div className="container py-5">
                 <h1 className="mb-0">Sản phẩm mới</h1>
                 <OwlCarousel {...carouselOptions} className="owl-carousel justify-content-center">
                     {models?.map((model) => (
-                        <ProductCard key={model.id} model={model} />
+                        <ProductCard key={model.id} model={model} token={token || ''} />
                     ))}
                 </OwlCarousel>
             </div>

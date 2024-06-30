@@ -546,14 +546,14 @@ const Checkout: React.FC = () => {
                                     <input
                                         type="radio"
                                         name="paymentMethod"
-                                        id="delivery"
+                                        id="momo"
                                         className="form-check-input"
                                         value={2}
                                         onChange={handlePaymentMethodChange}
                                         checked={selectedPaymentMethod === 2}
                                     />
-                                    <label className="form-check-label" htmlFor="delivery">
-                                        Thanh Toán Khi Giao Hàng
+                                    <label className="form-check-label" htmlFor="momo">
+                                        Momo
                                     </label>
                                 </div>
                             </div>
@@ -564,14 +564,14 @@ const Checkout: React.FC = () => {
                                     <input
                                         type="radio"
                                         name="paymentMethod"
-                                        id="paypal"
+                                        id="cod"
                                         className="form-check-input"
                                         value={3}
                                         onChange={handlePaymentMethodChange}
                                         checked={selectedPaymentMethod === 3}
                                     />
-                                    <label className="form-check-label" htmlFor="paypal">
-                                        Paypal
+                                    <label className="form-check-label" htmlFor="cod">
+                                        Thanh Toán Khi Giao Hàng
                                     </label>
                                 </div>
                             </div>

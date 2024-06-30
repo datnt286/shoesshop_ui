@@ -83,7 +83,7 @@ const Detail: React.FC = () => {
     const firstSizeButtonRef = useRef<HTMLButtonElement>(null);
     const { modelId } = useParams();
     const navigate = useNavigate();
-
+    console.log(products)
     const imageSrc =
         model?.images && model.images.length > 0
             ? `${config.baseURL}/images/model/${model.images[0].name}`
@@ -239,7 +239,7 @@ const Detail: React.FC = () => {
         }
     };
 
-    const handleAddtoCart = async () => {
+    const handleAddToCart = async () => {
         if (isLoggedIn && selectedProduct) {
             try {
                 const data = {
@@ -290,20 +290,19 @@ const Detail: React.FC = () => {
         }
     };
 
-    const handleAddtoWishlist = async () => {
+    const handleAddToWishlist = async () => {
         if (isLoggedIn && selectedProduct) {
             if (!selectedProduct.isInWishlist) {
                 try {
-                    const data = {
-                        userId: user.id,
-                        productId: selectedProduct?.id,
-                    };
-
-                    const response = await AxiosInstance.post('/Wishlists/AddToWishlist', data, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
+                    const response = await AxiosInstance.post(
+                        `/Wishlists/AddToWishlist/${selectedProduct?.id}`,
+                        {},
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
                         },
-                    });
+                    );
 
                     if (response.status === 200) {
                         Swal.fire({
@@ -503,13 +502,13 @@ const Detail: React.FC = () => {
                                     <div className="mb-5">Có sẵn: {selectedProduct?.quantity} đôi</div>
                                     <button
                                         className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"
-                                        onClick={handleAddtoCart}
+                                        onClick={handleAddToCart}
                                     >
                                         <i className="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
                                     </button>
                                     <button
                                         className="btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 text-primary"
-                                        onClick={handleAddtoWishlist}
+                                        onClick={handleAddToWishlist}
                                     >
                                         <i className={`${selectedProduct?.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>
                                     </button>

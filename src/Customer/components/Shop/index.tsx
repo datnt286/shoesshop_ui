@@ -9,6 +9,7 @@ interface Model {
     name: string;
     price: number;
     images: Image[];
+    isInWishlist: boolean;
 }
 
 interface Image {
@@ -48,7 +49,8 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
     const [selectedSizeIds, setSelectedSizeIds] = useState<number[]>([]);
     const [searchKeyword, setSearchKeyword] = useState(keyword);
     const [validationError, setValidationError] = useState('');
-
+    const [token, setToken] = useState<string | null>(null);
+    console.log(models)
     const fetchModels = async (currentPage = 1, pageSize = 12) => {
         try {
             const params: any = {
@@ -75,7 +77,11 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
 
             const queryString = queryParams.toString();
 
-            const response = await AxiosInstance.get(`/Models/paged?${queryString}`);
+            const response = await AxiosInstance.get(`/Models/paged?${queryString}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (response.status === 200) {
                 setModels(response.data.items);
@@ -121,7 +127,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
             console.error('Lỗi khi tải dữ liệu: ', error);
         }
     };
-
+    console.log(models);
     useEffect(() => {
         fetchModels();
     }, [selectedBrandId, selectedColorIds, selectedSizeIds]);
@@ -130,6 +136,11 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
         fetchBrands();
         fetchColors();
         fetchSizes();
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem('customerToken');
+        setToken(token);
     }, []);
 
     const handlePageChange = ({ selected }: { selected: number }) => {
@@ -155,10 +166,6 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                 ? prevSelectedSizes.filter((id) => id !== sizeId)
                 : [...prevSelectedSizes, sizeId],
         );
-    };
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchKeyword(event.target.value);
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -193,8 +200,8 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                         <input
                                             type="search"
                                             className="form-control p-3"
-                                            onChange={handleInputChange}
                                             value={searchKeyword}
+                                            onChange={(e) => setSearchKeyword(e.target.value)}
                                             placeholder={validationError ? validationError : 'Nhập từ khoá'}
                                             aria-describedby="search-icon"
                                         />
@@ -256,29 +263,6 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="mb-3">
-                                            <h4 className="mb-2">Mức giá</h4>
-                                            <input
-                                                type="range"
-                                                className="form-range w-100"
-                                                id="rangeInput"
-                                                name="rangeInput"
-                                                min={0}
-                                                max={500}
-                                                value={0}
-                                            />
-                                            <output
-                                                id="amount"
-                                                name="amount"
-                                                min-velue="0"
-                                                max-value="500"
-                                                htmlFor="rangeInput"
-                                            >
-                                                0
-                                            </output>
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-12">
-                                        <div className="mb-3">
                                             <h4>Màu sắc</h4>
                                             {colors.map((color) => (
                                                 <div key={color.id} className="form-check text-start">
@@ -322,7 +306,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                 <div className="row g-4 justify-content-center">
                                     {models?.map((model) => (
                                         <div key={model.id} className="col-md-6 col-lg-6 col-xl-4">
-                                            <ProductCard model={model} />
+                                            <ProductCard model={model} token={token || ''} />
                                         </div>
                                     ))}
                                     <div className="col-12">
