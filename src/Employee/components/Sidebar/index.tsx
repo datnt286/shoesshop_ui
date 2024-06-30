@@ -96,8 +96,14 @@ const Sidebar: React.FC = () => {
                             </ul>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/admin/nhan-hieu" className="nav-link">
+                            <NavLink to="/admin/loai-san-pham" className="nav-link">
                                 <i className="nav-icon fas fa-tag"></i>
+                                <p>Quản lý loại sản phẩm</p>
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink to="/admin/nhan-hieu" className="nav-link">
+                                <i className="nav-icon far fa-flag"></i>
                                 <p>Quản lý nhãn hiệu</p>
                             </NavLink>
                         </li>

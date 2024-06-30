@@ -391,7 +391,7 @@ const Detail: React.FC = () => {
                                                 return (
                                                     <button
                                                         key={product.id}
-                                                        className={`btn border py-1 px-1 mx-1 ${
+                                                        className={`btn border py-1 px-1 mx-1 mb-2 ${
                                                             activeColorId === product.colorId ? 'active' : ''
                                                         }`}
                                                         ref={isFirst ? firstColorButtonRef : null}
@@ -463,10 +463,10 @@ const Detail: React.FC = () => {
                                         <i className="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
                                     </button>
                                     <button
-                                        className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"
+                                        className="btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 text-primary"
                                         onClick={handleAddtoWishlist}
                                     >
-                                        <i className="far fa-heart me-2"></i> Thêm vào Wishlist
+                                        <i className="far fa-heart"></i>
                                     </button>
                                 </div>
                                 <ProductTab token={token} model={model} user={user} />

@@ -42,6 +42,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ model }) => {
                 >
                     -20%
                 </div>
+                <button
+                    className="btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 text-primary position-absolute"
+                    style={{ top: '10px', right: '10px' }}
+                >
+                    <i className="far fa-heart"></i>
+                </button>
                 <div className="p-4 rounded-bottom">
                     <h4 className="line-clamp line-clamp-2">{model.name}</h4>
                     <div className="d-flex justify-content-between flex-lg-wrap">

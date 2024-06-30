@@ -5,6 +5,7 @@ import PrivateWrapper from './PrivateWrapper';
 import HomePage from '../pages/HomePage';
 import LoginPage from './../pages/LoginPage';
 import AccountPage from '../pages/AccountPage';
+import ProductTypePage from './../pages/ProductTypePage';
 import BrandPage from './../pages/BrandPage';
 import ColorPage from '../pages/ColorPage';
 import SizePage from './../pages/SizePage';
@@ -28,6 +29,7 @@ const AppRoutes: React.FC = () => {
             <Route element={<PrivateWrapper />}>
                 <Route path="/" element={<BrandPage />} />
                 <Route path="/tai-khoan" element={<AccountPage />} />
+                <Route path="/loai-san-pham" element={<ProductTypePage />} />
                 <Route path="/nhan-hieu" element={<BrandPage />} />
                 <Route path="/mau-sac" element={<ColorPage />} />
                 <Route path="/size" element={<SizePage />} />
