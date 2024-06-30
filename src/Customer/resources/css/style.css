@@ -367,7 +367,6 @@
     border: 1px solid var(--bs-secondary);
     border-radius: 20px;
     transition: 0.5s;
-
 }
 
 .vesitable .owl-nav .owl-prev:hover {

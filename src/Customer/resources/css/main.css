@@ -277,6 +277,86 @@ a:hover {
     color: var(--bs-secondary) !important;
 } */
 
+.product .product-item {
+    height: 100%;
+    transition: 0.5s;
+}
+
+.product .product-item:hover {
+    box-shadow: 0 0 55px rgba(0, 0, 0, 0.4);
+}
+
+.product .product-item .product-img {
+    overflow: hidden;
+    transition: 0.5s;
+    border-radius: 10px 10px 0 0;
+}
+
+.product .product-item .product-img img {
+    transition: 0.5s;
+}
+
+.product .product-item .product-img img:hover {
+    transform: scale(1.3);
+}
+
+.product .tab-class .nav-item a.active {
+    background: var(--secondary-color) !important;
+}
+
+.product .tab-class .nav-item a.active span {
+    color: #fff !important;
+}
+
+.product .product-categorie .product-name {
+    line-height: 40px;
+}
+
+.product .product-categorie .product-name a {
+    transition: 0.5s;
+}
+
+.product .product-categorie .product-name a:hover {
+    color: var(--secondary-color);
+}
+
+.product .owl-stage {
+    margin: 50px 0;
+    position: relative;
+}
+
+.product .owl-nav .owl-prev {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    color: var(--primary-colory);
+    padding: 5px 25px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 20px;
+    transition: 0.5s;
+}
+
+.product .owl-nav .owl-prev:hover {
+    background: var(--secondary-color);
+    color: #fff;
+}
+
+.product .owl-nav .owl-next {
+    position: absolute;
+    top: -8px;
+    right: 88px;
+    color: var(--primary-color);
+    padding: 5px 25px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 20px;
+    transition: 0.5s;
+}
+
+.product .owl-nav .owl-next:hover {
+    background: var(--secondary-color);
+    color: #fff;
+}
+
 .counter h4 {
     color: var(--primary-color);
 }
@@ -295,8 +375,8 @@ a:hover {
     box-shadow: var(--box-shadow-color);
 }
 
-.vesitable .owl-nav .owl-next,
-.vesitable .owl-nav .owl-prev,
+.product .owl-nav .owl-next,
+.product .owl-nav .owl-prev,
 .testimonial .owl-nav .owl-next,
 .testimonial .owl-nav .owl-prev {
     color: var(--primary-color);

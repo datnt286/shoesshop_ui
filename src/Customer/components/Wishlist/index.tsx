@@ -99,7 +99,7 @@ const Wishlist: React.FC = () => {
     };
 
     return (
-        <div className="container-fluid fruite py-5">
+        <div className="container-fluid product py-5">
             <div className="container py-5">
                 {wishlistDetails.length > 0 ? (
                     <div className="row g-4">

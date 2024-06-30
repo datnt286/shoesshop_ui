@@ -32,6 +32,7 @@ interface Product {
     price: number;
     quantity: number;
     image: string;
+    isInWishlist: boolean;
 }
 
 interface ProductType {
@@ -104,7 +105,11 @@ const Detail: React.FC = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await AxiosInstance.get(`/Products/modelId/${modelId}`);
+            const response = await AxiosInstance.get(`/Products/Model/${modelId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (response.status === 200) {
                 setProducts(response.data);
@@ -287,35 +292,75 @@ const Detail: React.FC = () => {
 
     const handleAddtoWishlist = async () => {
         if (isLoggedIn && selectedProduct) {
-            try {
-                const data = {
-                    userId: user.id,
-                    productId: selectedProduct?.id,
-                };
+            if (!selectedProduct.isInWishlist) {
+                try {
+                    const data = {
+                        userId: user.id,
+                        productId: selectedProduct?.id,
+                    };
 
-                const response = await AxiosInstance.post('/Wishlists/AddToWishlist', data, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                    const response = await AxiosInstance.post('/Wishlists/AddToWishlist', data, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
 
-                if (response.status === 200) {
+                    if (response.status === 200) {
+                        Swal.fire({
+                            title: 'Đã thêm sản phẩm vào Wishlist!',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3085d6',
+                        });
+                        const updatedProducts = products.map((product) =>
+                            product.id === selectedProduct.id ? { ...product, isInWishlist: true } : product,
+                        );
+                        setProducts(updatedProducts);
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi thêm sản phẩm vào Wishlist: ', error);
+
                     Swal.fire({
-                        title: 'Đã thêm sản phẩm vào Wishlist!',
-                        icon: 'success',
+                        title: 'Đã xảy ra lỗi khi thêm sản phẩm vào Wishlist!',
+                        icon: 'error',
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#3085d6',
                     });
                 }
-            } catch (error) {
-                console.error('Lỗi khi thêm sản phẩm vào Wishlist: ', error);
+            } else {
+                try {
+                    const response = await AxiosInstance.delete(
+                        `/Wishlists/DeleteWishlistDetailByProductId/${selectedProduct.id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    );
 
-                Swal.fire({
-                    title: 'Đã xảy ra lỗi khi thêm sản phẩm vào Wishlist!',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
-                });
+                    if (response.status === 204) {
+                        Swal.fire({
+                            title: 'Đã xoá sản phẩm khỏi Wishlist!',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3085d6',
+                        });
+
+                        const updatedProducts = products.map((product) =>
+                            product.id === selectedProduct.id ? { ...product, isInWishlist: false } : product,
+                        );
+                        setProducts(updatedProducts);
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi xoá sản phẩm khỏi Wishlist: ', error);
+
+                    Swal.fire({
+                        title: 'Đã xảy ra lỗi khi xoá sản phẩm khỏi Wishlist!',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6',
+                    });
+                }
             }
         } else {
             const result = await Swal.fire({
@@ -466,7 +511,7 @@ const Detail: React.FC = () => {
                                         className="btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 text-primary"
                                         onClick={handleAddtoWishlist}
                                     >
-                                        <i className="far fa-heart"></i>
+                                        <i className={`${selectedProduct?.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>
                                     </button>
                                 </div>
                                 <ProductTab token={token} model={model} user={user} />

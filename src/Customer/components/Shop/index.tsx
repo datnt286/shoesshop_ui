@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AxiosInstance from '../../../services/AxiosInstance';
-import ProductCard from './ProductCard';
+import ProductCard from './../ProductCard/index';
 import Pagination from './../Pagination/index';
 import ProductSection from './../ProductSection/index';
 
@@ -181,7 +181,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
     };
 
     return (
-        <div className="container-fluid fruite py-5">
+        <div className="container-fluid product py-5">
             <div className="container py-5">
                 <h1 className="mb-4">{heading}</h1>
                 <div className="row g-4">
@@ -236,10 +236,10 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                     <div className="col-lg-12">
                                         <div className="mb-3">
                                             <h4>Nhãn hiệu</h4>
-                                            <ul className="list-unstyled fruite-categorie">
+                                            <ul className="list-unstyled product-categorie">
                                                 {brands.map((brand) => (
                                                     <li key={brand.id}>
-                                                        <div className="d-flex justify-content-between fruite-name">
+                                                        <div className="d-flex justify-content-between product-name">
                                                             <span
                                                                 className="btn btn-link px-0"
                                                                 onClick={() => handleBrandChange(brand.id)}

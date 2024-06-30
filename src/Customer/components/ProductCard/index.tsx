@@ -27,12 +27,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ model }) => {
 
     return (
         <Link to={`/san-pham/${model.id}`}>
-            <div className="border border-primary rounded position-relative vesitable-item">
-                <div className="vesitable-img">
+            <div className="rounded position-relative product-item">
+                <div className="product-img">
                     <img
                         src={imageSrc}
                         className="img-fluid w-100 rounded-top"
                         style={{ maxHeight: '260px' }}
+                        loading="lazy"
                         alt="Ảnh sản phẩm"
                     />
                 </div>
@@ -48,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ model }) => {
                 >
                     <i className="far fa-heart"></i>
                 </button>
-                <div className="p-4 rounded-bottom">
+                <div className="p-4 border border-secondary border-top-0 rounded-bottom">
                     <h4 className="line-clamp line-clamp-2">{model.name}</h4>
                     <div className="d-flex justify-content-between flex-lg-wrap">
                         <p className="text-dark fs-5 fw-bold mb-0">{model.price.toLocaleString() + ' ₫'}</p>

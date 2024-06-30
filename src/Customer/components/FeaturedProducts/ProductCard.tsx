@@ -6,8 +6,8 @@ const ProductCard: React.FC = () => {
     return (
         <div className="col-md-6 col-lg-4 col-xl-3">
             <Link to={`/san-pham/1`}>
-                <div className="rounded position-relative fruite-item">
-                    <div className="fruite-img">
+                <div className="rounded position-relative product-item">
+                    <div className="product-img">
                         <img src={imageSrc} className="img-fluid w-100 rounded-top" alt="Ảnh sản phẩm" />
                     </div>
                     <div

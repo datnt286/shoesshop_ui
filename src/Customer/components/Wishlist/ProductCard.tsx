@@ -28,9 +28,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ wishlistDetail, onDelete }) =
 
     return (
         <Link to={`/san-pham/${wishlistDetail.modelId}`}>
-            <div className="rounded position-relative fruite-item">
-                <div className="fruite-img">
-                    <img src={imageSrc} className="img-fluid w-100 rounded-top" loading="lazy" alt="Ảnh sản phẩm" />
+            <div className="rounded position-relative product-item">
+                <div className="product-img">
+                    <img
+                        src={imageSrc}
+                        className="img-fluid w-100 rounded-top"
+                        style={{ maxHeight: '260px' }}
+                        loading="lazy"
+                        alt="Ảnh sản phẩm"
+                    />
                 </div>
                 <div
                     className="text-white bg-danger px-3 py-2 rounded position-absolute"
@@ -43,9 +49,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ wishlistDetail, onDelete }) =
                     <h4 className="line-clamp line-clamp-2">{wishlistDetail.productName}</h4>
                     <div className="d-flex justify-content-between flex-lg-wrap">
                         <p className="text-dark fs-5 fw-bold mb-0">{wishlistDetail.price.toLocaleString() + ' ₫'}</p>
-                        <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary">
+                        <button className="btn border border-secondary rounded-pill px-3 text-primary">
                             <i className="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ hàng
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
