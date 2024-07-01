@@ -23,6 +23,11 @@ interface Brand {
     modelCount: number;
 }
 
+interface ProductType {
+    id: number;
+    name: string;
+}
+
 interface Color {
     id: number;
     name: string;
@@ -41,16 +46,18 @@ interface ShopProps {
 const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [brands, setBrands] = useState<Brand[]>([]);
+    const [productTypes, setProductTypes] = useState<ProductType[]>([]);
     const [colors, setColors] = useState<Color[]>([]);
     const [sizes, setSizes] = useState<Size[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null);
+    const [selectedProductTypeIds, setSelectedProductTypeIds] = useState<number[]>([]);
     const [selectedColorIds, setSelectedColorIds] = useState<number[]>([]);
     const [selectedSizeIds, setSelectedSizeIds] = useState<number[]>([]);
     const [searchKeyword, setSearchKeyword] = useState(keyword);
     const [validationError, setValidationError] = useState('');
     const [token, setToken] = useState<string | null>(null);
-    console.log(models)
+
     const fetchModels = async (currentPage = 1, pageSize = 12) => {
         try {
             const params: any = {
@@ -66,6 +73,10 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
             }
 
             const queryParams = new URLSearchParams(params);
+
+            selectedProductTypeIds.forEach((productTypeId) => {
+                queryParams.append('productTypeIds', productTypeId.toString());
+            });
 
             selectedColorIds.forEach((colorId) => {
                 queryParams.append('colorIds', colorId.toString());
@@ -104,6 +115,18 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
         }
     };
 
+    const fetchProductTypes = async () => {
+        try {
+            const response = await AxiosInstance.get('/ProductTypes/ChildProductTypes');
+
+            if (response.status === 200) {
+                setProductTypes(response.data);
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải dữ liệu: ', error);
+        }
+    };
+
     const fetchColors = async () => {
         try {
             const response = await AxiosInstance.get('/Colors');
@@ -127,13 +150,14 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
             console.error('Lỗi khi tải dữ liệu: ', error);
         }
     };
-    console.log(models);
+
     useEffect(() => {
         fetchModels();
-    }, [selectedBrandId, selectedColorIds, selectedSizeIds]);
+    }, [selectedBrandId, selectedProductTypeIds, selectedColorIds, selectedSizeIds]);
 
     useEffect(() => {
         fetchBrands();
+        fetchProductTypes();
         fetchColors();
         fetchSizes();
     }, []);
@@ -150,6 +174,14 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
 
     const handleBrandChange = (brandId: number) => {
         setSelectedBrandId(brandId);
+    };
+
+    const handleProductTypeChange = (productTypeId: number) => {
+        setSelectedProductTypeIds((prevSelectedProductTypeIds) =>
+            prevSelectedProductTypeIds.includes(productTypeId)
+                ? prevSelectedProductTypeIds.filter((id) => id !== productTypeId)
+                : [...prevSelectedProductTypeIds, productTypeId],
+        );
     };
 
     const handleColorChange = (colorId: number) => {
@@ -181,6 +213,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
 
     const handleResetFilters = () => {
         setSelectedBrandId(null);
+        setSelectedProductTypeIds([]);
         setSelectedColorIds([]);
         setSelectedSizeIds([]);
         setSearchKeyword('');
@@ -259,6 +292,28 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                                     </li>
                                                 ))}
                                             </ul>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12">
+                                        <div className="mb-3">
+                                            <h4>Loại sản phẩm</h4>
+                                            {productTypes.map((productType) => (
+                                                <div key={productType.id} className="form-check text-start">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="form-check-input"
+                                                        id={`productType-${productType.id}`}
+                                                        onChange={() => handleProductTypeChange(productType.id)}
+                                                        checked={selectedProductTypeIds.includes(productType.id)}
+                                                    />
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`productType-${productType.id}`}
+                                                    >
+                                                        {productType.name}
+                                                    </label>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
