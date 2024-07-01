@@ -520,6 +520,7 @@ const Customer: React.FC = () => {
             status: 1,
             avatar: null,
         });
+        setShowPassword(false);
         setErrors({});
     };
 

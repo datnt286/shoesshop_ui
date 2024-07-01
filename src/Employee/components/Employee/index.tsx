@@ -9,6 +9,7 @@ import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
 import ExportPDFButton from '../ExportPDFButton/index';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
+import { roles } from './rolesData';
 
 const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -21,7 +22,7 @@ interface Employee {
     phoneNumber: string;
     email: string;
     address: string;
-    roleId: number;
+    role: string;
     salary: number;
     description: string;
     status: number;
@@ -59,7 +60,7 @@ const Employee: React.FC = () => {
         phoneNumber: '',
         email: '',
         address: '',
-        roleId: 0,
+        role: '',
         salary: 0,
         description: '',
         status: 1,
@@ -90,6 +91,7 @@ const Employee: React.FC = () => {
         city?: string;
         district?: string;
         ward?: string;
+        role?: string;
         salary?: string;
         avatar?: string;
     }>({});
@@ -144,6 +146,11 @@ const Employee: React.FC = () => {
             .catch((error) => console.error('Lỗi khi tải dữ liệu địa chỉ: ', error));
     }, []);
 
+    function getRoleText(name: string) {
+        const role = roles.find((role) => role.name === name);
+        return role ? role.text : 'Không có chức vụ';
+    }
+
     const handlePageChange = ({ selected }: { selected: number }) => {
         const currentPage = selected + 1;
         fetchEmployees(currentPage);
@@ -171,7 +178,7 @@ const Employee: React.FC = () => {
             phoneNumber: employee.phoneNumber,
             email: employee.email,
             address: employee.address,
-            roleId: employee.roleId,
+            role: employee.role,
             salary: employee.salary,
             description: employee.description,
             status: employee.status,
@@ -336,10 +343,23 @@ const Employee: React.FC = () => {
                 }
             }
 
-            setEmployeeData({
-                ...employeeData,
-                [name]: value,
-            });
+            if (name === 'role') {
+                const selectedRole = roles.find((role) => role.name === value);
+
+                if (selectedRole) {
+                    setEmployeeData({
+                        ...employeeData,
+                        role: value,
+                        salary: selectedRole.salary,
+                    });
+                    setErrors((prevErrors) => ({ ...prevErrors, role: undefined }));
+                }
+            } else {
+                setEmployeeData({
+                    ...employeeData,
+                    [name]: value,
+                });
+            }
         }
     };
 
@@ -469,6 +489,7 @@ const Employee: React.FC = () => {
             city?: string;
             district?: string;
             ward?: string;
+            role?: string;
             salary?: string;
             avatar?: string;
         } = {};
@@ -505,6 +526,10 @@ const Employee: React.FC = () => {
             newErrors.ward = 'Vui lòng chọn Phường/Xã.';
         }
 
+        if (!employeeData.role) {
+            newErrors.role = 'Vui lòng chọn chức vụ.';
+        }
+
         if (!employeeData.salary) {
             newErrors.salary = 'Lương không được để trống.';
         }
@@ -527,8 +552,9 @@ const Employee: React.FC = () => {
             formData.append('phoneNumber', employeeData.phoneNumber);
             formData.append('email', employeeData.email);
             formData.append('address', employeeData.address);
-            formData.append('description', employeeData.description);
+            formData.append('role', employeeData.role);
             formData.append('salary', employeeData.salary.toString());
+            formData.append('description', employeeData.description);
             formData.append('status', employeeData.status.toString());
             if (employeeData.avatar) {
                 formData.append('avatar', employeeData.avatar);
@@ -612,7 +638,7 @@ const Employee: React.FC = () => {
             phoneNumber: '',
             email: '',
             address: '',
-            roleId: 1,
+            role: '',
             salary: 0,
             description: '',
             status: 1,
@@ -625,6 +651,7 @@ const Employee: React.FC = () => {
         setDistricts([]);
         setWards([]);
         setIsEditMode(false);
+        setShowPassword(false);
         setErrors({});
     };
 
@@ -679,8 +706,8 @@ const Employee: React.FC = () => {
                                 <th>Ảnh đại diện</th>
                                 <th>Tên đăng nhập</th>
                                 <th>Họ tên</th>
-                                <th>Điện thoại</th>
                                 <th>Email</th>
+                                <th>Chức vụ</th>
                                 <th>Trạng thái</th>
                                 <th></th>
                             </tr>
@@ -705,8 +732,8 @@ const Employee: React.FC = () => {
                                         </td>
                                         <td>{employee.userName}</td>
                                         <td>{employee.name}</td>
-                                        <td>{employee.phoneNumber}</td>
                                         <td>{employee.email}</td>
+                                        <td>{getRoleText(employee.role)}</td>
                                         <td>{employee.status === 1 ? 'Hoạt động' : 'Không hoạt động'}</td>
                                         <td>
                                             <button
@@ -916,6 +943,26 @@ const Employee: React.FC = () => {
                             />
                         </div>
                         <div className="form-group">
+                            <label htmlFor="role">Chức vụ: </label>
+                            <select
+                                name="role"
+                                id="role"
+                                className="form-select"
+                                value={employeeData.role}
+                                onChange={handleInputChange}
+                            >
+                                <option value="" disabled>
+                                    -- Chọn chức vụ --
+                                </option>
+                                {roles.map((role) => (
+                                    <option key={role.id} value={role.name}>
+                                        {role.text}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.role && <div className="text-danger">{errors.role}</div>}
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="address">Lương: </label>
                             <input
                                 type="text"
@@ -1007,8 +1054,12 @@ const Employee: React.FC = () => {
                                 <span className="text-lg">{selectedEmployee.address}</span>
                             </div>
                             <div className="form-group">
+                                <span className="text-lg font-weight-bold">Chức vụ: </span>
+                                <span className="text-lg">{getRoleText(selectedEmployee.role)}</span>
+                            </div>
+                            <div className="form-group">
                                 <span className="text-lg font-weight-bold">Lương: </span>
-                                <span className="text-lg">{selectedEmployee.salary}</span>
+                                <span className="text-lg">{selectedEmployee.salary.toLocaleString() + ' ₫'}</span>
                             </div>
                             <div className="form-group">
                                 <span className="text-lg font-weight-bold">Mô tả: </span>
