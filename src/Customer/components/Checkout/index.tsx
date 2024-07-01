@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import TableRow from './TableRow';
 
@@ -43,7 +44,7 @@ interface CartDetail {
 
 const Checkout: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<User>({
+    const [userData, setUserData] = useState<User>({
         id: '',
         userName: '',
         name: '',
@@ -63,9 +64,18 @@ const Checkout: React.FC = () => {
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
 
+    const [errors, setErrors] = useState<{
+        name?: string;
+        phoneNumber?: string;
+        email?: string;
+        city?: string;
+        district?: string;
+        ward?: string;
+    }>({});
+
     const fetchCartDetails = async () => {
         try {
-            const response = await AxiosInstance.get(`/Carts/CartDetails/User/${user.id}`, {
+            const response = await AxiosInstance.get(`/Carts/CartDetails/User/${userData.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -87,7 +97,7 @@ const Checkout: React.FC = () => {
                 const decodedToken: User = jwtDecode<User>(token);
 
                 setToken(token);
-                setUser({
+                setUserData({
                     id: decodedToken.id,
                     userName: decodedToken.userName,
                     name: decodedToken.name || '',
@@ -146,10 +156,10 @@ const Checkout: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (user.id) {
+        if (userData.id) {
             fetchCartDetails();
         }
-    }, [user.id]);
+    }, [userData.id]);
 
     useEffect(() => {
         const total = cartDetails.reduce((acc, item) => acc + item.amount, 0);
@@ -159,8 +169,60 @@ const Checkout: React.FC = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
 
-        setUser({
-            ...user,
+        if (name === 'name') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, name: 'Họ tên không được để trống.' }));
+            } else {
+                const vietnameseCharacterRegex =
+                    /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ\s]+$/;
+
+                if (!vietnameseCharacterRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        name: 'Họ tên không được chứa số và ký tự đặc biệt.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
+            }
+        }
+
+        if (name === 'phoneNumber') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: 'Số điện thoại không được để trống.' }));
+            } else {
+                const phoneNumberRegex = /^0\d{9}$/;
+
+                if (!phoneNumberRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        phoneNumber: 'Số điện thoại phải bắt đầu bằng số 0 và đủ 10 chữ số.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: undefined }));
+                }
+            }
+        }
+
+        if (name === 'email') {
+            if (!value) {
+                setErrors((prevErrors) => ({ ...prevErrors, email: 'Email không được để trống.' }));
+            } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(value)) {
+                    setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        email: 'Email không hợp lệ.',
+                    }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+                }
+            }
+        }
+
+        setUserData({
+            ...userData,
             [name]: value,
         });
     };
@@ -168,8 +230,8 @@ const Checkout: React.FC = () => {
     const updateAddress = (cityName: string, districtName: string, wardName: string) => {
         const address = `${wardName ? wardName + ', ' : ''}${districtName ? districtName + ', ' : ''}${cityName}`;
 
-        setUser({
-            ...user,
+        setUserData({
+            ...userData,
             address,
         });
     };
@@ -177,6 +239,12 @@ const Checkout: React.FC = () => {
     const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const cityId = event.target.value;
         const selectedCity = cities.find((city) => city.Id === cityId);
+
+        if (!cityId) {
+            setErrors((prevErrors) => ({ ...prevErrors, city: 'Vui lòng chọn Tỉnh/Thành phố.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, city: undefined }));
+        }
 
         if (selectedCity) {
             setDistricts(selectedCity.Districts);
@@ -199,6 +267,12 @@ const Checkout: React.FC = () => {
         const districtId = event.target.value;
         const selectedDistrict = districts.find((district) => district.Id === districtId);
 
+        if (!districtId) {
+            setErrors((prevErrors) => ({ ...prevErrors, district: 'Vui lòng chọn Quận/Huyện.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, district: undefined }));
+        }
+
         if (selectedDistrict) {
             setWards(selectedDistrict.Wards);
             setSelectedDistrict(selectedDistrict.Name);
@@ -216,6 +290,12 @@ const Checkout: React.FC = () => {
         const wardId = event.target.value;
         const selectedWard = wards.find((ward) => ward.Id === wardId);
 
+        if (!wardId) {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: 'Vui lòng chọn Phường/Xã.' }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, ward: undefined }));
+        }
+
         if (selectedWard) {
             setSelectedWard(selectedWard.Name);
             updateAddress(selectedCity, selectedDistrict, selectedWard.Name);
@@ -225,15 +305,52 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const handleUpdateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const updateAccount = async () => {
+        const newErrors: {
+            name?: string;
+            phoneNumber?: string;
+            email?: string;
+            city?: string;
+            district?: string;
+            ward?: string;
+        } = {};
+
+        if (!userData.name) {
+            newErrors.name = 'Họ tên không được để trống.';
+        }
+
+        if (!userData.phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được để trống.';
+        }
+
+        if (!userData.email) {
+            newErrors.email = 'Email không được để trống.';
+        }
+
+        if (!selectedCity) {
+            newErrors.city = 'Vui lòng chọn Tỉnh/Thành phố.';
+        }
+
+        if (!selectedDistrict) {
+            newErrors.district = 'Vui lòng chọn Quận/Huyện.';
+        }
+
+        if (!selectedWard) {
+            newErrors.ward = 'Vui lòng chọn Phường/Xã.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return false;
+        }
 
         const formData = new FormData();
-        formData.append('userName', user.userName);
-        formData.append('name', user.name || '');
-        formData.append('email', user.email);
-        formData.append('phoneNumber', user.phoneNumber || '');
-        formData.append('address', user.address || '');
+        formData.append('userName', userData.userName);
+        formData.append('name', userData.name || '');
+        formData.append('email', userData.email);
+        formData.append('phoneNumber', userData.phoneNumber || '');
+        formData.append('address', userData.address || '');
 
         try {
             const response = await AxiosInstance.put(`/Users/UpdateAccount`, formData, {
@@ -244,34 +361,58 @@ const Checkout: React.FC = () => {
 
             if (response.data.token) {
                 localStorage.setItem('customerToken', response.data.token);
-
-                Swal.fire({
-                    title: 'Cập nhật thông tin tài khoản thành công!',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
-                });
+                return true;
             }
         } catch (error) {
             console.error('Lỗi: ', error);
 
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 409) {
+                    const apiErrors = error.response.data.messages;
+                    const newApiErrors: {
+                        phoneNumber?: string;
+                        email?: string;
+                    } = {};
+
+                    apiErrors.forEach((errorMessage: string) => {
+                        if (errorMessage.includes('PhoneNumber')) {
+                            newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
+                        } else if (errorMessage.includes('Email')) {
+                            newApiErrors.email = 'Email đã tồn tại.';
+                        }
+                    });
+
+                    setErrors(newApiErrors);
+                }
+            }
+            return false;
+        }
+    };
+
+    const handleUpdateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const accountUpdated = await updateAccount();
+
+        if (accountUpdated) {
             Swal.fire({
-                title: 'Cập nhật thông tin tài khoản thất bại! Vui lòng thử lại.',
-                icon: 'error',
+                title: 'Cập nhật thông tin tài khoản thành công!',
+                icon: 'success',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#3085d6',
             });
         }
     };
 
-    const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedPaymentMethod(parseInt(event.target.value));
-    };
-
     const handleSubmitOrder = async () => {
+        const accountUpdated = await updateAccount();
+
+        if (!accountUpdated) {
+            return;
+        }
+
         try {
             const data = {
-                userId: user.id,
+                userId: userData.id,
                 total: total,
                 note: note,
                 cartDetails: cartDetails.map((cartDetail) => ({
@@ -324,10 +465,10 @@ const Checkout: React.FC = () => {
                                     name="name"
                                     id="name"
                                     className="form-control"
-                                    value={user.name}
+                                    value={userData.name}
                                     onChange={handleInputChange}
-                                    required
                                 />
+                                {errors.name && <div className="text-danger">{errors.name}</div>}
                             </div>
                             <div className="form-item">
                                 <label htmlFor="phone-number" className="form-label my-3">
@@ -338,10 +479,10 @@ const Checkout: React.FC = () => {
                                     name="phoneNumber"
                                     id="phone-number"
                                     className="form-control"
-                                    value={user.phoneNumber}
+                                    value={userData.phoneNumber}
                                     onChange={handleInputChange}
-                                    required
                                 />
+                                {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
                             </div>
                             <div className="form-item">
                                 <label htmlFor="email" className="form-label my-3">
@@ -352,10 +493,10 @@ const Checkout: React.FC = () => {
                                     name="email"
                                     id="email"
                                     className="form-control"
-                                    value={user.email}
+                                    value={userData.email}
                                     onChange={handleInputChange}
-                                    required
                                 />
+                                {errors.email && <div className="text-danger">{errors.email}</div>}
                             </div>
                             <div className="form-item">
                                 <label htmlFor="city" className="form-label my-3">
@@ -366,7 +507,6 @@ const Checkout: React.FC = () => {
                                     className="form-select"
                                     value={cities.find((city) => city.Name === selectedCity)?.Id || ''}
                                     onChange={handleCityChange}
-                                    required
                                 >
                                     <option value="" disabled>
                                         Chọn Tỉnh/Thành phố
@@ -377,6 +517,7 @@ const Checkout: React.FC = () => {
                                         </option>
                                     ))}
                                 </select>
+                                {errors.city && <div className="text-danger">{errors.city}</div>}
                             </div>
                             <div className="form-item">
                                 <label htmlFor="district" className="form-label my-3">
@@ -388,7 +529,6 @@ const Checkout: React.FC = () => {
                                     value={districts.find((district) => district.Name === selectedDistrict)?.Id || ''}
                                     onChange={handleDistrictChange}
                                     disabled={districts.length === 0}
-                                    required
                                 >
                                     <option value="" disabled>
                                         Chọn Quận/Huyện
@@ -399,6 +539,7 @@ const Checkout: React.FC = () => {
                                         </option>
                                     ))}
                                 </select>
+                                {errors.district && <div className="text-danger">{errors.district}</div>}
                             </div>
                             <div className="form-item">
                                 <label htmlFor="ward" className="form-label my-3">
@@ -410,7 +551,6 @@ const Checkout: React.FC = () => {
                                     value={wards.find((ward) => ward.Name === selectedWard)?.Id || ''}
                                     onChange={handleWardChange}
                                     disabled={wards.length === 0}
-                                    required
                                 >
                                     <option value="" disabled>
                                         Chọn Phường/Xã
@@ -421,6 +561,7 @@ const Checkout: React.FC = () => {
                                         </option>
                                     ))}
                                 </select>
+                                {errors.ward && <div className="text-danger">{errors.ward}</div>}
                             </div>
                             <div className="form-item">
                                 <label htmlFor="address" className="form-label my-3">
@@ -430,7 +571,7 @@ const Checkout: React.FC = () => {
                                     name="address"
                                     id="address"
                                     className="form-control"
-                                    value={user.address}
+                                    value={userData.address}
                                     disabled
                                 ></textarea>
                             </div>
@@ -526,7 +667,7 @@ const Checkout: React.FC = () => {
                                         id="transfer"
                                         className="form-check-input"
                                         value={1}
-                                        onChange={handlePaymentMethodChange}
+                                        onChange={(e) => setSelectedPaymentMethod(parseInt(e.target.value))}
                                         checked={selectedPaymentMethod === 1}
                                     />
                                     <label className="form-check-label" htmlFor="transfer">
@@ -549,7 +690,7 @@ const Checkout: React.FC = () => {
                                         id="momo"
                                         className="form-check-input"
                                         value={2}
-                                        onChange={handlePaymentMethodChange}
+                                        onChange={(e) => setSelectedPaymentMethod(parseInt(e.target.value))}
                                         checked={selectedPaymentMethod === 2}
                                     />
                                     <label className="form-check-label" htmlFor="momo">
@@ -567,7 +708,7 @@ const Checkout: React.FC = () => {
                                         id="cod"
                                         className="form-check-input"
                                         value={3}
-                                        onChange={handlePaymentMethodChange}
+                                        onChange={(e) => setSelectedPaymentMethod(parseInt(e.target.value))}
                                         checked={selectedPaymentMethod === 3}
                                     />
                                     <label className="form-check-label" htmlFor="cod">
