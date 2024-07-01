@@ -7,7 +7,7 @@ import Pagination from '../Pagination/index';
 import InvoiceRow from './InvoiceRow';
 import InvoiceDetailRow from './InvoiceDetailRow';
 import ExportPDFButton from '../ExportPDFButton/index';
-import { getStatusText, getActionBtnIcon } from '../../../utils/getStatusInvoice';
+import { getStatusText, getActionButtonText, getActionBtnIcon } from '../../../utils/getStatusInvoice';
 
 interface Invoice {
     id: number;
@@ -99,18 +99,10 @@ const Invoice: React.FC = () => {
 
     const handleCloseDetailModal = () => setShowDetailModal(false);
 
-    const getActionButtonText = (status: number): string => {
-        if (status === 1) {
-            return 'Duyệt đơn';
-        } else if (status === 2) {
-            return 'Vận chuyển';
-        }
-        return '';
-    };
-
     const handleStatusChange = async () => {
         if (selectedInvoice) {
-            const newStatus = selectedInvoice.status === 1 ? 2 : 3;
+            const newStatus = (selectedInvoice.status += 1);
+
             try {
                 const response = await AxiosInstance.put(`/Invoices/${selectedInvoice.id}/status`, {
                     status: newStatus,
@@ -323,12 +315,24 @@ const Invoice: React.FC = () => {
                     <Button variant="gray" onClick={handleCloseModal}>
                         <i className="fas fa-times-circle"></i> Đóng
                     </Button>
-                    {selectedInvoice && (selectedInvoice.status === 1 || selectedInvoice.status === 2) && (
-                        <Button variant={selectedInvoice.status === 1 ? 'blue' : 'info'} onClick={handleStatusChange}>
-                            <i className={`${getActionBtnIcon(selectedInvoice.status)}`}></i>{' '}
-                            {getActionButtonText(selectedInvoice.status)}
-                        </Button>
-                    )}
+                    {selectedInvoice &&
+                        (selectedInvoice.status === 1 ||
+                            selectedInvoice.status === 2 ||
+                            selectedInvoice.status === 3) && (
+                            <Button
+                                variant={
+                                    selectedInvoice.status === 1
+                                        ? 'blue'
+                                        : selectedInvoice.status === 2
+                                        ? 'info'
+                                        : 'warning'
+                                }
+                                onClick={handleStatusChange}
+                            >
+                                <i className={`${getActionBtnIcon(selectedInvoice.status)}`}></i>{' '}
+                                {getActionButtonText(selectedInvoice.status)}
+                            </Button>
+                        )}
                 </Modal.Footer>
             </Modal>
 

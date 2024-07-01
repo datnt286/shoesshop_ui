@@ -85,11 +85,11 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                                 </td>
                                 <td>
                                     <button
-                                        className="btn btn-sm btn-secondary"
+                                        className="btn btn-sm btn-light"
                                         style={{ whiteSpace: 'nowrap' }}
                                         onClick={() => onDetail(invoice)}
                                     >
-                                        Chi tiết
+                                        <i className="fas fa-info-circle"></i> Xem đơn hàng
                                     </button>
                                 </td>
                                 <td>
@@ -99,14 +99,14 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                                             style={{ whiteSpace: 'nowrap' }}
                                             onClick={() => onConfirm(invoice.id)}
                                         >
-                                            Xác nhận
+                                            <i className="fas fa-check"></i> Xác nhận
                                         </button>
                                     )}
                                 </td>
                                 <td>
                                     {(invoice.status === 1 || invoice.status === 2) && (
                                         <button className="btn btn-sm btn-danger" onClick={() => onCancel(invoice.id)}>
-                                            Huỷ
+                                            <i className="fas fa-times"></i> Huỷ
                                         </button>
                                     )}
                                 </td>

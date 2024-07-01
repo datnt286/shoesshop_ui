@@ -30,7 +30,7 @@ export const getActionButtonText = (status: InvoiceStatus): string => {
         case InvoiceStatus.Approved:
             return 'Vận chuyển';
         case InvoiceStatus.Shipped:
-            return 'Đang vận chuyển';
+            return 'Xác nhận';
         case InvoiceStatus.Received:
             return 'Đã nhận';
         case InvoiceStatus.Cancelled:
@@ -62,9 +62,9 @@ export const getActionBtnIcon = (status: InvoiceStatus): string => {
         case InvoiceStatus.Placed:
             return 'fas fa-edit';
         case InvoiceStatus.Approved:
-            return 'fas fa-truck-moving';
-        case InvoiceStatus.Shipped:
             return 'fas fa-shipping-fast';
+        case InvoiceStatus.Shipped:
+            return 'fas fa-check';
         case InvoiceStatus.Received:
             return 'fas fa-check-circle';
         case InvoiceStatus.Cancelled:

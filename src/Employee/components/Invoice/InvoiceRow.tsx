@@ -29,6 +29,8 @@ interface InvoiceRowProps {
 }
 
 const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, onAction, onCancel, onDetail }) => {
+    const isActionDisabled = invoice.status === InvoiceStatus.Received || invoice.status === InvoiceStatus.Cancelled;
+
     const isCancelDisabled =
         invoice.status === InvoiceStatus.Shipped ||
         invoice.status === InvoiceStatus.Received ||
@@ -51,7 +53,7 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, onAction, onCan
                     <button
                         className={`btn btn-sm ${getActionBtnClassName(invoice.status)} mr-2`}
                         onClick={onAction}
-                        disabled={isCancelDisabled}
+                        disabled={isActionDisabled}
                     >
                         <i className={`${getActionBtnIcon(invoice.status)}`}></i> {getActionButtonText(invoice.status)}
                     </button>
