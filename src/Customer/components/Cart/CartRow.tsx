@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import config from '../../../services/config';
 import DefaultImage from '../../resources/img/default-image.jpg';
@@ -10,6 +10,7 @@ interface CartDetail {
     productImage: string;
     price: number;
     quantity: number;
+    quantityAvailable: number;
     amount: number;
 }
 
@@ -21,6 +22,9 @@ interface CartRowProps {
 
 const CartRow: React.FC<CartRowProps> = ({ cartDetail, onUpdateQuantity, onDelete }) => {
     const [quantity, setQuantity] = useState(cartDetail.quantity);
+    const [quantityAvailableError, setQuantityAvailableError] = useState(
+        cartDetail.quantity > cartDetail.quantityAvailable,
+    );
     const imageSrc = cartDetail.productImage
         ? `${config.baseURL}/images/product/${cartDetail.productImage}`
         : DefaultImage;
@@ -29,8 +33,14 @@ const CartRow: React.FC<CartRowProps> = ({ cartDetail, onUpdateQuantity, onDelet
         if (newQuantity > 0) {
             setQuantity(newQuantity);
             onUpdateQuantity(cartDetail.id, newQuantity, cartDetail.price * newQuantity);
+            setQuantityAvailableError(newQuantity > cartDetail.quantityAvailable);
         }
     };
+
+    useEffect(() => {
+        setQuantity(cartDetail.quantity);
+        setQuantityAvailableError(cartDetail.quantity > cartDetail.quantityAvailable);
+    }, [cartDetail]);
 
     return (
         <tr>
@@ -76,11 +86,15 @@ const CartRow: React.FC<CartRowProps> = ({ cartDetail, onUpdateQuantity, onDelet
                         <button
                             className="btn btn-sm btn-plus rounded-circle bg-light border"
                             onClick={() => handleQuantityChange(quantity + 1)}
+                            disabled={quantityAvailableError}
                         >
                             <i className="fa fa-plus"></i>
                         </button>
                     </div>
                 </div>
+                {quantityAvailableError && (
+                    <div className="text-danger">Số lượng sản phẩm không đủ: {cartDetail.quantityAvailable}</div>
+                )}
             </td>
             <td>
                 <p className="mb-0">{(cartDetail.price * quantity).toLocaleString() + ' ₫'}</p>

@@ -39,6 +39,7 @@ interface CartDetail {
     productImage: string;
     price: number;
     quantity: number;
+    quantityAvailable: number;
     amount: number;
 }
 
@@ -56,6 +57,7 @@ const Checkout: React.FC = () => {
     const [total, setTotal] = useState(0);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
     const [note, setNote] = useState('');
+    const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
 
     const [cities, setCities] = useState<City[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
@@ -164,6 +166,9 @@ const Checkout: React.FC = () => {
     useEffect(() => {
         const total = cartDetails.reduce((acc, item) => acc + item.amount, 0);
         setTotal(total);
+
+        const hasError = cartDetails.some((detail) => detail.quantity > detail.quantityAvailable);
+        setCanProceedToCheckout(!hasError);
     }, [cartDetails]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -410,6 +415,8 @@ const Checkout: React.FC = () => {
             return;
         }
 
+        fetchCartDetails();
+
         try {
             const data = {
                 userId: userData.id,
@@ -440,12 +447,27 @@ const Checkout: React.FC = () => {
         } catch (error) {
             console.error('Lỗi khi đặt hàng: ', error);
 
-            Swal.fire({
-                title: 'Đặt hàng thất bại! Vui lòng thử lại.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-            });
+            if (axios.isAxiosError(error)) {
+                if (error.response && error.response.status === 400) {
+                    const apiError = error.response.data;
+
+                    if (apiError === 'Product not available or insufficient quantity.') {
+                        Swal.fire({
+                            title: 'Số lượng sản phẩm không đủ! Vui lòng thử lại.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3085d6',
+                        });
+                    }
+                }
+            } else {
+                Swal.fire({
+                    title: 'Đặt hàng thất bại! Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6',
+                });
+            }
         }
     };
 
@@ -722,6 +744,7 @@ const Checkout: React.FC = () => {
                                 type="button"
                                 className="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
                                 onClick={handleSubmitOrder}
+                                disabled={!canProceedToCheckout}
                             >
                                 Đặt Hàng
                             </button>

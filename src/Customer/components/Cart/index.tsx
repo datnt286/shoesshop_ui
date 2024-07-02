@@ -17,6 +17,7 @@ interface CartDetail {
     productImage: string;
     price: number;
     quantity: number;
+    quantityAvailable: number;
     amount: number;
 }
 
@@ -28,6 +29,7 @@ const Cart: React.FC = () => {
     });
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
     const [total, setTotal] = useState(0);
+    const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
 
     const fetchCartDetails = async () => {
         try {
@@ -72,6 +74,9 @@ const Cart: React.FC = () => {
     useEffect(() => {
         const total = cartDetails.reduce((acc, item) => acc + item.amount, 0);
         setTotal(total);
+
+        const hasError = cartDetails.some((detail) => detail.quantity > detail.quantityAvailable);
+        setCanProceedToCheckout(!hasError);
     }, [cartDetails]);
 
     const handleUpdateCartDetailQuantity = async (id: number, quantity: number, amount: number) => {
@@ -195,14 +200,25 @@ const Cart: React.FC = () => {
                                         <p className="mb-0 pe-4">{(total + 15000).toLocaleString() + ' ₫'}</p>
                                     </div>
                                     <div className="d-flex justify-content-center">
-                                        <Link to="/thanh-toan">
+                                        {canProceedToCheckout && (
+                                            <Link to="/thanh-toan">
+                                                <button
+                                                    className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
+                                                    type="button"
+                                                >
+                                                    Tiến hành thanh toán
+                                                </button>
+                                            </Link>
+                                        )}
+                                        {!canProceedToCheckout && (
                                             <button
                                                 className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
                                                 type="button"
+                                                disabled
                                             >
                                                 Tiến hành thanh toán
                                             </button>
-                                        </Link>
+                                        )}
                                     </div>
                                 </div>
                             </div>

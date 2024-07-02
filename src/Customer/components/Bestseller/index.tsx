@@ -1,7 +1,5 @@
 import React from 'react';
-import bestProduct1 from '../../resources/img/best-product-1.jpg';
-import ProductCardBig from './ProductCardBig';
-import ProductCardSmall from './ProductCardSmall';
+import ProductCard from './ProductCard';
 
 const Bestseller: React.FC = () => {
     return (
@@ -11,16 +9,14 @@ const Bestseller: React.FC = () => {
                     <h1 className="display-4">Sản phẩm bán chạy</h1>
                 </div>
                 <div className="row g-4">
-                    <ProductCardSmall />
-                    <ProductCardSmall />
-                    <ProductCardSmall />
-                    <ProductCardSmall />
-                    <ProductCardSmall />
-                    <ProductCardSmall />
-                    <ProductCardBig />
-                    <ProductCardBig />
-                    <ProductCardBig />
-                    <ProductCardBig />
+                    <ProductCard />
+                    <ProductCard />
+                    <ProductCard />
+                    <ProductCard />
+                    <ProductCard />
+                    <ProductCard />
+                    <ProductCard />
+                    <ProductCard />
                 </div>
             </div>
         </div>
