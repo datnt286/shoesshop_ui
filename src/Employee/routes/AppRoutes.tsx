@@ -18,6 +18,7 @@ import ProductPage from './../pages/ProductPage';
 import InvoicePage from './../pages/InvoicePage';
 import CommentPage from './../pages/CommentPage';
 import ForgotPasswordPage from './../pages/ForgotPasswordPage';
+import ForbiddenPage from './../pages/ForbiddenPage';
 import NotFoundPage from './../pages/NotFoundPage';
 
 const AppRoutes: React.FC = () => {
@@ -45,6 +46,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/binh-luan" element={<CommentPage />} />
             </Route>
 
+            <Route path="/403" element={<ForbiddenPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );

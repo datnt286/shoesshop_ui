@@ -6,7 +6,7 @@ import '../resources/plugins/ionicons-2.0.1/css/ionicons.min.css';
 import '../resources/plugins/fontawesome-free/css/all.min.css';
 import '../resources/dist/css/adminlte.min.css';
 
-const NotFoundPage: React.FC = () => {
+const ForbiddenPage: React.FC = () => {
     return (
         <>
             <HelmetInstance title="404" />
@@ -15,11 +15,11 @@ const NotFoundPage: React.FC = () => {
                     <div className="row justify-content-center">
                         <div className="col-lg-6">
                             <i className="bi bi-exclamation-triangle display-1 text-secondary"></i>
-                            <h1 className="display-1">404</h1>
-                            <h1 className="mb-4">Không tìm thấy trang!</h1>
+                            <h1 className="display-1">403</h1>
+                            <h1 className="mb-4">Bạn không có quyền truy cập địa chỉ này!</h1>
                             <p className="mb-4">
-                                Rất tiếc, trang bạn tìm kiếm không tồn tại! Hãy thử truy cập trang chủ hoặc liên hệ quản
-                                lý.
+                                Rất tiếc, bạn không có quyền truy cập địa chỉ này! Hãy thử truy cập trang chủ hoặc liên
+                                hệ quản lý.
                             </p>
                             <Link to="/admin" className="btn border-secondary rounded-pill py-3 px-5">
                                 Quay lại Trang chủ
@@ -32,4 +32,4 @@ const NotFoundPage: React.FC = () => {
     );
 };
 
-export default NotFoundPage;
+export default ForbiddenPage;

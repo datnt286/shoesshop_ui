@@ -69,7 +69,7 @@ const Sidebar: React.FC = () => {
                         role="menu"
                         data-accordion="false"
                     >
-                        {userData.role === 'Manager' && (
+                        {(userData.role === 'Manager' || userData.role === 'SalesStaff' || userData.role === 'WarehouseStaff' || userData.role === 'Shipper') && (
                             <li className="nav-item">
                                 <NavLink to="/admin" className="nav-link">
                                     <i className="nav-icon fas fa-home"></i>
