@@ -17,6 +17,7 @@ import AccessoriesPage from './../pages/AccessoriesPage';
 import ProductPage from './../pages/ProductPage';
 import InvoicePage from './../pages/InvoicePage';
 import CommentPage from './../pages/CommentPage';
+import SliderPage from './../pages/SliderPage';
 import ForgotPasswordPage from './../pages/ForgotPasswordPage';
 import ForbiddenPage from './../pages/ForbiddenPage';
 import NotFoundPage from './../pages/NotFoundPage';
@@ -44,6 +45,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/san-pham/:modelId" element={<ProductPage />} />
                 <Route path="/hoa-don" element={<InvoicePage />} />
                 <Route path="/binh-luan" element={<CommentPage />} />
+                <Route path="/slider" element={<SliderPage />} />
             </Route>
 
             <Route path="/403" element={<ForbiddenPage />} />
