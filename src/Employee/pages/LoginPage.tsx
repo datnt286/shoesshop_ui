@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import AxiosInstance from '../../services/AxiosInstance';
@@ -194,7 +194,7 @@ const LoginPage: React.FC = () => {
                                 </div>
                             </form>
                             <p className="mb-1">
-                                <a href="#">Quên mật khẩu?</a>
+                                <Link to="/admin/quen-mat-khau">Quên mật khẩu?</Link>
                             </p>
                         </div>
                     </div>

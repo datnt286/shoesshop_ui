@@ -14,6 +14,7 @@ import LoginPage from './../pages/LoginPage';
 import AccountPage from '../pages/AccountPage';
 import ChangePasswordPage from './../pages/ChangePasswordPage';
 import InvoicePage from './../pages/InvoicePage';
+import ForgotPasswordPage from './../pages/ForgotPasswordPage';
 import ContactPage from './../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => {
 
             <Route element={<AuthenticatedWrapper />}>
                 <Route path="/dang-nhap" element={<LoginPage />} />
+                <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
             </Route>
 
             <Route element={<PrivateWrapper />}>

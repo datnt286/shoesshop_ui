@@ -17,6 +17,7 @@ import AccessoriesPage from './../pages/AccessoriesPage';
 import ProductPage from './../pages/ProductPage';
 import InvoicePage from './../pages/InvoicePage';
 import CommentPage from './../pages/CommentPage';
+import ForgotPasswordPage from './../pages/ForgotPasswordPage';
 import NotFoundPage from './../pages/NotFoundPage';
 
 const AppRoutes: React.FC = () => {
@@ -24,6 +25,7 @@ const AppRoutes: React.FC = () => {
         <Routes>
             <Route element={<AuthenticatedWrapper />}>
                 <Route path="/dang-nhap" element={<LoginPage />} />
+                <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
             </Route>
 
             <Route element={<PrivateWrapper />}>
