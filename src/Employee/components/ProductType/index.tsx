@@ -6,7 +6,7 @@ import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import Pagination from '../Pagination/index';
 import DeleteModal from '../DeleteModal/index';
-import ExportPDFButton from '../ExportPDFButton/index';
+import ExportExcelButton from './../ExportExcelButton/index';
 
 interface ProductType {
     id: number | null;
@@ -262,7 +262,7 @@ const ProductType: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportPDFButton data={productTypes} />
+                    <ExportExcelButton data={productTypes} filename="productTypes" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

@@ -18,18 +18,33 @@ interface DefaultLayoutProps {
 }
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
-    const [loading, setLoading] = useState(true);
-
     useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
+        const preloadDuration = 300;
+        const preloader = document.querySelector('.preloader');
+
+        if (preloader && preloader instanceof HTMLElement) {
+            setTimeout(() => {
+                preloader.style.height = '0';
+                setTimeout(() => {
+                    const children = preloader.children;
+                    for (let i = 0; i < children.length; i++) {
+                        const child = children[i];
+                        if (child instanceof HTMLElement) {
+                            child.style.display = 'none';
+                        }
+                    }
+                }, 300);
+            }, preloadDuration);
+        }
     }, []);
 
     return (
         <>
             <div className="sidebar-mini layout-fixed">
                 <div className="wrapper">
+                    <div className="preloader flex-column justify-content-center align-items-center">
+                        <img className="animation__shake" src="" alt="Logo" height="60" width="60" />
+                    </div>
                     <Navbar />
                     <Sidebar />
                     <div className="content-wrapper">

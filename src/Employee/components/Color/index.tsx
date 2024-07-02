@@ -6,7 +6,7 @@ import axios from 'axios';
 import AxiosInstance from './../../../services/AxiosInstance';
 import Pagination from './../Pagination/index';
 import DeleteModal from './../DeleteModal/index';
-import ExportPDFButton from '../ExportPDFButton';
+import ExportExcelButton from './../ExportExcelButton/index';
 
 interface Color {
     id: number | null;
@@ -215,7 +215,7 @@ const Color: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportPDFButton data={colors} />
+                    <ExportExcelButton data={colors} filename="colors" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

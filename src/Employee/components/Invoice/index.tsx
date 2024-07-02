@@ -6,7 +6,7 @@ import AxiosInstance from '../../../services/AxiosInstance';
 import Pagination from '../Pagination/index';
 import InvoiceRow from './InvoiceRow';
 import InvoiceDetailRow from './InvoiceDetailRow';
-import ExportPDFButton from '../ExportPDFButton/index';
+import ExportExcelButton from './../ExportExcelButton/index';
 import { getStatusText, getActionButtonText, getActionBtnIcon } from '../../../utils/getStatusInvoice';
 
 interface Invoice {
@@ -189,7 +189,7 @@ const Invoice: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportPDFButton data={invoices} />
+                    <ExportExcelButton data={invoices} filename="invoices" />
                     <div className="float-right">
                         <select className="form-select" value={statusFilter} onChange={handleStatusSelectChange}>
                             <option value={0}>Tất cả</option>

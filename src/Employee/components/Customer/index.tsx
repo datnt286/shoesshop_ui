@@ -6,7 +6,7 @@ import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination/index';
-import ExportPDFButton from '../ExportPDFButton/index';
+import ExportExcelButton from './../ExportExcelButton/index';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
 
 const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
@@ -550,7 +550,7 @@ const Customer: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportPDFButton data={customers} />
+                    <ExportExcelButton data={customers} filename="customers" />
                     <form className="float-right d-flex justify-content-center" onSubmit={handleSearchSubmit}>
                         <input
                             type="search"
