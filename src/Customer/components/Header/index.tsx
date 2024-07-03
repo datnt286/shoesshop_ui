@@ -139,7 +139,7 @@ const Header: React.FC = () => {
                         <Link to="/" className="navbar-brand d-flex">
                             <img
                                 src={Logo}
-                                className="img-fluid rounded-circle me-1"
+                                className="img-fluid me-1"
                                 style={{ width: '46px', height: '46px', objectFit: 'cover' }}
                                 alt="Logo"
                             />

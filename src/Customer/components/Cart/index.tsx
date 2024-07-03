@@ -6,7 +6,6 @@ import AxiosInstance from '../../../services/AxiosInstance';
 import CartRow from './CartRow';
 
 interface User {
-    id: string;
     address?: string;
 }
 
@@ -23,17 +22,14 @@ interface CartDetail {
 
 const Cart: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<User>({
-        id: '',
-        address: '',
-    });
+    const [userAddress, setUserAddress] = useState('');
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
     const [total, setTotal] = useState(0);
     const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
 
     const fetchCartDetails = async () => {
         try {
-            const response = await AxiosInstance.get(`/Carts/CartDetails/User/${user.id}`, {
+            const response = await AxiosInstance.get('/Carts/CartDetails/User', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -55,10 +51,7 @@ const Cart: React.FC = () => {
                 const decodedToken: User = jwtDecode<User>(token);
 
                 setToken(token);
-                setUser({
-                    id: decodedToken.id,
-                    address: decodedToken.address || '',
-                });
+                setUserAddress(decodedToken.address || '');
             } catch (error) {
                 console.error('Token không hợp lệ: ', token);
             }
@@ -66,10 +59,10 @@ const Cart: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (user.id) {
+        if (token) {
             fetchCartDetails();
         }
-    }, [user.id]);
+    }, [token]);
 
     useEffect(() => {
         const total = cartDetails.reduce((acc, item) => acc + item.amount, 0);
@@ -191,8 +184,8 @@ const Cart: React.FC = () => {
                                                 <p className="mb-0">Phí cố định: 15.000 ₫</p>
                                             </div>
                                         </div>
-                                        {user.address && (
-                                            <p className="mb-0 mt-2 text-end">Vận chuyển đến: {user.address}</p>
+                                        {userAddress && (
+                                            <p className="mb-0 mt-2 text-end">Vận chuyển đến: {userAddress}</p>
                                         )}
                                     </div>
                                     <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">

@@ -21,9 +21,10 @@ interface Image {
 interface ProductCardProps {
     model: Model;
     token: string;
+    onWishlistChange: (modelId: number, isInWishlist: boolean) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ model, token }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChange }) => {
     const isLoggedIn = !!token;
     const navigate = useNavigate();
 
@@ -100,6 +101,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token }) => {
                     );
 
                     if (response.status === 200) {
+                        onWishlistChange(model.id, !model.isInWishlist);
+
                         Swal.fire({
                             title: 'Đã thêm sản phẩm vào Wishlist!',
                             icon: 'success',
@@ -126,6 +129,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token }) => {
                     });
 
                     if (response.status === 204) {
+                        onWishlistChange(model.id, !model.isInWishlist);
+
                         Swal.fire({
                             title: 'Đã xoá sản phẩm khỏi Wishlist!',
                             icon: 'success',

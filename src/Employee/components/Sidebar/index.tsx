@@ -44,7 +44,7 @@ const Sidebar: React.FC = () => {
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             <Link to="/admin" className="brand-link">
-                <img src={Logo} className="brand-image img-circle elevation-3" style={{ opacity: 0.8 }} alt="Logo" />
+                <img src={Logo} className="brand-image elevation-3" style={{ opacity: 0.8 }} alt="Logo" />
                 <span className="brand-text font-weight-light">Double D Shop</span>
             </Link>
             <div className="sidebar">

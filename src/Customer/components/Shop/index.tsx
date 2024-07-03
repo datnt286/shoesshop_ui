@@ -226,6 +226,12 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
         fetchModels();
     };
 
+    const handleWishlistChange = (modelId: number, isInWishlist: boolean) => {
+        setModels((prevModels) =>
+            prevModels.map((model) => (model.id === modelId ? { ...model, isInWishlist } : model)),
+        );
+    };
+
     return (
         <div className="container-fluid product py-5">
             <div className="container py-5">
@@ -367,7 +373,12 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                                 <div className="row g-4 justify-content-center">
                                     {models?.map((model) => (
                                         <div key={model.id} className="col-md-6 col-lg-6 col-xl-4">
-                                            <ProductCard model={model} token={token || ''} />
+                                            <ProductCard
+                                                key={model.id}
+                                                model={model}
+                                                token={token || ''}
+                                                onWishlistChange={handleWishlistChange}
+                                            />
                                         </div>
                                     ))}
                                     <div className="col-12">

@@ -44,6 +44,20 @@ const FeaturedProducts: React.FC = () => {
         setToken(token);
     }, []);
 
+    const handleWishlistChange = (modelId: number, isInWishlist: boolean) => {
+        setAllModels((prevModels) =>
+            prevModels.map((model) => (model.id === modelId ? { ...model, isInWishlist } : model)),
+        );
+
+        setShoesModels((prevShoesModels) =>
+            prevShoesModels.map((model) => (model.id === modelId ? { ...model, isInWishlist } : model)),
+        );
+
+        setAccessoriesModels((prevAccessoriesModels) =>
+            prevAccessoriesModels.map((model) => (model.id === modelId ? { ...model, isInWishlist } : model)),
+        );
+    };
+
     return (
         <div className="container-fluid product py-5">
             <div className="container py-5">
@@ -97,7 +111,12 @@ const FeaturedProducts: React.FC = () => {
                                     <div className="row g-4">
                                         {allModels?.slice(0, 8).map((model) => (
                                             <div className="col-md-6 col-lg-4 col-xl-3">
-                                                <ProductCard key={model.id} model={model} token={token || ''} />
+                                                <ProductCard
+                                                    key={model.id}
+                                                    model={model}
+                                                    token={token || ''}
+                                                    onWishlistChange={handleWishlistChange}
+                                                />
                                             </div>
                                         ))}
                                     </div>
@@ -110,7 +129,12 @@ const FeaturedProducts: React.FC = () => {
                                     <div className="row g-4">
                                         {shoesModels?.slice(0, 8).map((model) => (
                                             <div className="col-md-6 col-lg-4 col-xl-3">
-                                                <ProductCard key={model.id} model={model} token={token || ''} />
+                                                <ProductCard
+                                                    key={model.id}
+                                                    model={model}
+                                                    token={token || ''}
+                                                    onWishlistChange={handleWishlistChange}
+                                                />
                                             </div>
                                         ))}
                                     </div>
@@ -123,7 +147,12 @@ const FeaturedProducts: React.FC = () => {
                                     <div className="row g-4">
                                         {accessoriesModels?.slice(0, 8).map((model) => (
                                             <div className="col-md-6 col-lg-4 col-xl-3">
-                                                <ProductCard key={model.id} model={model} token={token || ''} />
+                                                <ProductCard
+                                                    key={model.id}
+                                                    model={model}
+                                                    token={token || ''}
+                                                    onWishlistChange={handleWishlistChange}
+                                                />
                                             </div>
                                         ))}
                                     </div>

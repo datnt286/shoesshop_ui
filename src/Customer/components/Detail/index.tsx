@@ -255,7 +255,6 @@ const Detail: React.FC = () => {
         if (isLoggedIn && selectedProduct) {
             try {
                 const data = {
-                    userId: user.id,
                     productId: selectedProduct?.id,
                     price: selectedProduct?.price,
                     quantity: quantity,

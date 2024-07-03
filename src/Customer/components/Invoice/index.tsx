@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
@@ -8,10 +7,6 @@ import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import InvoiceTable from './InvoiceTable';
 import DefaultImage from '../../resources/img/default-image.jpg';
-
-interface User {
-    id: string;
-}
 
 interface InvoiceDetail {
     id: number;
@@ -38,7 +33,6 @@ interface Invoice {
 
 const Invoice: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
-    const [userId, setUserId] = useState<string | null>(null);
     const [invoices, setInvoices] = useState({
         allInvoices: [],
         placedInvoices: [],
@@ -52,7 +46,7 @@ const Invoice: React.FC = () => {
 
     const fetchInvoices = async () => {
         try {
-            const response = await AxiosInstance.get(`/Invoices/User/${userId}`, {
+            const response = await AxiosInstance.get('/Invoices/User', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -75,24 +69,14 @@ const Invoice: React.FC = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
-
-        if (token) {
-            try {
-                const decodedToken: User = jwtDecode<User>(token);
-
-                setToken(token);
-                setUserId(decodedToken.id);
-            } catch (error) {
-                console.error('Token không hợp lệ: ', token);
-            }
-        }
+        setToken(token);
     }, []);
 
     useEffect(() => {
-        if (userId) {
+        if (token) {
             fetchInvoices();
         }
-    }, [userId]);
+    }, [token]);
 
     const handleDetailClick = (invoice: Invoice) => {
         setSelectedInvoice(invoice);

@@ -5,10 +5,6 @@ import AxiosInstance from '../../../services/AxiosInstance';
 import ProductCard from './ProductCard';
 import Pagination from '../Pagination/index';
 
-interface DecodedToken {
-    id: string;
-}
-
 interface WishlistDetail {
     id: number;
     modelId: number;
@@ -20,13 +16,12 @@ interface WishlistDetail {
 
 const Wishlist: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
-    const [userId, setUserId] = useState<string | null>(null);
     const [wishlistDetails, setWishlistDetails] = useState<WishlistDetail[]>([]);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchWishlistDetails = async (currentPage = 1, pageSize = 12) => {
         try {
-            const response = await AxiosInstance.get(`/Wishlists/WishlistDetails/User/${userId}`, {
+            const response = await AxiosInstance.get('/Wishlists/WishlistDetails/User', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -47,24 +42,14 @@ const Wishlist: React.FC = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
-
-        if (token) {
-            try {
-                const decodedToken: DecodedToken = jwtDecode<DecodedToken>(token);
-
-                setToken(token);
-                setUserId(decodedToken.id);
-            } catch (error) {
-                console.error('Token không hợp lệ: ', token);
-            }
-        }
+        setToken(token);
     }, []);
 
     useEffect(() => {
-        if (userId) {
+        if (token) {
             fetchWishlistDetails();
         }
-    }, [userId]);
+    }, [token]);
 
     const handlePageChange = ({ selected }: { selected: number }) => {
         const currentPage = selected + 1;
@@ -109,6 +94,7 @@ const Wishlist: React.FC = () => {
                                     <div key={wishlistDetail.id} className="col-md-6 col-lg-4 col-xl-3">
                                         <ProductCard
                                             wishlistDetail={wishlistDetail}
+                                            token={token || ''}
                                             onDelete={() => deleteWishlistDetail(wishlistDetail.id)}
                                         />
                                     </div>
