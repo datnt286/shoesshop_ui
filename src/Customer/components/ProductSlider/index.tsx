@@ -51,7 +51,11 @@ const ProductSlider: React.FC = () => {
 
     const fetchModels = async () => {
         try {
-            const response = await AxiosInstance.get('/Models');
+            const response = await AxiosInstance.get('/Models', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (response.status === 200) {
                 setModels(response.data);
@@ -62,8 +66,10 @@ const ProductSlider: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchModels();
-    }, []);
+        if (token) {
+            fetchModels();
+        }
+    }, [token]);
 
     useEffect(() => {
         const token = localStorage.getItem('customerToken');

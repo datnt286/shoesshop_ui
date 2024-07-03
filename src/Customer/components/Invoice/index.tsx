@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -18,6 +19,7 @@ interface InvoiceDetail {
     productId: number;
     productName: string;
     productImage: string;
+    modelId: number;
     price: number;
     quantity: number;
     amount: number;
@@ -290,21 +292,29 @@ const Invoice: React.FC = () => {
                                                     <tr>
                                                         <td>{index + 1}</td>
                                                         <td>
-                                                            <img
-                                                                src={imageSrc}
-                                                                className="img img-thumbnail"
-                                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                                                alt="Ảnh sản phẩm"
-                                                            />
+                                                            <Link to={`/san-pham/${invoiceDetail.modelId}`}>
+                                                                <img
+                                                                    src={imageSrc}
+                                                                    className="img img-thumbnail"
+                                                                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                                    alt="Ảnh sản phẩm"
+                                                                />
+                                                            </Link>
                                                         </td>
-                                                        <td>{invoiceDetail.productName}</td>
+                                                        <td>
+                                                            <Link to={`/san-pham/${invoiceDetail.modelId}`}>
+                                                                {invoiceDetail.productName}
+                                                            </Link>
+                                                        </td>
                                                         <td>{invoiceDetail.price.toLocaleString() + ' ₫'}</td>
                                                         <td>{invoiceDetail.quantity}</td>
                                                         <td>{invoiceDetail.amount.toLocaleString() + ' ₫'}</td>
                                                         <td>
-                                                            <button className="btn border border-secondary rounded-pill px-3 text-primary">
-                                                                Hoàn trả
-                                                            </button>
+                                                            <Link to={`/san-pham/${invoiceDetail.modelId}`}>
+                                                                <button className="btn border border-secondary rounded-pill px-3 text-primary">
+                                                                    Đánh giá
+                                                                </button>
+                                                            </Link>
                                                         </td>
                                                     </tr>
                                                 );

@@ -179,7 +179,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token }) => {
                     -20%
                 </div>
                 <button
-                    className="btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 text-primary position-absolute"
+                    className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 position-absolute ${
+                        model?.isInWishlist ? 'text-danger' : 'text-primary'
+                    }`}
                     style={{ top: '10px', right: '10px' }}
                     onClick={handleAddToWishlist}
                 >

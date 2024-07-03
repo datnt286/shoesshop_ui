@@ -13,6 +13,7 @@ interface Model {
     price: number;
     description: string;
     images: Image[];
+    isBought: boolean;
 }
 
 interface Image {
@@ -388,49 +389,55 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                         <p className="text-center pt-3">Sản phẩm chưa có đánh giá nào.</p>
                     )}
                     {token ? (
-                        <div>
-                            <h4 className="my-5 fw-bold">
-                                {isEditing ? 'Chỉnh sửa đánh giá của bạn' : 'Viết đánh giá của bạn'}
-                            </h4>
-                            <div className="row g-4">
-                                <div className="col-lg-12">
-                                    <div className="border-bottom rounded my-4">
-                                        <textarea
-                                            className="form-control border-0"
-                                            cols={30}
-                                            rows={8}
-                                            value={reviewContent}
-                                            onChange={(e) => setReviewContent(e.target.value)}
-                                            placeholder="Nội dung *"
-                                        ></textarea>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="d-flex justify-content-between py-3 mb-5">
-                                        <div className="d-flex align-items-center">
-                                            <p className="mb-0 me-3">Đánh giá:</p>
-                                            <div className="d-flex align-items-center">
-                                                {[...Array(5)].map((_, index) => (
-                                                    <i
-                                                        key={index}
-                                                        className={`fa fa-star ${
-                                                            index < rating ? 'text-secondary' : ''
-                                                        }`}
-                                                        onClick={() => setRating(index + 1)}
-                                                    />
-                                                ))}
+                        <>
+                            {model?.isBought ? (
+                                <div>
+                                    <h4 className="my-5 fw-bold">
+                                        {isEditing ? 'Chỉnh sửa đánh giá của bạn' : 'Viết đánh giá của bạn'}
+                                    </h4>
+                                    <div className="row g-4">
+                                        <div className="col-lg-12">
+                                            <div className="border-bottom rounded my-4">
+                                                <textarea
+                                                    className="form-control border-0"
+                                                    cols={30}
+                                                    rows={8}
+                                                    value={reviewContent}
+                                                    onChange={(e) => setReviewContent(e.target.value)}
+                                                    placeholder="Nội dung *"
+                                                ></textarea>
                                             </div>
                                         </div>
-                                        <button
-                                            className="btn border border-secondary text-primary rounded-pill px-4 py-2"
-                                            onClick={handlePostReview}
-                                        >
-                                            {isEditing ? 'Cập nhật' : 'Đăng'}
-                                        </button>
+                                        <div className="col-lg-12">
+                                            <div className="d-flex justify-content-between py-3 mb-5">
+                                                <div className="d-flex align-items-center">
+                                                    <p className="mb-0 me-3">Đánh giá:</p>
+                                                    <div className="d-flex align-items-center">
+                                                        {[...Array(5)].map((_, index) => (
+                                                            <i
+                                                                key={index}
+                                                                className={`fa fa-star ${
+                                                                    index < rating ? 'text-secondary' : ''
+                                                                }`}
+                                                                onClick={() => setRating(index + 1)}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    className="btn border border-secondary text-primary rounded-pill px-4 py-2"
+                                                    onClick={handlePostReview}
+                                                >
+                                                    {isEditing ? 'Cập nhật' : 'Đăng'}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            ) : (
+                                <p className="text-center pt-3">Những khách hàng đã mua hàng mới được đánh giá.</p>
+                            )}
+                        </>
                     ) : (
                         <p className="text-center pt-3">
                             Đăng nhập để đánh giá. <Link to="/dang-nhap">Đăng nhập</Link>

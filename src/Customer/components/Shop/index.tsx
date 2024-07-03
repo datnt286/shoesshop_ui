@@ -156,6 +156,12 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
     }, [selectedBrandId, selectedProductTypeIds, selectedColorIds, selectedSizeIds]);
 
     useEffect(() => {
+        if (token) {
+            fetchModels();
+        }
+    }, [token]);
+
+    useEffect(() => {
         fetchBrands();
         fetchProductTypes();
         fetchColors();

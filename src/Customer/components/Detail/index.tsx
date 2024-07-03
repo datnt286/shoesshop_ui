@@ -17,6 +17,7 @@ interface Model {
     price: number;
     description: string;
     images: Image[];
+    isBought: boolean;
 }
 
 interface Image {
@@ -83,7 +84,7 @@ const Detail: React.FC = () => {
     const firstSizeButtonRef = useRef<HTMLButtonElement>(null);
     const { modelId } = useParams();
     const navigate = useNavigate();
-    console.log(products)
+
     const imageSrc =
         model?.images && model.images.length > 0
             ? `${config.baseURL}/images/model/${model.images[0].name}`
@@ -93,7 +94,11 @@ const Detail: React.FC = () => {
 
     const fetchModel = async () => {
         try {
-            const response = await AxiosInstance.get(`/Models/${modelId}`);
+            const response = await AxiosInstance.get(`/Models/${modelId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (response.status === 200) {
                 setModel(response.data);
@@ -162,6 +167,13 @@ const Detail: React.FC = () => {
         fetchColors();
         fetchSizes();
     }, []);
+
+    useEffect(() => {
+        if (token) {
+            fetchModel();
+            fetchProducts();
+        }
+    }, [token]);
 
     useEffect(() => {
         if (firstColorButtonRef.current) {
@@ -507,7 +519,9 @@ const Detail: React.FC = () => {
                                         <i className="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
                                     </button>
                                     <button
-                                        className="btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 text-primary"
+                                        className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 ${
+                                            selectedProduct?.isInWishlist ? 'text-danger' : 'text-primary'
+                                        }`}
                                         onClick={handleAddToWishlist}
                                     >
                                         <i className={`${selectedProduct?.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>

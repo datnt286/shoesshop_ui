@@ -7,6 +7,7 @@ interface InvoiceDetail {
     productId: number;
     productName: string;
     productImage: string;
+    modelId: number;
     price: number;
     quantity: number;
     amount: number;
