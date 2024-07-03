@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 
 interface User {
@@ -9,12 +10,30 @@ interface User {
 }
 
 const Header: React.FC = () => {
+    const [token, setToken] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [avatar, setAvatar] = useState('');
+    const [cartCount, setCartCount] = useState(0);
+    const [wishlistCount, setWishlistCount] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [validationError, setValidationError] = useState('');
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+
+    const fetchCountCartAndWishlist = async () => {
+        try {
+            const response = await AxiosInstance.get('/Users/CountCartAndWishlist', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                setCartCount(response.data.cartDetailsCount);
+                setWishlistCount(response.data.wishlistDetailsCount);
+            }
+        } catch (error) {}
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
@@ -23,6 +42,7 @@ const Header: React.FC = () => {
             try {
                 const decodedToken: User = jwtDecode<User>(token);
 
+                setToken(token);
                 setIsLoggedIn(true);
                 setAvatar(decodedToken.avatar || '');
             } catch (error) {
@@ -32,6 +52,12 @@ const Header: React.FC = () => {
             setIsLoggedIn(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (token) {
+            fetchCountCartAndWishlist();
+        }
+    }, [token]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setKeyword(event.target.value);
@@ -171,7 +197,7 @@ const Header: React.FC = () => {
                                             className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                                             style={{ top: '-5px', left: '15px', height: '20px', minWidth: '20px' }}
                                         >
-                                            3
+                                            {wishlistCount}
                                         </span>
                                     )}
                                 </Link>
@@ -182,7 +208,7 @@ const Header: React.FC = () => {
                                             className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                                             style={{ top: '-5px', left: '15px', height: '20px', minWidth: '20px' }}
                                         >
-                                            3
+                                            {cartCount}
                                         </span>
                                     )}
                                 </Link>
