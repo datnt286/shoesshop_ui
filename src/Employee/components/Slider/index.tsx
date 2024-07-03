@@ -33,6 +33,7 @@ const Slider: React.FC = () => {
         status: 1,
     });
     const [imagePreview, setImagePreview] = useState(DefaultImage);
+    const [isEditMode, setIsEditMode] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
     const [deletedSuccessfully, setDeletedSuccessfully] = useState(false);
@@ -80,6 +81,7 @@ const Slider: React.FC = () => {
     const handleAddClick = () => {
         setModalTitle('Thêm slider');
         setShowModal(true);
+        setIsEditMode(false);
     };
 
     const handleEditClick = (slider: Slider) => {
@@ -88,6 +90,7 @@ const Slider: React.FC = () => {
         setSelectedSlider(slider);
         setModalTitle('Cập nhật slider');
         setShowModal(true);
+        setIsEditMode(true);
         setSliderData({
             ...sliderData,
             id: slider.id,
@@ -109,20 +112,29 @@ const Slider: React.FC = () => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+        const { name, value, type } = event.target;
 
-        if (name === 'name') {
-            if (!value) {
-                setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên slider không được để trống.' }));
-            } else {
-                setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+        if (type === 'checkbox') {
+            const checkboxValue = (event.currentTarget as HTMLInputElement).checked ? 1 : 0;
+
+            setSliderData({
+                ...sliderData,
+                [name]: checkboxValue,
+            });
+        } else {
+            if (name === 'name') {
+                if (!value) {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên slider không được để trống.' }));
+                } else {
+                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
+                }
             }
-        }
 
-        setSliderData({
-            ...sliderData,
-            [name]: value,
-        });
+            setSliderData({
+                ...sliderData,
+                [name]: value,
+            });
+        }
     };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,7 +185,7 @@ const Slider: React.FC = () => {
             newErrors.name = 'Tên slider không được để trống.';
         }
 
-        if (!sliderData.image) {
+        if (!sliderData.image && !isEditMode) {
             newErrors.image = 'Vui lòng chọn hình ảnh.';
         }
 
@@ -186,6 +198,7 @@ const Slider: React.FC = () => {
         try {
             const formData = new FormData();
             formData.append('name', sliderData.name);
+            formData.append('status', sliderData.status.toString());
             if (sliderData.image) {
                 formData.append('image', sliderData.image);
             }
@@ -251,6 +264,36 @@ const Slider: React.FC = () => {
         }
     };
 
+    const handleToggleStatus = async (id: number | null) => {
+        try {
+            const response = await AxiosInstance.put(`/Sliders/UpdateStatus/${id}`);
+
+            if (response.status === 204) {
+                fetchSliders();
+
+                Swal.fire({
+                    title: 'Cập nhật trạng thái slider thành công.',
+                    icon: 'success',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
+        } catch (error) {
+            console.error('Lỗi khi cập nhật trạng thái slider: ', error);
+
+            Swal.fire({
+                title: 'Lỗi khi cập nhật trạng thái slider.',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        }
+    };
+
     const resetFormData = () => {
         setSliderData({
             id: null,
@@ -259,6 +302,7 @@ const Slider: React.FC = () => {
             image: null,
         });
         setImagePreview(DefaultImage);
+        setIsEditMode(false);
         setErrors({});
     };
 
@@ -308,9 +352,22 @@ const Slider: React.FC = () => {
                                             />
                                         </td>
                                         <td>{slider.name}</td>
-                                        <td>{slider.status}</td>
+                                        <td>{slider.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
                                         <td>
                                             <div className="project-actions text-right">
+                                                <button
+                                                    className={`btn ${
+                                                        slider.status === 1 ? 'btn-warning' : 'btn-success'
+                                                    } btn-sm mr-2`}
+                                                    onClick={() => handleToggleStatus(slider.id)}
+                                                >
+                                                    <i
+                                                        className={
+                                                            slider.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'
+                                                        }
+                                                    ></i>{' '}
+                                                    {slider.status === 1 ? 'Ẩn' : 'Hiện'}
+                                                </button>
                                                 <button
                                                     className="btn btn-blue btn-sm mr-2"
                                                     onClick={() => handleEditClick(slider)}
@@ -381,6 +438,19 @@ const Slider: React.FC = () => {
                                 onChange={handleInputChange}
                             />
                             {errors.name && <div className="text-danger">{errors.name}</div>}
+                        </div>
+                        <div className="custom-control custom-checkbox text-center">
+                            <input
+                                type="checkbox"
+                                name="status"
+                                id="status"
+                                className="custom-control-input"
+                                onChange={handleInputChange}
+                                checked={sliderData.status === 1}
+                            />
+                            <label htmlFor="status" className="custom-control-label">
+                                Hiện
+                            </label>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

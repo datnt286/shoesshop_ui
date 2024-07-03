@@ -1,12 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HeroImage1 from '../../resources/img/hero-1.png';
-import HeroImage2 from '../../resources/img/hero-2.png';
+import OwlCarousel from 'react-owl-carousel';
+import AxiosInstance from '../../../services/AxiosInstance';
+import config from '../../../services/config';
+import DefaultImage from '../../resources/img/default-image.jpg';
+
+const carouselOptions = {
+    items: 1,
+    loop: true,
+    nav: false,
+    dots: false,
+    autoplay: true,
+    autoplayTimeout: 5000,
+    smartSpeed: 1000,
+};
+
+interface Slider {
+    id: number | null;
+    name: string;
+    status: number;
+    image: string | null;
+}
 
 const Hero: React.FC = () => {
+    const [sliders, setSliders] = useState<Slider[]>([]);
     const [keyword, setKeyword] = useState('');
     const [validationError, setValidationError] = useState('');
+    const carouselRef = useRef<OwlCarousel>(null);
     const navigate = useNavigate();
+
+    const fetchSliders = async () => {
+        try {
+            const response = await AxiosInstance.get('/Sliders');
+
+            if (response.status === 200) {
+                setSliders(response.data);
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải dữ liệu: ', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSliders();
+    }, []);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setKeyword(event.target.value);
@@ -21,6 +58,14 @@ const Hero: React.FC = () => {
         }
 
         navigate(`/tim-kiem/${keyword}`);
+    };
+
+    const handlePrevClick = () => {
+        carouselRef.current?.prev(300);
+    };
+
+    const handleNextClick = () => {
+        carouselRef.current?.next(300);
     };
 
     return (
@@ -48,39 +93,45 @@ const Hero: React.FC = () => {
                             </form>
                         </div>
                     </div>
-                    <div className="col-md-12 col-lg-5">
-                        <div id="carouselId" className="carousel slide position-relative" data-bs-ride="carousel">
-                            <div className="carousel-inner" role="listbox">
-                                <div className="carousel-item active rounded">
-                                    <img
-                                        src={HeroImage1}
-                                        className="img-fluid w-100 h-100 bg-secondary rounded"
-                                        alt="First slide"
-                                    />
-                                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                                        Fruites
-                                    </a>
-                                </div>
-                                <div className="carousel-item rounded">
-                                    <img
-                                        src={HeroImage2}
-                                        className="img-fluid w-100 h-100 rounded"
-                                        alt="Second slide"
-                                    />
-                                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                                        Vesitables
-                                    </a>
-                                </div>
-                            </div>
-                            <button className="carousel-control-prev" data-bs-target="#carouselId" data-bs-slide="prev">
-                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span className="visually-hidden">Trang trước</span>
-                            </button>
-                            <button className="carousel-control-next" data-bs-target="#carouselId" data-bs-slide="next">
-                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span className="visually-hidden">Trang sau</span>
-                            </button>
-                        </div>
+                    <div className="col-md-12 col-lg-5 position-relative">
+                        <OwlCarousel
+                            ref={carouselRef}
+                            className="carousel slide position-relative"
+                            {...carouselOptions}
+                        >
+                            {sliders.map((slider, index) => {
+                                const imageSrc = slider.image
+                                    ? `${config.baseURL}/images/slider/${slider.image}`
+                                    : DefaultImage;
+
+                                return (
+                                    <div key={index} className={`carousel-item active rounded`}>
+                                        <img
+                                            src={imageSrc}
+                                            className="img-fluid w-100 h-100 bg-secondary rounded"
+                                            style={{ width: '600px', height: '400px', objectFit: 'cover' }}
+                                            alt="Hình ảnh"
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </OwlCarousel>
+                        <button
+                            className="carousel-control-prev"
+                            style={{ marginLeft: '40px' }}
+                            onClick={handlePrevClick}
+                        >
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Trang trước</span>
+                        </button>
+                        <button
+                            className="carousel-control-next"
+                            style={{ marginRight: '40px' }}
+                            onClick={handleNextClick}
+                        >
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Trang sau</span>
+                        </button>
                     </div>
                 </div>
             </div>

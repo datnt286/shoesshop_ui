@@ -69,10 +69,10 @@ const Comment: React.FC = () => {
         setSelectedComment(null);
     };
 
-    const handleToggleComment = async (id: number, currentStatus: number) => {
+    const handleToggleStatus = async (id: number, currentStatus: number) => {
         try {
             const newStatus = currentStatus === 1 ? 0 : 1;
-            const response = await AxiosInstance.put(`/Comments/UpdateStatus/${id}`, { status: newStatus });
+            const response = await AxiosInstance.put(`/Comments/UpdateStatus/${id}`);
 
             if (response.status === 204) {
                 if (selectedComment) {
@@ -91,10 +91,29 @@ const Comment: React.FC = () => {
                     }
                     return comment;
                 });
+
                 setComments(updatedMainComments);
+
+                Swal.fire({
+                    title: 'Cập nhật trạng thái bình luận thành công.',
+                    icon: 'success',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
             }
         } catch (error) {
             console.error('Lỗi khi cập nhật trạng thái bình luận: ', error);
+
+            Swal.fire({
+                title: 'Lỗi khi cập nhật trạng thái bình luận.',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+            });
         }
     };
 
@@ -140,7 +159,7 @@ const Comment: React.FC = () => {
                                                 className={`btn ${
                                                     comment.status === 1 ? 'btn-warning' : 'btn-success'
                                                 } btn-sm mr-2`}
-                                                onClick={() => handleToggleComment(comment.id, comment.status)}
+                                                onClick={() => handleToggleStatus(comment.id, comment.status)}
                                             >
                                                 <i
                                                     className={comment.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'}
@@ -193,7 +212,7 @@ const Comment: React.FC = () => {
                                                     className={`btn ${
                                                         comment.status === 1 ? 'btn-warning' : 'btn-success'
                                                     } btn-sm mr-2`}
-                                                    onClick={() => handleToggleComment(comment.id, comment.status)}
+                                                    onClick={() => handleToggleStatus(comment.id, comment.status)}
                                                 >
                                                     <i
                                                         className={
