@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import config from '../../../services/config';
+import Logo from '../../resources/img/logo.jpg';
 import DefaultAvatar from '../../resources/img/default-avatar.jpg';
 
 interface User {
@@ -43,7 +44,7 @@ const Sidebar: React.FC = () => {
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             <Link to="/admin" className="brand-link">
-                <img src="" className="brand-image img-circle elevation-3" style={{ opacity: 0.8 }} alt="Logo" />
+                <img src={Logo} className="brand-image img-circle elevation-3" style={{ opacity: 0.8 }} alt="Logo" />
                 <span className="brand-text font-weight-light">Double D Shop</span>
             </Link>
             <div className="sidebar">
@@ -69,7 +70,10 @@ const Sidebar: React.FC = () => {
                         role="menu"
                         data-accordion="false"
                     >
-                        {(userData.role === 'Manager' || userData.role === 'SalesStaff' || userData.role === 'WarehouseStaff' || userData.role === 'Shipper') && (
+                        {(userData.role === 'Manager' ||
+                            userData.role === 'SalesStaff' ||
+                            userData.role === 'WarehouseStaff' ||
+                            userData.role === 'Shipper') && (
                             <li className="nav-item">
                                 <NavLink to="/admin" className="nav-link">
                                     <i className="nav-icon fas fa-home"></i>

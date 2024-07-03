@@ -1,4 +1,7 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect } from 'react';
+import Navbar from './../components/Navbar/index';
+import Sidebar from './../components/Sidebar/index';
+import Footer from './../components/Footer/index';
 
 import '../resources/plugins/ionicons-2.0.1/css/ionicons.min.css';
 import '../resources/plugins/fontawesome-free/css/all.min.css';
@@ -8,10 +11,7 @@ import '../resources/css/style.css';
 import '../resources/plugins/jquery-ui/jquery-ui.min.js';
 import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
-
-import Navbar from './../components/Navbar/index';
-import Sidebar from './../components/Sidebar/index';
-import Footer from './../components/Footer/index';
+import Logo from '../resources/img/logo.jpg';
 
 interface DefaultLayoutProps {
     children: ReactNode;
@@ -43,7 +43,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
             <div className="sidebar-mini layout-fixed">
                 <div className="wrapper">
                     <div className="preloader flex-column justify-content-center align-items-center">
-                        <img className="animation__shake" src="" alt="Logo" height="60" width="60" />
+                        <img className="animation__shake" src={Logo} alt="Logo" height="60" width="60" />
                     </div>
                     <Navbar />
                     <Sidebar />

@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
+import Logo from '../../resources/img/logo.jpg';
 
 interface User {
     avatar?: string;
@@ -135,7 +136,13 @@ const Header: React.FC = () => {
                 </div>
                 <div className="container px-0">
                     <nav className="navbar navbar-light bg-white navbar-expand-xl">
-                        <Link to="/" className="navbar-brand">
+                        <Link to="/" className="navbar-brand d-flex">
+                            <img
+                                src={Logo}
+                                className="img-fluid rounded-circle me-1"
+                                style={{ width: '46px', height: '46px', objectFit: 'cover' }}
+                                alt="Logo"
+                            />
                             <h1 className="text-primary display-6">Double D</h1>
                         </Link>
                         <button

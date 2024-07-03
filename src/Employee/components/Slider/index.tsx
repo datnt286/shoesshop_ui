@@ -298,7 +298,7 @@ const Slider: React.FC = () => {
         setSliderData({
             id: null,
             name: '',
-            status: 0,
+            status: 1,
             image: null,
         });
         setImagePreview(DefaultImage);
