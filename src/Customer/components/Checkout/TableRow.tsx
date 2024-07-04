@@ -28,15 +28,15 @@ const TableRow: React.FC<TableRowProps> = ({ cartDetail }) => {
         ? `${config.baseURL}/images/product/${cartDetail.productImage}`
         : DefaultImage;
 
-        useEffect(() => {
-            setQuantityAvailableError(cartDetail.quantity > cartDetail.quantityAvailable);
-        }, [cartDetail]);
+    useEffect(() => {
+        setQuantityAvailableError(cartDetail.quantity > cartDetail.quantityAvailable);
+    }, [cartDetail]);
 
     return (
         <tr>
             <th scope="row">
                 <Link to={`/san-pham/${cartDetail.modelId}`}>
-                    <div className="d-flex align-items-center mt-2">
+                    <div className="d-flex align-items-center">
                         <img
                             src={imageSrc}
                             className="img-fluid rounded-circle"
@@ -50,9 +50,12 @@ const TableRow: React.FC<TableRowProps> = ({ cartDetail }) => {
                 <Link to={`/san-pham/${cartDetail.modelId}`}>{cartDetail.productName}</Link>
             </td>
             <td className="py-5">{cartDetail.price.toLocaleString() + ' ₫'}</td>
-            <td className="py-5 text-center">{cartDetail.quantity}{quantityAvailableError && (
+            <td className="py-5 text-center">
+                {cartDetail.quantity}
+                {quantityAvailableError && (
                     <div className="text-danger">Số lượng sản phẩm không đủ: {cartDetail.quantityAvailable}</div>
-                )}</td>
+                )}
+            </td>
             <td className="py-5">{cartDetail.amount.toLocaleString() + ' ₫'}</td>
         </tr>
     );

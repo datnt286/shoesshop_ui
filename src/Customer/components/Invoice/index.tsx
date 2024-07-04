@@ -24,6 +24,7 @@ interface Invoice {
     id: number;
     userId: string;
     createDate: string;
+    paymentMethod: string;
     total: number;
     shippingFee: number;
     totalPayment: number;
@@ -87,9 +88,17 @@ const Invoice: React.FC = () => {
 
     const handleConfirmInvoice = async (invoiceId: number) => {
         try {
-            const response = await AxiosInstance.put(`/Invoices/${invoiceId}/status`, {
-                status: 4,
-            });
+            const response = await AxiosInstance.put(
+                `/Invoices/${invoiceId}/status`,
+                {
+                    status: 4,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
 
             if (response.status === 200) {
                 Swal.fire({

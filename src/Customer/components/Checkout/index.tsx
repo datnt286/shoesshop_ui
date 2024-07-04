@@ -54,8 +54,8 @@ const Checkout: React.FC = () => {
         address: '',
     });
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('VN Pay');
     const [total, setTotal] = useState(0);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
     const [note, setNote] = useState('');
     const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
 
@@ -77,7 +77,7 @@ const Checkout: React.FC = () => {
 
     const fetchCartDetails = async () => {
         try {
-            const response = await AxiosInstance.get(`/Carts/CartDetails/User/${userData.id}`, {
+            const response = await AxiosInstance.get('/Carts/CartDetails/User', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -158,10 +158,10 @@ const Checkout: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (userData.id) {
+        if (token) {
             fetchCartDetails();
         }
-    }, [userData.id]);
+    }, [token]);
 
     useEffect(() => {
         const total = cartDetails.reduce((acc, item) => acc + item.amount, 0);
@@ -408,7 +408,31 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const handleSubmitOrder = async () => {
+    const handleMoMoPayment = async () => {
+        try {
+            const response = await AxiosInstance.post(
+                '/Payment',
+                { requiredAmount: total + 15000 },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                },
+            );
+
+            if (response.status === 200) {
+                const paymentResponse = response.data;
+                // Assuming paymentResponse contains the redirect URL to MoMo
+                window.location.href = paymentResponse.payUrl;
+            } else {
+                console.error('Payment creation failed:', response.status);
+            }
+        } catch (error) {
+            console.error('Error during MoMo payment request:', error);
+        }
+    };
+
+    const handlePostOrder = async () => {
         const accountUpdated = await updateAccount();
 
         if (!accountUpdated) {
@@ -419,7 +443,7 @@ const Checkout: React.FC = () => {
 
         try {
             const data = {
-                userId: userData.id,
+                paymentMethod: selectedPaymentMethod,
                 total: total,
                 note: note,
                 cartDetails: cartDetails.map((cartDetail) => ({
@@ -686,13 +710,13 @@ const Checkout: React.FC = () => {
                                     <input
                                         type="radio"
                                         name="paymentMethod"
-                                        id="transfer"
+                                        id="vn-pay"
                                         className="form-check-input"
-                                        value={1}
-                                        onChange={(e) => setSelectedPaymentMethod(parseInt(e.target.value))}
-                                        checked={selectedPaymentMethod === 1}
+                                        value="VN Pay"
+                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                        checked={selectedPaymentMethod === 'VN Pay'}
                                     />
-                                    <label className="form-check-label" htmlFor="transfer">
+                                    <label className="form-check-label" htmlFor="vn-pay">
                                         Chuyển khoản trực tiếp
                                     </label>
                                 </div>
@@ -711,9 +735,9 @@ const Checkout: React.FC = () => {
                                         name="paymentMethod"
                                         id="momo"
                                         className="form-check-input"
-                                        value={2}
-                                        onChange={(e) => setSelectedPaymentMethod(parseInt(e.target.value))}
-                                        checked={selectedPaymentMethod === 2}
+                                        value="Momo"
+                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                        checked={selectedPaymentMethod === 'Momo'}
                                     />
                                     <label className="form-check-label" htmlFor="momo">
                                         Momo
@@ -729,9 +753,9 @@ const Checkout: React.FC = () => {
                                         name="paymentMethod"
                                         id="cod"
                                         className="form-check-input"
-                                        value={3}
-                                        onChange={(e) => setSelectedPaymentMethod(parseInt(e.target.value))}
-                                        checked={selectedPaymentMethod === 3}
+                                        value="COD"
+                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                        checked={selectedPaymentMethod === 'COD'}
                                     />
                                     <label className="form-check-label" htmlFor="cod">
                                         Thanh Toán Khi Giao Hàng
@@ -743,7 +767,7 @@ const Checkout: React.FC = () => {
                             <button
                                 type="button"
                                 className="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
-                                onClick={handleSubmitOrder}
+                                onClick={selectedPaymentMethod === 'Momo' ? handleMoMoPayment : handlePostOrder}
                                 disabled={!canProceedToCheckout}
                             >
                                 Đặt Hàng

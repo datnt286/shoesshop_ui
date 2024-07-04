@@ -16,6 +16,7 @@ interface InvoiceDetail {
 interface Invoice {
     id: number;
     userId: string;
+    paymentMethod: string;
     createDate: string;
     total: number;
     shippingFee: number;
@@ -60,7 +61,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                                 Ngày đặt
                             </th>
                             <th className="text-primary" scope="col">
-                                Phí vận chuyển
+                                Phương thức thanh toán
                             </th>
                             <th className="text-primary" scope="col">
                                 Tổng thanh toán
@@ -77,7 +78,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                         {invoices.map((invoice) => (
                             <tr>
                                 <td>{invoice.createDate}</td>
-                                <td>{invoice.shippingFee.toLocaleString() + ' ₫'}</td>
+                                <td>{invoice.paymentMethod}</td>
                                 <td>{invoice.totalPayment.toLocaleString() + ' ₫'}</td>
                                 <td>
                                     <span className={`badge ${getStatusBadgeClass(invoice.status)}`}>

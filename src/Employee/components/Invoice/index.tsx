@@ -16,6 +16,7 @@ interface Invoice {
     phoneNumber: string;
     address: string;
     createDate: string;
+    paymentMethod: string;
     total: number;
     shippingFee: number;
     totalPayment: number;
@@ -264,6 +265,10 @@ const Invoice: React.FC = () => {
                             </div>
                             <div className="col-xl-6">
                                 <div className="form-group">
+                                    <span className="text-lg font-weight-bold">Phương thức thanh toán: </span>
+                                    <span className="text-lg">{selectedInvoice.paymentMethod}</span>
+                                </div>
+                                <div className="form-group">
                                     <span className="text-lg font-weight-bold">Tổng tiền: </span>
                                     <span className="text-lg">{selectedInvoice.total.toLocaleString() + ' ₫'}</span>
                                 </div>
@@ -365,6 +370,10 @@ const Invoice: React.FC = () => {
                                 </div>
                             </div>
                             <div className="col-xl-6">
+                                <div className="form-group">
+                                    <span className="text-lg font-weight-bold">Phương thức thanh toán: </span>
+                                    <span className="text-lg">{selectedInvoice.paymentMethod}</span>
+                                </div>
                                 <div className="form-group">
                                     <span className="text-lg font-weight-bold">Tổng tiền: </span>
                                     <span className="text-lg">{selectedInvoice.total.toLocaleString() + ' ₫'}</span>
