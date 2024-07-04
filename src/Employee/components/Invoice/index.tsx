@@ -36,6 +36,7 @@ interface InvoiceDetail {
 }
 
 const Invoice: React.FC = () => {
+    const [token, setToken] = useState<string | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
@@ -72,7 +73,14 @@ const Invoice: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchInvoices();
+        if (token) {
+            fetchInvoices();
+        }
+    }, [token]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('employeeToken');
+        setToken(token);
     }, []);
 
     const handlePageChange = ({ selected }: { selected: number }) => {
@@ -105,9 +113,17 @@ const Invoice: React.FC = () => {
             const newStatus = (selectedInvoice.status += 1);
 
             try {
-                const response = await AxiosInstance.put(`/Invoices/${selectedInvoice.id}/status`, {
-                    status: newStatus,
-                });
+                const response = await AxiosInstance.put(
+                    `/Invoices/${selectedInvoice.id}/status`,
+                    {
+                        status: newStatus,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
 
                 if (response.status === 200) {
                     Swal.fire({
