@@ -51,7 +51,7 @@ const ProductSlider: React.FC = () => {
 
     const fetchModels = async () => {
         try {
-            const response = await AxiosInstance.get('/Models', {
+            const response = await AxiosInstance.get('/Models/new', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

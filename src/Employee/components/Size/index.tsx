@@ -214,7 +214,7 @@ const Size: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={sizes} filename="sizes" />
+                    <ExportExcelButton endpoint="/Sizes" filename="size" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

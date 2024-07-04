@@ -563,7 +563,7 @@ const Product: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={products} filename="products" />
+                    <ExportExcelButton endpoint="/Products" filename="san-pham" />
                     <form className="float-right d-flex justify-content-center" onSubmit={handleSearchSubmit}>
                         <input
                             type="search"

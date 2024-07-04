@@ -190,7 +190,7 @@ const Invoice: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={invoices} filename="invoices" />
+                    <ExportExcelButton endpoint="/Invoices" filename="hoa-don" />
                     <div className="float-right">
                         <select className="form-select" value={statusFilter} onChange={handleStatusSelectChange}>
                             <option value={0}>Tất cả</option>

@@ -321,7 +321,7 @@ const Slider: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={sliders} filename="sliders" />
+                    <ExportExcelButton endpoint="/Sliders" filename="slider" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

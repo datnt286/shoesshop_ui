@@ -686,7 +686,7 @@ const Employee: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={employees} filename="employees" />
+                    <ExportExcelButton endpoint="/Users/Employees" filename="nhan-vien" />
                     <form className="float-right d-flex justify-content-center" onSubmit={handleSearchSubmit}>
                         <input
                             type="search"

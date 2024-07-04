@@ -215,7 +215,7 @@ const Brand: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={brands} filename="brands" />
+                    <ExportExcelButton endpoint="/Brands" filename="nhan-hieu" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

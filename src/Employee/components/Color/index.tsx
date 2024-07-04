@@ -215,7 +215,7 @@ const Color: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={colors} filename="colors" />
+                    <ExportExcelButton endpoint="/Colors" filename="mau-sac" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

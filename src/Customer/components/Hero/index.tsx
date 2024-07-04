@@ -18,7 +18,6 @@ const carouselOptions = {
 interface Slider {
     id: number | null;
     name: string;
-    status: number;
     image: string | null;
 }
 
@@ -31,7 +30,7 @@ const Hero: React.FC = () => {
 
     const fetchSliders = async () => {
         try {
-            const response = await AxiosInstance.get('/Sliders');
+            const response = await AxiosInstance.get('/Sliders/actived');
 
             if (response.status === 200) {
                 setSliders(response.data);

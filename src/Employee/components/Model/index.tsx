@@ -531,7 +531,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={models} filename="models" />
+                    <ExportExcelButton
+                        endpoint={`/Models/productType/${productTypeId}`}
+                        filename={`${productTypeId === 1 ? 'giay' : 'phu-kien-khac'}`}
+                    />
                     <form className="float-right d-flex justify-content-center" onSubmit={handleSearchSubmit}>
                         <input
                             type="search"

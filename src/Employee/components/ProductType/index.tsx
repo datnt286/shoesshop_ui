@@ -262,7 +262,7 @@ const ProductType: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={productTypes} filename="productTypes" />
+                    <ExportExcelButton endpoint="/ProductTypes" filename="loai-san-pham" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">

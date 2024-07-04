@@ -23,7 +23,7 @@ const FeaturedProducts: React.FC = () => {
 
     const fetchModels = async () => {
         try {
-            const response = await AxiosInstance.get('/Models/All');
+            const response = await AxiosInstance.get('/Models/all');
 
             if (response.status === 200) {
                 setAllModels(response.data.allModels);

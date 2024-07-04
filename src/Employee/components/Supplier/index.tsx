@@ -457,7 +457,7 @@ const Supplier: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton data={suppliers} filename="suppliers" />
+                    <ExportExcelButton endpoint="/Suppliers" filename="nha-cung-cap" />
                 </div>
                 <div className="card-body">
                     <table className="table table-bordered table-striped">
