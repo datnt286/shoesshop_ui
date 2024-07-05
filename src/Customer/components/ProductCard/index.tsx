@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                 console.error('Lỗi khi thêm sản phẩm vào giỏ hàng: ', error);
 
                 Swal.fire({
-                    title: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!',
+                    title: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng! Vui lòng thử lại sau.',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#3085d6',

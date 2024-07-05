@@ -514,6 +514,7 @@ const Detail: React.FC = () => {
                                     <button
                                         className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"
                                         onClick={handleAddToCart}
+                                        disabled={(selectedProduct?.quantity ?? 0) < 1}
                                     >
                                         <i className="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
                                     </button>
