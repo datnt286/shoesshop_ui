@@ -107,10 +107,29 @@ const Login: React.FC = () => {
         }
     };
 
+    const handleGoogleLogin = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        try {
+            const response = await AxiosInstance.get('/Users/google-login');
+        
+            
+        } catch (error) {
+            console.error('Lỗi đăng nhập: ', error);
+
+            Swal.fire({
+                title: 'Đăng nhập thất bại! Vui lòng thử lại.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+            });
+        }
+    };
+
     return (
         <div className="container-fluid py-5">
             <div className="container py-5">
-                <form onSubmit={handleLogin}>
+                <form>
                     <div className="row">
                         <div className="col-md-12 col-lg-6 col-xl-6 offset-lg-3 offset-xl-3">
                             <div className="border border-1 rounded p-5">
@@ -167,6 +186,7 @@ const Login: React.FC = () => {
                                     <button
                                         type="submit"
                                         className="btn border border-secondary px-4 py-3 rounded-pill text-primary text-uppercase w-75"
+                                        onClick={handleLogin}
                                     >
                                         Đăng nhập
                                     </button>
@@ -175,6 +195,7 @@ const Login: React.FC = () => {
                                     <button
                                         className="btn px-5 py-2 mx-2 rounded-pill text-light w-50"
                                         style={{ backgroundColor: '#dd4b39' }}
+                                        onClick={handleGoogleLogin}
                                     >
                                         <i className="fab fa-google"></i> Google
                                     </button>

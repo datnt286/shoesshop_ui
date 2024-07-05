@@ -472,31 +472,35 @@ const Supplier: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {suppliers.map((supplier, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{supplier.name}</td>
-                                    <td>{supplier.phoneNumber}</td>
-                                    <td>{supplier.email}</td>
-                                    <td>{supplier.address}</td>
-                                    <td>
-                                        <div className="project-actions text-right">
-                                            <button
-                                                className="btn btn-blue btn-sm mr-2"
-                                                onClick={() => handleEditClick(supplier)}
-                                            >
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => handleDeleteClick(supplier.id)}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {suppliers.length > 0 ? (
+                                suppliers.map((supplier, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{supplier.name}</td>
+                                        <td>{supplier.phoneNumber}</td>
+                                        <td>{supplier.email}</td>
+                                        <td>{supplier.address}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(supplier)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(supplier.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <h3 className="m-2">Danh sách nhà cung cấp trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

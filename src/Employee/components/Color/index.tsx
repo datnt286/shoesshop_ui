@@ -227,28 +227,32 @@ const Color: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {colors.map((color, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{color.name}</td>
-                                    <td>
-                                        <div className="project-actions text-right">
-                                            <button
-                                                className="btn btn-blue btn-sm mr-2"
-                                                onClick={() => handleEditClick(color)}
-                                            >
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => handleDeleteClick(color.id)}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {colors.length > 0 ? (
+                                colors.map((color, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{color.name}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(color)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(color.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <h3 className="m-2">Danh sách màu sắc trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

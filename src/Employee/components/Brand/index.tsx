@@ -227,28 +227,32 @@ const Brand: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {brands.map((brand, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{brand.name}</td>
-                                    <td>
-                                        <div className="project-actions text-right">
-                                            <button
-                                                className="btn btn-blue btn-sm mr-2"
-                                                onClick={() => handleEditClick(brand)}
-                                            >
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => handleDeleteClick(brand.id)}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {brands.length > 0 ? (
+                                brands.map((brand, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{brand.name}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(brand)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(brand.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <h3 className="m-2">Danh sách nhãn hiệu trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

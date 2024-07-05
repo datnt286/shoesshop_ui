@@ -226,28 +226,32 @@ const Size: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sizes.map((size, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{size.name}</td>
-                                    <td>
-                                        <div className="project-actions text-right">
-                                            <button
-                                                className="btn btn-blue btn-sm mr-2"
-                                                onClick={() => handleEditClick(size)}
-                                            >
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => handleDeleteClick(size.id)}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {sizes.length > 0 ? (
+                                sizes.map((size, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{size.name}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(size)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(size.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <h3 className="m-2">Danh sách size trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

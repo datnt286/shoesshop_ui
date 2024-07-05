@@ -577,47 +577,51 @@ const Customer: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {customers.map((customer, index) => {
-                                const avatarSrc = customer.avatar
-                                    ? `${config.baseURL}/images/avatar/${customer.avatar}`
-                                    : DefaultAvatar;
+                            {customers.length > 0 ? (
+                                customers.map((customer, index) => {
+                                    const avatarSrc = customer.avatar
+                                        ? `${config.baseURL}/images/avatar/${customer.avatar}`
+                                        : DefaultAvatar;
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img
-                                                src={avatarSrc}
-                                                className="img-thumbnail"
-                                                width={50}
-                                                height={50}
-                                                alt="Avatar"
-                                            />
-                                        </td>
-                                        <td>{customer.userName}</td>
-                                        <td>{customer.name}</td>
-                                        <td>{customer.phoneNumber}</td>
-                                        <td>{customer.email}</td>
-                                        <td>{customer.status === 1 ? 'Hoạt động' : 'Bị khoá'}</td>
-                                        <td>
-                                            <div className="project-actions text-right">
-                                                <button
-                                                    className="btn btn-gray btn-sm mr-2"
-                                                    onClick={() => handleDetailClick(customer)}
-                                                >
-                                                    <i className="fas fa-info-circle"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-blue btn-sm mr-2"
-                                                    onClick={() => handleEditClick(customer)}
-                                                >
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={avatarSrc}
+                                                    className="img-thumbnail"
+                                                    width={50}
+                                                    height={50}
+                                                    alt="Avatar"
+                                                />
+                                            </td>
+                                            <td>{customer.userName}</td>
+                                            <td>{customer.name}</td>
+                                            <td>{customer.phoneNumber}</td>
+                                            <td>{customer.email}</td>
+                                            <td>{customer.status === 1 ? 'Hoạt động' : 'Bị khoá'}</td>
+                                            <td>
+                                                <div className="project-actions text-right">
+                                                    <button
+                                                        className="btn btn-gray btn-sm mr-2"
+                                                        onClick={() => handleDetailClick(customer)}
+                                                    >
+                                                        <i className="fas fa-info-circle"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-blue btn-sm mr-2"
+                                                        onClick={() => handleEditClick(customer)}
+                                                    >
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách khách hàng trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -559,56 +559,60 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {models.map((model, index) => {
-                                const imageSrc =
-                                    model.images && model.images.length > 0
-                                        ? `${config.baseURL}/images/model/${model.images[0].name}`
-                                        : DefaultImage;
+                            {models.length > 0 ? (
+                                models.map((model, index) => {
+                                    const imageSrc =
+                                        model.images && model.images.length > 0
+                                            ? `${config.baseURL}/images/model/${model.images[0].name}`
+                                            : DefaultImage;
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img
-                                                src={imageSrc}
-                                                className="img img-thumbnail"
-                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                                alt="Ảnh sản phẩm"
-                                            />
-                                        </td>
-                                        <td>{model.name}</td>
-                                        <td>{model.importPrice?.toLocaleString() + ' ₫'}</td>
-                                        <td>{model.price?.toLocaleString() + ' ₫'}</td>
-                                        <td>
-                                            <div className="project-actions text-right">
-                                                <Link to={`/admin/san-pham/${model.id}`}>
-                                                    <button className="btn btn-success btn-sm mr-2">
-                                                        <i className="fas fa-arrow-circle-right"></i>
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={imageSrc}
+                                                    className="img img-thumbnail"
+                                                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                    alt="Ảnh sản phẩm"
+                                                />
+                                            </td>
+                                            <td>{model.name}</td>
+                                            <td>{model.importPrice?.toLocaleString() + ' ₫'}</td>
+                                            <td>{model.price?.toLocaleString() + ' ₫'}</td>
+                                            <td>
+                                                <div className="project-actions text-right">
+                                                    <Link to={`/admin/san-pham/${model.id}`}>
+                                                        <button className="btn btn-success btn-sm mr-2">
+                                                            <i className="fas fa-arrow-circle-right"></i>
+                                                        </button>
+                                                    </Link>
+                                                    <button
+                                                        className="btn btn-gray btn-sm mr-2"
+                                                        onClick={() => handleDetailClick(model)}
+                                                    >
+                                                        <i className="fas fa-info-circle"></i>
                                                     </button>
-                                                </Link>
-                                                <button
-                                                    className="btn btn-gray btn-sm mr-2"
-                                                    onClick={() => handleDetailClick(model)}
-                                                >
-                                                    <i className="fas fa-info-circle"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-blue btn-sm mr-2"
-                                                    onClick={() => handleEditClick(model)}
-                                                >
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() => handleDeleteClick(model.id)}
-                                                >
-                                                    <i className="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                                    <button
+                                                        className="btn btn-blue btn-sm mr-2"
+                                                        onClick={() => handleEditClick(model)}
+                                                    >
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => handleDeleteClick(model.id)}
+                                                    >
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách mẫu sản phẩm trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

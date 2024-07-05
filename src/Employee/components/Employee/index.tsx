@@ -353,6 +353,7 @@ const Employee: React.FC = () => {
                         salary: selectedRole.salary,
                     });
                     setErrors((prevErrors) => ({ ...prevErrors, role: undefined }));
+                    setErrors((prevErrors) => ({ ...prevErrors, salary: undefined }));
                 }
             } else {
                 setEmployeeData({
@@ -713,51 +714,55 @@ const Employee: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {employees.map((employee, index) => {
-                                const avatarSrc = employee.avatar
-                                    ? `${config.baseURL}/images/avatar/${employee.avatar}`
-                                    : DefaultAvatar;
+                            {employees.length > 0 ? (
+                                employees.map((employee, index) => {
+                                    const avatarSrc = employee.avatar
+                                        ? `${config.baseURL}/images/avatar/${employee.avatar}`
+                                        : DefaultAvatar;
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img
-                                                src={avatarSrc}
-                                                className="img-thumbnail"
-                                                width={50}
-                                                height={50}
-                                                alt="Avatar"
-                                            />
-                                        </td>
-                                        <td>{employee.userName}</td>
-                                        <td>{employee.name}</td>
-                                        <td>{employee.email}</td>
-                                        <td>{getRoleText(employee.role)}</td>
-                                        <td>{employee.status === 1 ? 'Hoạt động' : 'Không hoạt động'}</td>
-                                        <td>
-                                            <button
-                                                className="btn btn-gray btn-sm mr-2"
-                                                onClick={() => handleDetailClick(employee)}
-                                            >
-                                                <i className="fas fa-info-circle"></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-blue btn-sm mr-2"
-                                                onClick={() => handleEditClick(employee)}
-                                            >
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => handleDeleteClick(employee.id)}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={avatarSrc}
+                                                    className="img-thumbnail"
+                                                    width={50}
+                                                    height={50}
+                                                    alt="Avatar"
+                                                />
+                                            </td>
+                                            <td>{employee.userName}</td>
+                                            <td>{employee.name}</td>
+                                            <td>{employee.email}</td>
+                                            <td>{getRoleText(employee.role)}</td>
+                                            <td>{employee.status === 1 ? 'Hoạt động' : 'Không hoạt động'}</td>
+                                            <td>
+                                                <button
+                                                    className="btn btn-gray btn-sm mr-2"
+                                                    onClick={() => handleDetailClick(employee)}
+                                                >
+                                                    <i className="fas fa-info-circle"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-blue btn-sm mr-2"
+                                                    onClick={() => handleEditClick(employee)}
+                                                >
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(employee.id)}
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách nhân viên trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

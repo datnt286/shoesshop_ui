@@ -589,53 +589,58 @@ const Product: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map((product, index) => {
-                                const colorName = colors.find((color) => color.id === product.colorId)?.name || 'N/A';
-                                const sizeName = sizes.find((size) => size.id === product.sizeId)?.name || 'N/A';
-                                const imageSrc = product.image
-                                    ? `${config.baseURL}/images/product/${product.image}`
-                                    : DefaultImage;
+                            {products.length > 0 ? (
+                                products.map((product, index) => {
+                                    const colorName =
+                                        colors.find((color) => color.id === product.colorId)?.name || 'N/A';
+                                    const sizeName = sizes.find((size) => size.id === product.sizeId)?.name || 'N/A';
+                                    const imageSrc = product.image
+                                        ? `${config.baseURL}/images/product/${product.image}`
+                                        : DefaultImage;
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img
-                                                src={imageSrc}
-                                                className="img img-thumbnail"
-                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                                alt="Ảnh sản phẩm"
-                                            />
-                                        </td>
-                                        <td>{product.name}</td>
-                                        <td>{colorName}</td>
-                                        <td>{sizeName}</td>
-                                        <td>{product.quantity}</td>
-                                        <td>
-                                            <div className="project-actions text-right">
-                                                <button
-                                                    className="btn btn-gray btn-sm mr-2"
-                                                    onClick={() => handleDetailClick(product)}
-                                                >
-                                                    <i className="fas fa-info-circle"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-blue btn-sm mr-2"
-                                                    onClick={() => handleEditClick(product)}
-                                                >
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() => handleDeleteClick(product.id)}
-                                                >
-                                                    <i className="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={imageSrc}
+                                                    className="img img-thumbnail"
+                                                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                    alt="Ảnh sản phẩm"
+                                                />
+                                            </td>
+                                            <td>{product.name}</td>
+                                            <td>{colorName}</td>
+                                            <td>{sizeName}</td>
+                                            <td>{product.quantity}</td>
+                                            <td>
+                                                <div className="project-actions text-right">
+                                                    <button
+                                                        className="btn btn-gray btn-sm mr-2"
+                                                        onClick={() => handleDetailClick(product)}
+                                                    >
+                                                        <i className="fas fa-info-circle"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-blue btn-sm mr-2"
+                                                        onClick={() => handleEditClick(product)}
+                                                    >
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => handleDeleteClick(product.id)}
+                                                    >
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách sản phẩm trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

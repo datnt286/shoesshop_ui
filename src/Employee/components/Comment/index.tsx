@@ -140,36 +140,42 @@ const Comment: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {comments.map((comment, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{comment.customerName || comment.customerUserName}</td>
-                                    <td>{comment.content}</td>
-                                    <td>{comment.createDate}</td>
-                                    <td>{comment.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
-                                    <td>
-                                        <div className="project-actions text-right">
-                                            <button
-                                                className="btn btn-gray btn-sm mr-2"
-                                                onClick={() => handleDetailClick(comment)}
-                                            >
-                                                <i className="fas fa-info-circle"></i> Chi tiết
-                                            </button>
-                                            <button
-                                                className={`btn ${
-                                                    comment.status === 1 ? 'btn-warning' : 'btn-success'
-                                                } btn-sm mr-2`}
-                                                onClick={() => handleToggleStatus(comment.id, comment.status)}
-                                            >
-                                                <i
-                                                    className={comment.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'}
-                                                ></i>{' '}
-                                                {comment.status === 1 ? 'Ẩn' : 'Hiện'}
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {comments.length > 0 ? (
+                                comments.map((comment, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{comment.customerName || comment.customerUserName}</td>
+                                        <td>{comment.content}</td>
+                                        <td>{comment.createDate}</td>
+                                        <td>{comment.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
+                                        <td>
+                                            <div className="project-actions text-right">
+                                                <button
+                                                    className="btn btn-gray btn-sm mr-2"
+                                                    onClick={() => handleDetailClick(comment)}
+                                                >
+                                                    <i className="fas fa-info-circle"></i> Chi tiết
+                                                </button>
+                                                <button
+                                                    className={`btn ${
+                                                        comment.status === 1 ? 'btn-warning' : 'btn-success'
+                                                    } btn-sm mr-2`}
+                                                    onClick={() => handleToggleStatus(comment.id, comment.status)}
+                                                >
+                                                    <i
+                                                        className={
+                                                            comment.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'
+                                                        }
+                                                    ></i>{' '}
+                                                    {comment.status === 1 ? 'Ẩn' : 'Hiện'}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <h3 className="m-2">Danh sách bình luận trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

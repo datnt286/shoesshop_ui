@@ -275,36 +275,41 @@ const ProductType: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {productTypes.map((productType, index) => {
-                                const parentProductTypeName =
-                                    parentProductTypes.find(
-                                        (parentProductType) => parentProductType.id === productType.parentProductTypeId,
-                                    )?.name || 'N/A';
+                            {productTypes.length > 0 ? (
+                                productTypes.map((productType, index) => {
+                                    const parentProductTypeName =
+                                        parentProductTypes.find(
+                                            (parentProductType) =>
+                                                parentProductType.id === productType.parentProductTypeId,
+                                        )?.name || 'N/A';
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{productType.name}</td>
-                                        <td>{parentProductTypeName}</td>
-                                        <td>
-                                            <div className="project-actions text-right">
-                                                <button
-                                                    className="btn btn-blue btn-sm mr-2"
-                                                    onClick={() => handleEditClick(productType)}
-                                                >
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() => handleDeleteClick(productType.id)}
-                                                >
-                                                    <i className="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{productType.name}</td>
+                                            <td>{parentProductTypeName}</td>
+                                            <td>
+                                                <div className="project-actions text-right">
+                                                    <button
+                                                        className="btn btn-blue btn-sm mr-2"
+                                                        onClick={() => handleEditClick(productType)}
+                                                    >
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => handleDeleteClick(productType.id)}
+                                                    >
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách loại sản phẩm trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

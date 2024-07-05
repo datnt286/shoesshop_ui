@@ -231,18 +231,22 @@ const Invoice: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {invoices.map((invoice, index) => {
-                                return (
-                                    <InvoiceRow
-                                        key={invoice.id}
-                                        index={index}
-                                        invoice={invoice}
-                                        onDetail={() => handleDetailClick(invoice)}
-                                        onAction={() => handleActionClick(invoice)}
-                                        onCancel={() => handleCancelInvoice(invoice.id)}
-                                    />
-                                );
-                            })}
+                            {invoices.length > 0 ? (
+                                invoices.map((invoice, index) => {
+                                    return (
+                                        <InvoiceRow
+                                            key={invoice.id}
+                                            index={index}
+                                            invoice={invoice}
+                                            onDetail={() => handleDetailClick(invoice)}
+                                            onAction={() => handleActionClick(invoice)}
+                                            onCancel={() => handleCancelInvoice(invoice.id)}
+                                        />
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách hoá đơn trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -335,56 +335,60 @@ const Slider: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sliders.map((slider, index) => {
-                                const imageSrc = slider.image
-                                    ? `${config.baseURL}/images/slider/${slider.image}`
-                                    : DefaultImage;
+                            {sliders.length > 0 ? (
+                                sliders.map((slider, index) => {
+                                    const imageSrc = slider.image
+                                        ? `${config.baseURL}/images/slider/${slider.image}`
+                                        : DefaultImage;
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img
-                                                src={imageSrc}
-                                                className="img img-thumbnail"
-                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                                alt="Hình ảnh"
-                                            />
-                                        </td>
-                                        <td>{slider.name}</td>
-                                        <td>{slider.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
-                                        <td>
-                                            <div className="project-actions text-right">
-                                                <button
-                                                    className={`btn ${
-                                                        slider.status === 1 ? 'btn-warning' : 'btn-success'
-                                                    } btn-sm mr-2`}
-                                                    onClick={() => handleToggleStatus(slider.id)}
-                                                >
-                                                    <i
-                                                        className={
-                                                            slider.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'
-                                                        }
-                                                    ></i>{' '}
-                                                    {slider.status === 1 ? 'Ẩn' : 'Hiện'}
-                                                </button>
-                                                <button
-                                                    className="btn btn-blue btn-sm mr-2"
-                                                    onClick={() => handleEditClick(slider)}
-                                                >
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() => handleDeleteClick(slider.id)}
-                                                >
-                                                    <i className="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={imageSrc}
+                                                    className="img img-thumbnail"
+                                                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                    alt="Hình ảnh"
+                                                />
+                                            </td>
+                                            <td>{slider.name}</td>
+                                            <td>{slider.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
+                                            <td>
+                                                <div className="project-actions text-right">
+                                                    <button
+                                                        className={`btn ${
+                                                            slider.status === 1 ? 'btn-warning' : 'btn-success'
+                                                        } btn-sm mr-2`}
+                                                        onClick={() => handleToggleStatus(slider.id)}
+                                                    >
+                                                        <i
+                                                            className={
+                                                                slider.status === 1 ? 'fas fa-eye-slash' : 'fas fa-eye'
+                                                            }
+                                                        ></i>{' '}
+                                                        {slider.status === 1 ? 'Ẩn' : 'Hiện'}
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-blue btn-sm mr-2"
+                                                        onClick={() => handleEditClick(slider)}
+                                                    >
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => handleDeleteClick(slider.id)}
+                                                    >
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <h3 className="m-2">Danh sách slider trống.</h3>
+                            )}
                         </tbody>
                     </table>
                 </div>
