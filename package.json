@@ -12,6 +12,8 @@
         "@types/react": "^18.2.79",
         "@types/react-dom": "^18.2.25",
         "axios": "^1.6.8",
+        "chart.js": "^3.9.1",
+        "chartjs-adapter-moment": "^1.0.1",
         "jquery": "^3.7.1",
         "jwt-decode": "^4.0.0",
         "react": "^18.2.0",
@@ -52,6 +54,8 @@
         ]
     },
     "devDependencies": {
+        "@types/chart.js": "^2.9.41",
+        "@types/jquery": "^3.5.30",
         "@types/pdfmake": "^0.2.9",
         "@types/react-helmet": "^6.1.11",
         "eslint-plugin-unicorn": "^52.0.0"
