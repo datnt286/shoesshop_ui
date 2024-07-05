@@ -20,7 +20,6 @@ const ExportExcelButton: React.FC<ExportExcelButtonProps> = ({ endpoint, filenam
         role: 'Chức vụ',
         salary: 'Lương',
         image: 'Hình ảnh',
-        sku: 'SKU',
         productType: 'Loại sản phẩm',
         brand: 'Nhãn hiệu',
         supplier: 'Nhà cung cấp',
