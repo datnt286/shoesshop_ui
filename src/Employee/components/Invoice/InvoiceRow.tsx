@@ -23,18 +23,21 @@ interface Invoice {
 interface InvoiceRowProps {
     invoice: Invoice;
     index: number;
+    userRole: string;
     onAction: () => void;
     onCancel: () => void;
     onDetail: () => void;
 }
 
-const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, onAction, onCancel, onDetail }) => {
+const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAction, onCancel, onDetail }) => {
     const isActionDisabled = invoice.status === InvoiceStatus.Received || invoice.status === InvoiceStatus.Cancelled;
 
     const isCancelDisabled =
         invoice.status === InvoiceStatus.Shipped ||
         invoice.status === InvoiceStatus.Received ||
         invoice.status === InvoiceStatus.Cancelled;
+
+    const isShipperAction = userRole !== 'Shipper' && invoice.status === 3;
 
     return (
         <tr>
@@ -53,7 +56,7 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, onAction, onCan
                     <button
                         className={`btn btn-sm ${getActionBtnClassName(invoice.status)} mr-2`}
                         onClick={onAction}
-                        disabled={isActionDisabled}
+                        disabled={isActionDisabled || isShipperAction}
                     >
                         <i className={`${getActionBtnIcon(invoice.status)}`}></i> {getActionButtonText(invoice.status)}
                     </button>

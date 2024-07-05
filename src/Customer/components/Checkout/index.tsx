@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -74,6 +75,8 @@ const Checkout: React.FC = () => {
         district?: string;
         ward?: string;
     }>({});
+
+    const navigate = useNavigate();
 
     const fetchCartDetails = async () => {
         try {
@@ -461,6 +464,8 @@ const Checkout: React.FC = () => {
             });
 
             if (response.status === 200) {
+                navigate('/hoa-don');
+
                 Swal.fire({
                     title: 'Đặt hàng thành công!',
                     icon: 'success',

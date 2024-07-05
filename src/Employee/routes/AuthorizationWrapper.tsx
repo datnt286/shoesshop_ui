@@ -11,20 +11,25 @@ interface AuthorizationWrapperProps {
 }
 
 const AuthorizationWrapper: React.FC<AuthorizationWrapperProps> = ({ allowedRoles }) => {
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const token = localStorage.getItem('employeeToken');
 
     useEffect(() => {
         if (token) {
             try {
                 const decodedToken: User = jwtDecode<User>(token);
-
                 setRole(decodedToken.role || '');
             } catch (error) {
                 console.error('Token không hợp lệ: ', token);
             }
         }
+        setIsLoading(false);
     }, [token]);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     const isAuthorized = role && allowedRoles.includes(role);
 

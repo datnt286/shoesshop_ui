@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import { jwtDecode } from 'jwt-decode';
 import AxiosInstance from '../../../services/AxiosInstance';
 import Pagination from '../Pagination/index';
 import InvoiceRow from './InvoiceRow';
 import InvoiceDetailRow from './InvoiceDetailRow';
 import ExportExcelButton from './../ExportExcelButton/index';
 import { getStatusText, getActionButtonText, getActionBtnIcon } from '../../../utils/getStatusInvoice';
+
+interface User {
+    role?: string;
+}
 
 interface Invoice {
     id: number;
@@ -37,6 +42,7 @@ interface InvoiceDetail {
 
 const Invoice: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
+    const [userRole, setUserRole] = useState<string | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
@@ -51,6 +57,9 @@ const Invoice: React.FC = () => {
                     currentPage,
                     pageSize,
                     status,
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -80,7 +89,17 @@ const Invoice: React.FC = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('employeeToken');
-        setToken(token);
+
+        if (token) {
+            try {
+                const decodedToken: User = jwtDecode<User>(token);
+
+                setToken(token);
+                setUserRole(decodedToken.role || '');
+            } catch (error) {
+                console.error('Token không hợp lệ: ', token);
+            }
+        }
     }, []);
 
     const handlePageChange = ({ selected }: { selected: number }) => {
@@ -206,12 +225,16 @@ const Invoice: React.FC = () => {
 
             <div className="card">
                 <div className="card-header">
-                    <ExportExcelButton endpoint="/Invoices" filename="hoa-don" />
+                    {userRole !== 'Shipper' && <ExportExcelButton endpoint="/Invoices" filename="hoa-don" />}
                     <div className="float-right">
                         <select className="form-select" value={statusFilter} onChange={handleStatusSelectChange}>
                             <option value={0}>Tất cả</option>
-                            <option value={1}>Đã đặt</option>
-                            <option value={2}>Đã duyệt</option>
+                            {userRole !== 'Shipper' && (
+                                <>
+                                    <option value={1}>Đã đặt</option>
+                                    <option value={2}>Đã duyệt</option>
+                                </>
+                            )}
                             <option value={3}>Đang vận chuyển</option>
                             <option value={4}>Đã nhận</option>
                             <option value={5}>Đã huỷ</option>
@@ -238,6 +261,7 @@ const Invoice: React.FC = () => {
                                             key={invoice.id}
                                             index={index}
                                             invoice={invoice}
+                                            userRole={userRole || ''}
                                             onDetail={() => handleDetailClick(invoice)}
                                             onAction={() => handleActionClick(invoice)}
                                             onCancel={() => handleCancelInvoice(invoice.id)}

@@ -189,28 +189,32 @@ const Home: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {report.topSellingProducts.map((product, index) => {
-                                            const imageSrc = product.image
-                                                ? `${config.baseURL}/images/product/${product.image}`
-                                                : DefaultImage;
+                                        {report.topSellingProducts.length > 0 ? (
+                                            report.topSellingProducts.map((product, index) => {
+                                                const imageSrc = product.image
+                                                    ? `${config.baseURL}/images/product/${product.image}`
+                                                    : DefaultImage;
 
-                                            return (
-                                                <tr key={index}>
-                                                    <th scope="row">{index + 1}</th>
-                                                    <td>
-                                                        <img
-                                                            src={imageSrc}
-                                                            className="img img-thumbnail"
-                                                            style={{ maxWidth: '100px', maxHeight: '100px' }}
-                                                            alt="Ảnh sản phẩm"
-                                                        />
-                                                    </td>
-                                                    <td>{product.name}</td>
-                                                    <td>{product.price.toLocaleString() + ' ₫'}</td>
-                                                    <td>{product.quantitySold}</td>
-                                                </tr>
-                                            );
-                                        })}
+                                                return (
+                                                    <tr key={index}>
+                                                        <th scope="row">{index + 1}</th>
+                                                        <td>
+                                                            <img
+                                                                src={imageSrc}
+                                                                className="img img-thumbnail"
+                                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                                alt="Ảnh sản phẩm"
+                                                            />
+                                                        </td>
+                                                        <td>{product.name}</td>
+                                                        <td>{product.price.toLocaleString() + ' ₫'}</td>
+                                                        <td>{product.quantitySold}</td>
+                                                    </tr>
+                                                );
+                                            })
+                                        ) : (
+                                            <h3 className="m-2">Danh sách sản phẩm trống.</h3>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

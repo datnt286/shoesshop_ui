@@ -70,42 +70,39 @@ const Sidebar: React.FC = () => {
                         role="menu"
                         data-accordion="false"
                     >
-                        {(userData.role === 'Manager' ||
-                            userData.role === 'SalesStaff' ||
-                            userData.role === 'WarehouseStaff' ||
-                            userData.role === 'Shipper') && (
+                        <li className="nav-item">
+                            <NavLink to="/admin" className="nav-link">
+                                <i className="nav-icon fas fa-home"></i>
+                                <p>Trang chủ</p>
+                            </NavLink>
+                        </li>
+                        {(userData.role === 'Manager' || userData.role === 'WarehouseStaff') && (
                             <li className="nav-item">
-                                <NavLink to="/admin" className="nav-link">
-                                    <i className="nav-icon fas fa-home"></i>
-                                    <p>Trang chủ</p>
-                                </NavLink>
+                                <a href="#" className="nav-link">
+                                    <i className="nav-icon fas fa-box-open"></i>
+                                    <p>
+                                        Quản lý sản phẩm
+                                        <i className="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul className="nav nav-treeview ml-2">
+                                    <li className="nav-item">
+                                        <NavLink to="/admin/giay" className="nav-link">
+                                            <i className="nav-icon fas fa-shoe-prints"></i>
+                                            <p>Giày</p>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/admin/phu-kien" className="nav-link">
+                                            <i className="nav-icon fas fa-socks"></i>
+                                            <p>Phụ kiện</p>
+                                        </NavLink>
+                                    </li>
+                                </ul>
                             </li>
                         )}
-                        {(userData.role === 'Manager' || userData.role === 'WarehouseStaff') && (
+                        {userData.role === 'Manager' && (
                             <>
-                                <li className="nav-item">
-                                    <a href="#" className="nav-link">
-                                        <i className="nav-icon fas fa-box-open"></i>
-                                        <p>
-                                            Quản lý sản phẩm
-                                            <i className="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul className="nav nav-treeview ml-2">
-                                        <li className="nav-item">
-                                            <NavLink to="/admin/giay" className="nav-link">
-                                                <i className="nav-icon fas fa-shoe-prints"></i>
-                                                <p>Giày</p>
-                                            </NavLink>
-                                        </li>
-                                        <li className="nav-item">
-                                            <NavLink to="/admin/phu-kien" className="nav-link">
-                                                <i className="nav-icon fas fa-socks"></i>
-                                                <p>Phụ kiện</p>
-                                            </NavLink>
-                                        </li>
-                                    </ul>
-                                </li>
                                 <li className="nav-item">
                                     <NavLink to="/admin/loai-san-pham" className="nav-link">
                                         <i className="nav-icon fas fa-tag"></i>
@@ -118,6 +115,10 @@ const Sidebar: React.FC = () => {
                                         <p>Quản lý nhãn hiệu</p>
                                     </NavLink>
                                 </li>
+                            </>
+                        )}
+                        {(userData.role === 'Manager' || userData.role === 'WarehouseStaff') && (
+                            <>
                                 <li className="nav-item">
                                     <NavLink to="/admin/mau-sac" className="nav-link">
                                         <i className="nav-icon fas fa-palette"></i>
@@ -130,21 +131,23 @@ const Sidebar: React.FC = () => {
                                         <p>Quản lý size</p>
                                     </NavLink>
                                 </li>
+                            </>
+                        )}
+                        {userData.role === 'Manager' && (
+                            <>
                                 <li className="nav-item">
                                     <NavLink to="/admin/nha-cung-cap" className="nav-link">
                                         <i className="nav-icon fas fa-shipping-fast"></i>
                                         <p>Quản lý nhà cung cấp</p>
                                     </NavLink>
                                 </li>
+                                <li className="nav-item">
+                                    <NavLink to="/admin/nhan-vien" className="nav-link">
+                                        <i className="nav-icon fas fa-user-tie"></i>
+                                        <p>Quản lý nhân viên</p>
+                                    </NavLink>
+                                </li>
                             </>
-                        )}
-                        {userData.role === 'Manager' && (
-                            <li className="nav-item">
-                                <NavLink to="/admin/nhan-vien" className="nav-link">
-                                    <i className="nav-icon fas fa-user-tie"></i>
-                                    <p>Quản lý nhân viên</p>
-                                </NavLink>
-                            </li>
                         )}
                         {(userData.role === 'Manager' || userData.role === 'SalesStaff') && (
                             <li className="nav-item">
@@ -165,20 +168,20 @@ const Sidebar: React.FC = () => {
                             </li>
                         )}
                         {(userData.role === 'Manager' || userData.role === 'SalesStaff') && (
-                            <>
-                                <li className="nav-item">
-                                    <NavLink to="/admin/binh-luan" className="nav-link">
-                                        <i className="nav-icon fas fa-comments"></i>
-                                        <p>Quản lý bình luận</p>
-                                    </NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink to="/admin/slider" className="nav-link">
-                                        <i className="nav-icon fab fa-adversal"></i>
-                                        <p>Quản lý slider</p>
-                                    </NavLink>
-                                </li>
-                            </>
+                            <li className="nav-item">
+                                <NavLink to="/admin/binh-luan" className="nav-link">
+                                    <i className="nav-icon fas fa-comments"></i>
+                                    <p>Quản lý bình luận</p>
+                                </NavLink>
+                            </li>
+                        )}
+                        {userData.role === 'Manager' && (
+                            <li className="nav-item">
+                                <NavLink to="/admin/slider" className="nav-link">
+                                    <i className="nav-icon fab fa-adversal"></i>
+                                    <p>Quản lý slider</p>
+                                </NavLink>
+                            </li>
                         )}
                     </ul>
                 </nav>
