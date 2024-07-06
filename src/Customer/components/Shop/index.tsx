@@ -233,6 +233,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
             return;
         }
 
+        setAddedProductTypeId(false);
         fetchModels();
     };
 
