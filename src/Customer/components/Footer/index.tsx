@@ -1,5 +1,5 @@
 import React from 'react';
-import Payment from '../../resources/img/payment.png';
+import PaymentImg from '../../resources/img/payment.png';
 
 const Footer: React.FC = () => {
     return (
@@ -114,14 +114,17 @@ const Footer: React.FC = () => {
                                 <p>Email: doube.d.shop@gmail.com</p>
                                 <p>Điện thoại: +0123 4567 8910</p>
                                 <p>Phương thức thanh toán</p>
-                                <img src={Payment} className="img-fluid" alt="Hình ảnh" />
+                                <img src={PaymentImg} className="img-fluid" alt="Hình ảnh" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button type="button" className="btn btn-primary border-3 border-primary rounded-circle back-to-top">
+            <button
+                className="btn btn-primary border-3 border-primary rounded-circle back-to-top"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
                 <i className="fa fa-arrow-up"></i>
             </button>
         </>
