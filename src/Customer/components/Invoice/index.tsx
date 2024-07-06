@@ -282,7 +282,7 @@ const Invoice: React.FC = () => {
                                                     : DefaultImage;
 
                                                 return (
-                                                    <tr>
+                                                    <tr key={index}>
                                                         <td>{index + 1}</td>
                                                         <td>
                                                             <Link to={`/san-pham/${invoiceDetail.modelId}`}>

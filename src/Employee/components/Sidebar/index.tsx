@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
                         data-accordion="false"
                     >
                         <li className="nav-item">
-                            <NavLink to="/admin" className="nav-link">
+                            <NavLink to="/admin" className="nav-link" end>
                                 <i className="nav-icon fas fa-home"></i>
                                 <p>Trang chủ</p>
                             </NavLink>

@@ -76,7 +76,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                     </thead>
                     <tbody>
                         {invoices.map((invoice) => (
-                            <tr>
+                            <tr key={invoice.id}>
                                 <td>{invoice.createDate}</td>
                                 <td>{invoice.paymentMethod}</td>
                                 <td>{invoice.totalPayment.toLocaleString() + ' ₫'}</td>

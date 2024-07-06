@@ -1,4 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
+import Header from './../components/Header';
+import Footer from './../components/Footer';
 
 import '../resources/lib/lightbox/css/lightbox.min.css';
 import '../resources/lib/owlcarousel/assets/owl.carousel.min.css';
@@ -11,9 +13,6 @@ import '../resources/lib/easing/easing.min.js';
 import '../resources/lib/waypoints/waypoints.min.js';
 import '../resources/lib/lightbox/js/lightbox.min.js';
 import '../resources/js/main.js';
-
-import Header from './../components/Header';
-import Footer from './../components/Footer';
 
 interface DefaultLayoutProps {
     children: ReactNode;
