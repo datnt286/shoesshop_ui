@@ -230,6 +230,11 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
         setAddedProductTypeId(false);
     };
 
+    const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedSort(parseInt(event.target.value));
+        setAddedProductTypeId(false);
+    };
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -282,27 +287,29 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
                                     </div>
                                 </form>
                             </div>
-                            <div className="col-5"></div>
-                            <div className="col-xl-4">
-                                <div className="d-flex justify-content-between">
+                            <div className="col-4"></div>
+                            <div className="col-xl-5">
+                                <div className="d-flex justify-content-end">
                                     <button
-                                        className="btn btn-light mb-4"
-                                        style={{ color: '#45595b', fontWeight: '500' }}
+                                        className="btn btn-light text-primary mb-4"
+                                        style={{ fontWeight: '500' }}
                                         onClick={handleResetFilters}
                                     >
                                         <i className="fas fa-redo me-2"></i>Làm mới
                                     </button>
-                                    <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                    <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4 ml-3">
                                         <label htmlFor="sort" className="mb-0" style={{ fontWeight: '500' }}>
                                             Sắp xếp theo:
                                         </label>
                                         <select
                                             id="sort"
-                                            className="border-0 form-select-sm bg-light outline-none me-3"
-                                            onChange={(e) => setSelectedSort(parseInt(e.target.value))}
+                                            className="border-0 form-select-sm bg-light text-primary outline-none me-3"
+                                            onChange={handleSortChange}
                                         >
                                             <option value={1}>Nổi bật</option>
                                             <option value={2}>Mới nhất</option>
+                                            <option value={3}>Giá tăng dần</option>
+                                            <option value={4}>Giá giảm dần</option>
                                         </select>
                                     </div>
                                 </div>

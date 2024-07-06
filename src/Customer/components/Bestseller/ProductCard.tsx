@@ -87,7 +87,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token }) => {
                 <div className="text-center">
                     <img src={imageSrc} className="img-fluid rounded" alt="Ảnh sản phẩm" />
                     <div className="py-4">
-                        <span className="h5">{model.name}</span>
+                        <span className="h5 line-clamp line-clamp-2">{model.name}</span>
                         <h4 className="mt-1 mb-3">{model.price.toLocaleString() + ' ₫'}</h4>
                         <button
                             className="btn border border-secondary rounded-pill px-3 text-primary"
