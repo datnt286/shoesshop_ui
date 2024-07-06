@@ -193,7 +193,7 @@ const Detail: React.FC = () => {
             setAmount(selectedProduct.price * quantity);
         }
     }, [selectedProduct, quantity]);
-    console.log(model);
+
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
 

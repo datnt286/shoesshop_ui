@@ -329,21 +329,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                     role="tabpanel"
                     aria-labelledby="nav-description-tab"
                 >
-                    {model?.description ? (
-                        <p>{model.description}</p>
-                    ) : (
-                        <>
-                            <p>
-                                The generated Lorem Ipsum is therefore always free from repetition injected humour, or
-                                non-characteristic words etc. Susp endisse ultricies nisi vel quam suscipit{' '}
-                            </p>
-                            <p>
-                                Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish filefish
-                                Antarctic icefish goldeye aholehole trumpetfish pilot fish airbreathing catfish,
-                                electric ray sweeper.
-                            </p>
-                        </>
-                    )}
+                    {model?.description ? <p>{model.description}</p> : <p>Mô tả sản phẩm.</p>}
                 </div>
                 <div id="nav-review" className="tab-pane" role="tabpanel" aria-labelledby="nav-review-tab">
                     {reviews.length > 0 ? (

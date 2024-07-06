@@ -72,8 +72,7 @@ const Hero: React.FC = () => {
             <div className="container py-5">
                 <div className="row g-5 align-items-center">
                     <div className="col-md-12 col-lg-7">
-                        <h4 className="mb-3 text-secondary">100% Organic Foods</h4>
-                        <h1 className="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
+                        <h1 className="mb-5 display-3 text-primary">Double D Shop</h1>
                         <div className="position-relative mx-auto">
                             <form onSubmit={handleSubmit}>
                                 <input
@@ -93,28 +92,31 @@ const Hero: React.FC = () => {
                         </div>
                     </div>
                     <div className="col-md-12 col-lg-5 position-relative">
-                        <OwlCarousel
-                            ref={carouselRef}
-                            className="carousel slide position-relative"
-                            {...carouselOptions}
-                        >
-                            {sliders.map((slider, index) => {
-                                const imageSrc = slider.image
-                                    ? `${config.baseURL}/images/slider/${slider.image}`
-                                    : DefaultImage;
+                        {sliders.length > 0 && (
+                            <OwlCarousel
+                                key={sliders.length}
+                                ref={carouselRef}
+                                className="carousel slide position-relative"
+                                {...carouselOptions}
+                            >
+                                {sliders.map((slider, index) => {
+                                    const imageSrc = slider.image
+                                        ? `${config.baseURL}/images/slider/${slider.image}`
+                                        : DefaultImage;
 
-                                return (
-                                    <div key={index} className={`carousel-item active rounded`}>
-                                        <img
-                                            src={imageSrc}
-                                            className="img-fluid w-100 h-100 bg-secondary rounded"
-                                            style={{ width: '600px', height: '400px', objectFit: 'cover' }}
-                                            alt="Hình ảnh"
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </OwlCarousel>
+                                    return (
+                                        <div key={index} className={`carousel-item active rounded`}>
+                                            <img
+                                                src={imageSrc}
+                                                className="img-fluid w-100 h-100 bg-secondary rounded"
+                                                style={{ width: '600px', height: '400px', objectFit: 'cover' }}
+                                                alt="Hình ảnh"
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </OwlCarousel>
+                        )}
                         <button
                             className="carousel-control-prev"
                             style={{ marginLeft: '40px' }}

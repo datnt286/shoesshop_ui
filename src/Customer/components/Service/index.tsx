@@ -14,7 +14,7 @@ const Service: React.FC = () => {
                                 <img src={serviceImage1} className="img-fluid rounded-top w-100" alt="Hình ảnh" />
                                 <div className="px-4 rounded-bottom">
                                     <div className="service-content bg-primary text-center p-4 rounded">
-                                        <h5 className="text-white">Fresh Apples</h5>
+                                        <h5 className="text-white">Thể thao</h5>
                                         <h3 className="mb-0">Giảm giá 20%</h3>
                                     </div>
                                 </div>
@@ -27,7 +27,7 @@ const Service: React.FC = () => {
                                 <img src={serviceImage2} className="img-fluid rounded-top w-100" alt="Hình ảnh" />
                                 <div className="px-4 rounded-bottom">
                                     <div className="service-content bg-light text-center p-4 rounded">
-                                        <h5 className="text-primary">Tasty Fruits</h5>
+                                        <h5 className="text-primary">Năng động</h5>
                                         <h3 className="mb-0">Miễn phí vận chuyển</h3>
                                     </div>
                                 </div>
@@ -40,7 +40,7 @@ const Service: React.FC = () => {
                                 <img src={serviceImage3} className="img-fluid rounded-top w-100" alt="Hình ảnh" />
                                 <div className="px-4 rounded-bottom">
                                     <div className="service-content bg-secondary text-center p-4 rounded">
-                                        <h5 className="text-white">Exotic Vegitable</h5>
+                                        <h5 className="text-white">Cá tính</h5>
                                         <h3 className="mb-0">Giảm 99.000 ₫</h3>
                                     </div>
                                 </div>

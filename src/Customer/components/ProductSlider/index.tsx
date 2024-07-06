@@ -91,16 +91,22 @@ const ProductSlider: React.FC<ProductSliderProps> = ({ endpoint, title }) => {
         <div className="container-fluid product py-5">
             <div className="container py-5">
                 <h1 className="mb-0">{title}</h1>
-                <OwlCarousel {...carouselOptions} className="owl-carousel justify-content-center">
-                    {models?.map((model) => (
-                        <ProductCard
-                            key={model.id}
-                            model={model}
-                            token={token || ''}
-                            onWishlistChange={handleWishlistChange}
-                        />
-                    ))}
-                </OwlCarousel>
+                {models.length > 0 && (
+                    <OwlCarousel
+                        key={models.length}
+                        {...carouselOptions}
+                        className="owl-carousel justify-content-center"
+                    >
+                        {models.map((model) => (
+                            <ProductCard
+                                key={model.id}
+                                model={model}
+                                token={token || ''}
+                                onWishlistChange={handleWishlistChange}
+                            />
+                        ))}
+                    </OwlCarousel>
+                )}
             </div>
         </div>
     );
