@@ -40,10 +40,11 @@ interface Size {
 
 interface ShopProps {
     keyword?: string;
+    productTypeId?: number;
     heading: string;
 }
 
-const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
+const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [brands, setBrands] = useState<Brand[]>([]);
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
@@ -55,6 +56,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
     const [selectedColorIds, setSelectedColorIds] = useState<number[]>([]);
     const [selectedSizeIds, setSelectedSizeIds] = useState<number[]>([]);
     const [searchKeyword, setSearchKeyword] = useState(keyword);
+    const [addedProductTypeId, setAddedProductTypeId] = useState(true);
     const [validationError, setValidationError] = useState('');
     const [token, setToken] = useState<string | null>(null);
 
@@ -68,6 +70,11 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
             if (searchKeyword) {
                 params.keyword = searchKeyword;
             }
+
+            if (productTypeId && addedProductTypeId) {
+                params.productTypeIds = productTypeId.toString();
+            }
+
             if (selectedBrandId) {
                 params.brandId = selectedBrandId;
             }
@@ -169,6 +176,14 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
     }, []);
 
     useEffect(() => {
+        if (productTypeId !== undefined && productTypeId !== null) {
+            setSelectedProductTypeIds([productTypeId]);
+        } else {
+            setSelectedProductTypeIds([]);
+        }
+    }, [productTypeId]);
+
+    useEffect(() => {
         const token = localStorage.getItem('customerToken');
         setToken(token);
     }, []);
@@ -180,6 +195,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
 
     const handleBrandChange = (brandId: number) => {
         setSelectedBrandId(brandId);
+        setAddedProductTypeId(false);
     };
 
     const handleProductTypeChange = (productTypeId: number) => {
@@ -188,6 +204,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                 ? prevSelectedProductTypeIds.filter((id) => id !== productTypeId)
                 : [...prevSelectedProductTypeIds, productTypeId],
         );
+        setAddedProductTypeId(false);
     };
 
     const handleColorChange = (colorId: number) => {
@@ -196,6 +213,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                 ? prevSelectedColors.filter((id) => id !== colorId)
                 : [...prevSelectedColors, colorId],
         );
+        setAddedProductTypeId(false);
     };
 
     const handleSizeChange = (sizeId: number) => {
@@ -204,6 +222,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
                 ? prevSelectedSizes.filter((id) => id !== sizeId)
                 : [...prevSelectedSizes, sizeId],
         );
+        setAddedProductTypeId(false);
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -223,6 +242,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, heading }) => {
         setSelectedColorIds([]);
         setSelectedSizeIds([]);
         setSearchKeyword('');
+        setAddedProductTypeId(false);
         fetchModels();
     };
 

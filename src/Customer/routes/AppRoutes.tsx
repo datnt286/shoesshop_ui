@@ -5,6 +5,7 @@ import PrivateWrapper from './PrivateWrapper';
 import HomePage from '../pages/HomePage';
 import ShopPage from '../pages/ShopPage';
 import SearchPage from './../pages/SearchPage';
+import ProductTypePage from './../pages/ProductTypePage';
 import DetailPage from './../pages/DetailPage';
 import CartPage from './../pages/CartPage';
 import CheckoutPage from './../pages/CheckoutPage';
@@ -24,6 +25,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/cua-hang" element={<ShopPage />} />
             <Route path="/tim-kiem/:keyword" element={<SearchPage />} />
+            <Route path="/danh-muc/:productType" element={<ProductTypePage />} />
             <Route path="/san-pham/:modelId" element={<DetailPage />} />
             <Route path="/dang-ky" element={<RegisterPage />} />
             <Route path="/lien-he" element={<ContactPage />} />

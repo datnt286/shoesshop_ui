@@ -6,6 +6,11 @@ import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Logo from '../../resources/img/logo.jpg';
 
+interface ProductType {
+    id: number;
+    name: string;
+}
+
 interface User {
     avatar?: string;
 }
@@ -14,12 +19,25 @@ const Header: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [avatar, setAvatar] = useState('');
+    const [productTypes, setProductTypes] = useState<ProductType[]>([]);
     const [cartCount, setCartCount] = useState(0);
     const [wishlistCount, setWishlistCount] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [validationError, setValidationError] = useState('');
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+
+    const fetchProductTypes = async () => {
+        try {
+            const response = await AxiosInstance.get('/ProductTypes');
+
+            if (response.status === 200) {
+                setProductTypes(response.data);
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải dữ liệu: ', error);
+        }
+    };
 
     const fetchCountCartAndWishlist = async () => {
         try {
@@ -33,7 +51,9 @@ const Header: React.FC = () => {
                 setCartCount(response.data.cartDetailsCount);
                 setWishlistCount(response.data.wishlistDetailsCount);
             }
-        } catch (error) {}
+        } catch (error) {
+            console.error('Lỗi khi tải dữ liệu: ', error);
+        }
     };
 
     useEffect(() => {
@@ -52,6 +72,10 @@ const Header: React.FC = () => {
         } else {
             setIsLoggedIn(false);
         }
+    }, []);
+
+    useEffect(() => {
+        fetchProductTypes();
     }, []);
 
     useEffect(() => {
@@ -170,16 +194,13 @@ const Header: React.FC = () => {
                                         className="dropdown-menu m-0 bg-secondary rounded-0"
                                         aria-labelledby="dropdownNavbarMenu"
                                     >
-                                        <li>
-                                            <NavLink to="/thanh-toan" className="dropdown-item">
-                                                Thanh toán
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/404" className="dropdown-item">
-                                                404
-                                            </NavLink>
-                                        </li>
+                                        {productTypes.map((productType) => (
+                                            <li>
+                                                <NavLink to={`/danh-muc/${productType.id}`} className="dropdown-item">
+                                                    {productType.name}
+                                                </NavLink>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                                 <NavLink to="/cua-hang" className="nav-item nav-link">
