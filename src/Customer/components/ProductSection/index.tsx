@@ -41,7 +41,7 @@ const ProductSection: React.FC = () => {
             <div className="col-lg-12">
                 <h4 className="mb-4">Sản phẩm nổi bật</h4>
                 {models.map((model) => (
-                    <ProductCard model={model} />
+                    <ProductCard key={model.id} model={model} />
                 ))}
                 <div className="d-flex justify-content-center my-4">
                     <Link

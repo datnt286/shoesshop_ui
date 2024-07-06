@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
             <Hero />
             <FeaturedProducts />
             <Service />
-            <ProductSlider />
+            <ProductSlider endpoint="/Models/new" title="Sản phẩm mới" />
             <Banner />
             <Bestseller />
             <Fact />

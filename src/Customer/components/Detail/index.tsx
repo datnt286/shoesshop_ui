@@ -14,6 +14,7 @@ interface Model {
     id: number;
     name: string;
     productTypeId: number;
+    brandId: number;
     price: number;
     description: string;
     images: Image[];
@@ -192,7 +193,7 @@ const Detail: React.FC = () => {
             setAmount(selectedProduct.price * quantity);
         }
     }, [selectedProduct, quantity]);
-
+    console.log(model);
     useEffect(() => {
         const token = localStorage.getItem('customerToken');
 
@@ -536,7 +537,9 @@ const Detail: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <ProductSlider />
+                    {model?.brandId !== undefined && (
+                        <ProductSlider endpoint={`/Models/BrandId/${model.brandId}`} title="Sản phẩm liên quan" />
+                    )}
                 </div>
             </div>
         </>

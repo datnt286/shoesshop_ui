@@ -45,13 +45,18 @@ interface Image {
     name: string;
 }
 
-const ProductSlider: React.FC = () => {
+interface ProductSliderProps {
+    endpoint: string;
+    title: string;
+}
+
+const ProductSlider: React.FC<ProductSliderProps> = ({ endpoint, title }) => {
     const [models, setModels] = useState<Model[]>([]);
     const [token, setToken] = useState<string | null>(null);
 
     const fetchModels = async () => {
         try {
-            const response = await AxiosInstance.get('/Models/new', {
+            const response = await AxiosInstance.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -85,7 +90,7 @@ const ProductSlider: React.FC = () => {
     return (
         <div className="container-fluid product py-5">
             <div className="container py-5">
-                <h1 className="mb-0">Sản phẩm mới</h1>
+                <h1 className="mb-0">{title}</h1>
                 <OwlCarousel {...carouselOptions} className="owl-carousel justify-content-center">
                     {models?.map((model) => (
                         <ProductCard
