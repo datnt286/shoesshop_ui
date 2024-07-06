@@ -109,7 +109,7 @@ const FeaturedProducts: React.FC = () => {
                             <div className="row g-4">
                                 <div className="col-lg-12">
                                     <div className="row g-4">
-                                        {allModels?.slice(0, 8).map((model) => (
+                                        {allModels?.map((model) => (
                                             <div className="col-md-6 col-lg-4 col-xl-3">
                                                 <ProductCard
                                                     key={model.id}
@@ -127,7 +127,7 @@ const FeaturedProducts: React.FC = () => {
                             <div className="row g-4">
                                 <div className="col-lg-12">
                                     <div className="row g-4">
-                                        {shoesModels?.slice(0, 8).map((model) => (
+                                        {shoesModels?.map((model) => (
                                             <div className="col-md-6 col-lg-4 col-xl-3">
                                                 <ProductCard
                                                     key={model.id}
@@ -145,7 +145,7 @@ const FeaturedProducts: React.FC = () => {
                             <div className="row g-4">
                                 <div className="col-lg-12">
                                     <div className="row g-4">
-                                        {accessoriesModels?.slice(0, 8).map((model) => (
+                                        {accessoriesModels?.map((model) => (
                                             <div className="col-md-6 col-lg-4 col-xl-3">
                                                 <ProductCard
                                                     key={model.id}
