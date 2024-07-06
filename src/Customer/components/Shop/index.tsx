@@ -57,6 +57,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
     const [selectedSizeIds, setSelectedSizeIds] = useState<number[]>([]);
     const [searchKeyword, setSearchKeyword] = useState(keyword);
     const [addedProductTypeId, setAddedProductTypeId] = useState(true);
+    const [selectedSort, setSelectedSort] = useState<number>(1);
     const [validationError, setValidationError] = useState('');
     const [token, setToken] = useState<string | null>(null);
 
@@ -71,12 +72,16 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
                 params.keyword = searchKeyword;
             }
 
+            if (selectedBrandId) {
+                params.brandId = selectedBrandId;
+            }
+
             if (productTypeId && addedProductTypeId) {
                 params.productTypeIds = productTypeId.toString();
             }
 
-            if (selectedBrandId) {
-                params.brandId = selectedBrandId;
+            if (selectedSort) {
+                params.sort = selectedSort;
             }
 
             const queryParams = new URLSearchParams(params);
@@ -160,7 +165,7 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
 
     useEffect(() => {
         fetchModels();
-    }, [selectedBrandId, selectedProductTypeIds, selectedColorIds, selectedSizeIds]);
+    }, [selectedBrandId, selectedProductTypeIds, selectedColorIds, selectedSizeIds, selectedSort]);
 
     useEffect(() => {
         if (token) {
@@ -294,10 +299,10 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
                                         <select
                                             id="sort"
                                             className="border-0 form-select-sm bg-light outline-none me-3"
+                                            onChange={(e) => setSelectedSort(parseInt(e.target.value))}
                                         >
                                             <option value={1}>Nổi bật</option>
                                             <option value={2}>Mới nhất</option>
-                                            <option value={3}>Bán chạy</option>
                                         </select>
                                     </div>
                                 </div>

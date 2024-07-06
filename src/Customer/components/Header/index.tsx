@@ -195,7 +195,7 @@ const Header: React.FC = () => {
                                         aria-labelledby="dropdownNavbarMenu"
                                     >
                                         {productTypes.map((productType) => (
-                                            <li>
+                                            <li key={productType.id}>
                                                 <NavLink to={`/danh-muc/${productType.id}`} className="dropdown-item">
                                                     {productType.name}
                                                 </NavLink>
