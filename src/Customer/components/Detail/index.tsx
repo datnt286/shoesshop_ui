@@ -461,7 +461,6 @@ const Detail: React.FC = () => {
                                                             style={{
                                                                 width: '30px',
                                                                 height: '25px',
-                                                                objectFit: 'cover',
                                                             }}
                                                             alt="Ảnh sản phẩm"
                                                         />{' '}

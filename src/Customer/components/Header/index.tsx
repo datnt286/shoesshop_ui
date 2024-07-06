@@ -164,7 +164,7 @@ const Header: React.FC = () => {
                             <img
                                 src={Logo}
                                 className="img-fluid me-1"
-                                style={{ width: '46px', height: '46px', objectFit: 'cover' }}
+                                style={{ width: '46px', height: '46px' }}
                                 alt="Logo"
                             />
                             <h1 className="text-primary display-6">Double D</h1>
@@ -253,7 +253,7 @@ const Header: React.FC = () => {
                                                 <img
                                                     src={`${config.baseURL}/images/avatar/${avatar}`}
                                                     className="rounded-circle"
-                                                    style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                                                    style={{ width: '40px', height: '40px' }}
                                                     alt="Ảnh đại diện"
                                                 />
                                             ) : (

@@ -40,7 +40,7 @@ const TableRow: React.FC<TableRowProps> = ({ cartDetail }) => {
                         <img
                             src={imageSrc}
                             className="img-fluid rounded-circle"
-                            style={{ width: '90px', height: '90px', objectFit: 'cover' }}
+                            style={{ width: '90px', height: '90px' }}
                             alt="Ảnh sản phẩm"
                         />
                     </div>

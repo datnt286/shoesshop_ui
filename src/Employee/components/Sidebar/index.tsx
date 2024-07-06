@@ -55,7 +55,7 @@ const Sidebar: React.FC = () => {
                                 <img
                                     src={avatarSrc}
                                     className="img-circle elevation-2"
-                                    style={{ width: '34px', height: '34px', objectFit: 'cover' }}
+                                    style={{ width: '34px', height: '34px' }}
                                     alt="Ảnh đại diện"
                                 />
                             </div>{' '}

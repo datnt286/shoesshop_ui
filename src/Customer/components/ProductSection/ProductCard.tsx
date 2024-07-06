@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ model }) => {
                     <img
                         src={imageSrc}
                         className="img-fluid rounded"
-                        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                        style={{ width: '100px', height: '100px' }}
                         alt="Ảnh sản phẩm"
                     />
                 </div>

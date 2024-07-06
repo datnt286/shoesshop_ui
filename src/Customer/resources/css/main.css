@@ -67,6 +67,10 @@ a:hover {
     color: var(--hover-color);
 }
 
+img {
+    object-fit: cover;
+}
+
 .btn-primary {
     color: var(--primary-color);
     background-color: var(--primary-color);

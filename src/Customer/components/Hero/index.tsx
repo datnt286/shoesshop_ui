@@ -109,7 +109,7 @@ const Hero: React.FC = () => {
                                             <img
                                                 src={imageSrc}
                                                 className="img-fluid w-100 h-100 bg-secondary rounded"
-                                                style={{ width: '600px', height: '400px', objectFit: 'cover' }}
+                                                style={{ width: '600px', height: '400px' }}
                                                 alt="Hình ảnh"
                                             />
                                         </div>

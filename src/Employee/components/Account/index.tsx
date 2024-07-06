@@ -587,7 +587,7 @@ const Account: React.FC = () => {
                                                 src={avatarPreview}
                                                 id="avatar-preview"
                                                 className="profile-user-img img-fluid img-circle d-block"
-                                                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                                style={{ width: '100px', height: '100px' }}
                                                 alt="Ảnh đại diện"
                                             />
                                             {userErrors.avatar && (

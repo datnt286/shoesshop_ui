@@ -429,7 +429,7 @@ const Account: React.FC = () => {
                                                     <img
                                                         src={avatarPreview}
                                                         className="img-fluid rounded-circle"
-                                                        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                                        style={{ width: '100px', height: '100px' }}
                                                         alt="Ảnh đại diện"
                                                     />
                                                     {errors.avatar && (

@@ -50,7 +50,7 @@ const CartRow: React.FC<CartRowProps> = ({ cartDetail, onUpdateQuantity, onDelet
                         <img
                             src={imageSrc}
                             className="img-fluid me-5 rounded-circle"
-                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                            style={{ width: '80px', height: '80px' }}
                             alt="Ảnh sản phẩm"
                         />
                     </div>
