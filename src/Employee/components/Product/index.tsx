@@ -94,7 +94,10 @@ const Product: React.FC = () => {
         ? `${config.baseURL}/images/product/${selectedProduct.image}`
         : DefaultImage;
 
-    const imageModelSrc = model?.images ? `${config.baseURL}/images/model/${model.images[0].name}` : DefaultImage;
+    const imageModelSrc =
+        model?.images && model.images.length > 0
+            ? `${config.baseURL}/images/model/${model.images[0].name}`
+            : DefaultImage;
 
     const fetchProducts = async (currentPage = 1, pageSize = 10) => {
         try {
