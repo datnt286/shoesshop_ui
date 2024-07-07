@@ -429,13 +429,16 @@ const Detail: React.FC = () => {
                                     <p className="mb-3">Phân loại: {productTypeName}</p>
                                     <h5 className="fw-bold mb-3">{selectedProduct?.price.toLocaleString() + ' ₫'}</h5>
                                     <div className="d-flex mb-4">
-                                        <i className="fa fa-star text-secondary"></i>
-                                        <i className="fa fa-star text-secondary"></i>
-                                        <i className="fa fa-star text-secondary"></i>
-                                        <i className="fa fa-star text-secondary"></i>
-                                        <i className="fa fa-star"></i>
+                                        {[...Array(5)].map((_, index) => (
+                                            <i
+                                                key={index}
+                                                className={`fa fa-star ${
+                                                    index < (model?.averageRating ?? 0) ? 'text-secondary' : ''
+                                                }`}
+                                            ></i>
+                                        ))}
                                         <span className="ml-2" style={{ lineHeight: '17px' }}>
-                                            {model?.averageRating} ({model?.totalReviews} đánh giá)
+                                            {model?.averageRating.toFixed(1)} ({model?.totalReviews} đánh giá)
                                         </span>
                                     </div>
                                     Màu sắc:
