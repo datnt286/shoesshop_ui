@@ -18,6 +18,8 @@ interface Model {
     price: number;
     description: string;
     images: Image[];
+    averageRating: number;
+    totalReviews: number;
     isBought: boolean;
 }
 
@@ -432,6 +434,9 @@ const Detail: React.FC = () => {
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star text-secondary"></i>
                                         <i className="fa fa-star"></i>
+                                        <span className="ml-2" style={{ lineHeight: '17px' }}>
+                                            {model?.averageRating} ({model?.totalReviews} đánh giá)
+                                        </span>
                                     </div>
                                     Màu sắc:
                                     <div className="mt-2 mb-4">

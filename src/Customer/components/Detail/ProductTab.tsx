@@ -66,6 +66,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
     const [rating, setRating] = useState<number>(5);
     const [reviewContent, setReviewContent] = useState('');
     const [totalReviewPages, setTotalReviewPages] = useState(1);
+    const [totalReviewsCount, setTotalReviewsCount] = useState(0);
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const [comments, setComments] = useState<Comment[]>([]);
@@ -75,6 +76,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
     const [parentCommentId, setParentCommentId] = useState<number | null>(null);
     const [isReplying, setIsReplying] = useState(false);
     const [totalCommentPages, setTotalCommentPages] = useState(1);
+    const [totalCommentsCount, setTotalCommentsCount] = useState(0);
     const [commentValidationError, setCommentValidationError] = useState('');
     const [replyValidationError, setReplyValidationError] = useState('');
 
@@ -93,6 +95,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                 if (response.status === 200) {
                     setReviews(response.data.items);
                     setTotalReviewPages(response.data.totalPages);
+                    setTotalReviewsCount(response.data.totalItems);
                 }
             } catch (error) {
                 console.error('Lỗi: ', error);
@@ -161,6 +164,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                 if (response.status === 200) {
                     setComments(response.data.items);
                     setTotalCommentPages(response.data.totalPages);
+                    setTotalCommentsCount(response.data.totalCommentsCount);
                 }
             } catch (error) {
                 console.error('Lỗi: ', error);
@@ -307,7 +311,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                         aria-controls="nav-review"
                         aria-selected="false"
                     >
-                        Đánh giá
+                        Đánh giá ({totalReviewsCount})
                     </button>
                     <button
                         id="nav-comment-tab"
@@ -318,7 +322,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
                         aria-controls="nav-comment"
                         aria-selected="false"
                     >
-                        Bình luận
+                        Bình luận ({totalCommentsCount})
                     </button>
                 </div>
             </nav>
