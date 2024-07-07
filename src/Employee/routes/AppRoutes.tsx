@@ -32,10 +32,10 @@ const AppRoutes: React.FC = () => {
             </Route>
 
             <Route element={<PrivateWrapper />}>
-                <Route path="/" element={<HomePage />} />
                 <Route path="/tai-khoan" element={<AccountPage />} />
 
                 <Route element={<AuthorizationWrapper allowedRoles={['Manager']} />}>
+                    <Route path="/" element={<HomePage />} />
                     <Route path="/loai-san-pham" element={<ProductTypePage />} />
                     <Route path="/nhan-hieu" element={<BrandPage />} />
                     <Route path="/nha-cung-cap" element={<SupplierPage />} />

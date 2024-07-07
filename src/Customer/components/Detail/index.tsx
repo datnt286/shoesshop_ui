@@ -83,8 +83,6 @@ const Detail: React.FC = () => {
         avatar: '',
     });
 
-    const firstColorButtonRef = useRef<HTMLButtonElement>(null);
-    const firstSizeButtonRef = useRef<HTMLButtonElement>(null);
     const { modelId } = useParams();
     const navigate = useNavigate();
 
@@ -179,18 +177,6 @@ const Detail: React.FC = () => {
     }, [token]);
 
     useEffect(() => {
-        if (firstColorButtonRef.current) {
-            firstColorButtonRef.current.click();
-        }
-    }, [products]);
-
-    useEffect(() => {
-        if (firstSizeButtonRef.current) {
-            firstSizeButtonRef.current.click();
-        }
-    }, [filteredProducts]);
-
-    useEffect(() => {
         if (selectedProduct) {
             setAmount(selectedProduct.price * quantity);
         }
@@ -230,6 +216,7 @@ const Detail: React.FC = () => {
     };
 
     const handleColorButtonClick = (colorId: number, imageSrc: string) => {
+        setSelectedProduct(null);
         setSelectedImage(imageSrc);
         setActiveColorId(colorId);
         const filtered = products.filter((product) => product.colorId === colorId);
@@ -255,6 +242,16 @@ const Detail: React.FC = () => {
     };
 
     const handleAddToCart = async () => {
+        if (!selectedProduct) {
+            Swal.fire({
+                title: 'Bạn chưa chọn màu hoặc size!',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+            });
+            return;
+        }
+
         if (isLoggedIn && selectedProduct) {
             try {
                 const data = {
@@ -305,6 +302,16 @@ const Detail: React.FC = () => {
     };
 
     const handleAddToWishlist = async () => {
+        if (!selectedProduct) {
+            Swal.fire({
+                title: 'Bạn chưa chọn màu hoặc size!',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+            });
+            return;
+        }
+
         if (isLoggedIn && selectedProduct) {
             if (!selectedProduct.isInWishlist) {
                 try {
@@ -425,9 +432,11 @@ const Detail: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
-                                    <h4 className="fw-bold mb-3">{selectedProduct?.name}</h4>
+                                    <h4 className="fw-bold mb-3">{selectedProduct?.name || model?.name}</h4>
                                     <p className="mb-3">Phân loại: {productTypeName}</p>
-                                    <h5 className="fw-bold mb-3">{selectedProduct?.price.toLocaleString() + ' ₫'}</h5>
+                                    <h5 className="fw-bold mb-3">
+                                        {(selectedProduct?.price || model?.price)?.toLocaleString() + ' ₫'}
+                                    </h5>
                                     <div className="d-flex mb-4">
                                         {[...Array(5)].map((_, index) => (
                                             <i
@@ -448,9 +457,8 @@ const Detail: React.FC = () => {
                                                 (product, index, self) =>
                                                     index === self.findIndex((p) => p.colorId === product.colorId),
                                             )
-                                            .map((product, index) => {
+                                            .map((product) => {
                                                 const imageSrc = `${config.baseURL}/images/product/${product.image}`;
-                                                const isFirst = index === 0;
 
                                                 return (
                                                     <button
@@ -458,7 +466,6 @@ const Detail: React.FC = () => {
                                                         className={`btn border py-1 px-1 mx-1 mb-2 ${
                                                             activeColorId === product.colorId ? 'active' : ''
                                                         }`}
-                                                        ref={isFirst ? firstColorButtonRef : null}
                                                         onClick={() =>
                                                             handleColorButtonClick(product.colorId, imageSrc)
                                                         }
@@ -479,24 +486,28 @@ const Detail: React.FC = () => {
                                     </div>
                                     <div className="mt-2 mb-4">
                                         Size:{' '}
-                                        {filteredProducts.map((product, index) => (
-                                            <button
-                                                key={product.id}
-                                                className={`btn border py-1 px-2 mx-1 mb-2 ${
-                                                    activeSizeId === product.sizeId ? 'active' : ''
-                                                }`}
-                                                onClick={() => handleSizeButtonClick(product.id, product.sizeId)}
-                                                ref={index === 0 ? firstSizeButtonRef : null}
-                                            >
-                                                {getSizeName(product.sizeId)}
-                                            </button>
-                                        ))}
+                                        {filteredProducts.length > 0 ? (
+                                            filteredProducts.map((product) => (
+                                                <button
+                                                    key={product.id}
+                                                    className={`btn border py-1 px-2 mx-1 mb-2 ${
+                                                        activeSizeId === product.sizeId ? 'active' : ''
+                                                    }`}
+                                                    onClick={() => handleSizeButtonClick(product.id, product.sizeId)}
+                                                >
+                                                    {getSizeName(product.sizeId)}
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <span>Vui lòng chọn màu sắc.</span>
+                                        )}
                                     </div>
-                                    <div className="input-group quantity mb-4" style={{ width: '100px' }}>
+                                    <div className="input-group quantity d-flex mb-4" style={{ width: '100px' }}>
                                         <div className="input-group-btn">
                                             <button
                                                 className="btn btn-sm btn-minus rounded-circle bg-light border"
                                                 onClick={() => handleQuantityChange(quantity - 1)}
+                                                disabled={!selectedProduct}
                                             >
                                                 <i className="fa fa-minus"></i>
                                             </button>
@@ -505,20 +516,26 @@ const Detail: React.FC = () => {
                                             type="text"
                                             className="form-control form-control-sm text-center border-0"
                                             value={quantity}
-                                            onChange={(e) => handleQuantityChange(Number(e.target.value))} // Cập nhật số lượng khi giá trị input thay đổi
+                                            onChange={(e) => handleQuantityChange(Number(e.target.value))}
                                             min={1}
                                             pattern="[0-9]*"
+                                            disabled={!selectedProduct}
                                         />
                                         <div className="input-group-btn">
                                             <button
                                                 className="btn btn-sm btn-plus rounded-circle bg-light border"
                                                 onClick={() => handleQuantityChange(quantity + 1)}
+                                                disabled={!selectedProduct}
                                             >
                                                 <i className="fa fa-plus"></i>
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="mb-5">Có sẵn: {selectedProduct?.quantity} đôi</div>
+                                    <div className="mb-5">
+                                        {selectedProduct
+                                            ? `Có sẵn: ${selectedProduct.quantity} đôi`
+                                            : 'Vui lòng chọn màu và size.'}
+                                    </div>
                                     <button
                                         className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"
                                         onClick={handleAddToCart}
@@ -531,6 +548,7 @@ const Detail: React.FC = () => {
                                             selectedProduct?.isInWishlist ? 'text-danger' : 'text-primary'
                                         }`}
                                         onClick={handleAddToWishlist}
+                                        disabled={!selectedProduct}
                                     >
                                         <i className={`${selectedProduct?.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>
                                     </button>

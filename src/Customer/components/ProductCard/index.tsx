@@ -177,12 +177,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                         alt="Ảnh sản phẩm"
                     />
                 </div>
-                <div
+                {/* <div
                     className="text-white bg-danger px-3 py-1 rounded position-absolute"
                     style={{ top: '10px', left: '10px' }}
                 >
                     -20%
-                </div>
+                </div> */}
                 <button
                     className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 position-absolute ${
                         model?.isInWishlist ? 'text-danger' : 'text-primary'
@@ -194,14 +194,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                 </button>
                 <div className="p-4 border border-secondary border-top-0 rounded-bottom">
                     <h4 className="line-clamp line-clamp-2">{model.name}</h4>
-                    <div className="d-flex justify-content-between flex-lg-wrap">
+                    <div className="d-flex justify-content-center flex-lg-wrap">
                         <p className="text-dark fs-5 fw-bold mb-0">{model.price.toLocaleString() + ' ₫'}</p>
-                        <button
+                        {/* <button
                             className="btn border border-secondary rounded-pill px-3 text-primary"
                             onClick={handleAddToCart}
                         >
                             <i className="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ hàng
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>

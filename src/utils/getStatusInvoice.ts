@@ -26,7 +26,7 @@ export const getStatusText = (status: InvoiceStatus): string => {
 export const getActionButtonText = (status: InvoiceStatus): string => {
     switch (status) {
         case InvoiceStatus.Placed:
-            return 'Duyệt đơn';
+            return 'Duyệt';
         case InvoiceStatus.Approved:
             return 'Vận chuyển';
         case InvoiceStatus.Shipped:
@@ -68,7 +68,7 @@ export const getActionBtnIcon = (status: InvoiceStatus): string => {
         case InvoiceStatus.Received:
             return 'fas fa-check-circle';
         case InvoiceStatus.Cancelled:
-            return 'fas fa-times';
+            return 'fas fa-trash-alt';
         default:
             return 'fas fa-question';
     }

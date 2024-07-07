@@ -219,7 +219,7 @@ const Invoice: React.FC = () => {
         <>
             <div className="row my-4">
                 <div className="col-9">
-                    <h1 className="m-0">Quản lý hoá đơn</h1>
+                    <h1 className="m-0">{userRole !== 'Shipper' ? 'Quản lý hoá đơn' : 'Danh sách hoá đơn'}</h1>
                 </div>
             </div>
 
@@ -246,6 +246,7 @@ const Invoice: React.FC = () => {
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Mã hoá đơn</th>
                                 <th>Tên khách hàng</th>
                                 <th>Ngày đặt</th>
                                 <th>Thành tiền</th>

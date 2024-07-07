@@ -89,12 +89,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token }) => {
                     <div className="py-4">
                         <span className="h5 mb-0 line-clamp line-clamp-2">{model.name}</span>
                         <h4 className="mt-1 mb-3">{model.price.toLocaleString() + ' ₫'}</h4>
-                        <button
+                        {/* <button
                             className="btn border border-secondary rounded-pill px-3 text-primary"
                             onClick={handleAddToCart}
                         >
                             <i className="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ hàng
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </Link>

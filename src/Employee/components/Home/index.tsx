@@ -22,6 +22,8 @@ const Home: React.FC = () => {
         topSellingProducts: [] as Product[],
         monthlyRevenue: [] as number[],
     });
+    const [topSellingProducts, setTopSellingProducts] = useState<Product[]>([]);
+    const [topSellingProductsFilter, setTopSellingProductsFilter] = useState(0);
 
     const chartRef = useRef<Chart | null>(null);
 
@@ -53,9 +55,36 @@ const Home: React.FC = () => {
         }
     };
 
+    const fetchTopSellingProducts = async () => {
+        try {
+            const response = await AxiosInstance.get('/Report/TopSellingProducts', {
+                params: { topSellingProductsFilter },
+            });
+
+            if (response.status === 200) {
+                setTopSellingProducts(response.data);
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải dữ liệu: ', error);
+
+            Swal.fire({
+                title: 'Lỗi khi tải dữ liệu!',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        }
+    };
+
     useEffect(() => {
         fetchReport();
     }, []);
+
+    useEffect(() => {
+        fetchTopSellingProducts();
+    }, [topSellingProductsFilter]);
 
     useEffect(() => {
         if (chartRef.current) {
@@ -111,7 +140,7 @@ const Home: React.FC = () => {
             });
         }
     }, [report.monthlyRevenue]);
-
+    console.log(topSellingProducts);
     return (
         <>
             <div className="mt-3">
@@ -175,7 +204,19 @@ const Home: React.FC = () => {
                     <div className="col-lg-12 col-12">
                         <div className="card">
                             <div className="card-header">
-                                <span className="h4">Top 5 sản phẩm bán chạy trong tháng</span>
+                                <span className="h4">Top 5 sản phẩm bán chạy</span>
+                                <div className="float-right">
+                                    <select
+                                        className="form-select"
+                                        value={topSellingProductsFilter}
+                                        onChange={(e) => setTopSellingProductsFilter(parseInt(e.target.value))}
+                                    >
+                                        <option value={1}>Hôm nay</option>
+                                        <option value={2}>Theo tuần</option>
+                                        <option value={3}>Theo tháng</option>
+                                        <option value={4}>Theo năm</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="card-body">
                                 <table className="table table-bordered table-striped">
@@ -189,8 +230,8 @@ const Home: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {report.topSellingProducts.length > 0 ? (
-                                            report.topSellingProducts.map((product, index) => {
+                                        {topSellingProducts.length > 0 ? (
+                                            topSellingProducts.map((product, index) => {
                                                 const imageSrc = product.image
                                                     ? `${config.baseURL}/images/product/${product.image}`
                                                     : DefaultImage;

@@ -41,9 +41,23 @@ const Sidebar: React.FC = () => {
         }
     }, []);
 
+    const getLinkPath = (userRole: string) => {
+        switch (userRole) {
+            case 'Manager':
+                return '/admin';
+            case 'WarehouseStaff':
+                return '/admin/giay';
+            case 'SalesStaff':
+            case 'Shipper':
+                return '/admin/hoa-don';
+            default:
+                return '/403';
+        }
+    };
+
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
-            <Link to="/admin" className="brand-link">
+            <Link to={getLinkPath(userData.role)} className="brand-link">
                 <img src={Logo} className="brand-image elevation-3" style={{ opacity: 0.8 }} alt="Logo" />
                 <span className="brand-text font-weight-light">Double D Shop</span>
             </Link>
@@ -70,12 +84,14 @@ const Sidebar: React.FC = () => {
                         role="menu"
                         data-accordion="false"
                     >
-                        <li className="nav-item">
-                            <NavLink to="/admin" className="nav-link" end>
-                                <i className="nav-icon fas fa-home"></i>
-                                <p>Trang chủ</p>
-                            </NavLink>
-                        </li>
+                        {userData.role === 'Manager' && (
+                            <li className="nav-item">
+                                <NavLink to="/admin" className="nav-link" end>
+                                    <i className="nav-icon fas fa-home"></i>
+                                    <p>Trang chủ</p>
+                                </NavLink>
+                            </li>
+                        )}
                         {(userData.role === 'Manager' || userData.role === 'WarehouseStaff') && (
                             <li className="nav-item">
                                 <a href="#" className="nav-link">
@@ -149,31 +165,31 @@ const Sidebar: React.FC = () => {
                                 </li>
                             </>
                         )}
-                        {(userData.role === 'Manager' || userData.role === 'SalesStaff') && (
-                            <li className="nav-item">
-                                <NavLink to="/admin/khach-hang" className="nav-link">
-                                    <i className="nav-icon fas fa-users"></i>
-                                    <p>Quản lý khách hàng</p>
-                                </NavLink>
-                            </li>
-                        )}
                         {(userData.role === 'Manager' ||
                             userData.role === 'SalesStaff' ||
                             userData.role === 'Shipper') && (
                             <li className="nav-item">
                                 <NavLink to="/admin/hoa-don" className="nav-link">
                                     <i className="nav-icon fas fa-scroll"></i>
-                                    <p>Quản lý hoá đơn</p>
+                                    <p>{userData.role !== 'Shipper' ? 'Quản lý hoá đơn' : 'Danh sách hoá đơn'}</p>
                                 </NavLink>
                             </li>
                         )}
                         {(userData.role === 'Manager' || userData.role === 'SalesStaff') && (
-                            <li className="nav-item">
-                                <NavLink to="/admin/binh-luan" className="nav-link">
-                                    <i className="nav-icon fas fa-comments"></i>
-                                    <p>Quản lý bình luận</p>
-                                </NavLink>
-                            </li>
+                            <>
+                                <li className="nav-item">
+                                    <NavLink to="/admin/khach-hang" className="nav-link">
+                                        <i className="nav-icon fas fa-users"></i>
+                                        <p>Quản lý khách hàng</p>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/admin/binh-luan" className="nav-link">
+                                        <i className="nav-icon fas fa-comments"></i>
+                                        <p>Quản lý bình luận</p>
+                                    </NavLink>
+                                </li>
+                            </>
                         )}
                         {userData.role === 'Manager' && (
                             <li className="nav-item">

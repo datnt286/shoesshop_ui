@@ -572,27 +572,35 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                                             <td>
                                                 <img
                                                     src={imageSrc}
-                                                    className="img img-thumbnail"
+                                                    className="img img-thumbnail cursor-pointer"
                                                     style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                    onClick={() => handleDetailClick(model)}
                                                     alt="Ảnh sản phẩm"
                                                 />
                                             </td>
-                                            <td>{model.name}</td>
+                                            <td>
+                                                <span
+                                                    className="cursor-pointer underline-on-hover"
+                                                    onClick={() => handleDetailClick(model)}
+                                                >
+                                                    {model.name}
+                                                </span>
+                                            </td>
                                             <td>{model.importPrice?.toLocaleString() + ' ₫'}</td>
                                             <td>{model.price?.toLocaleString() + ' ₫'}</td>
                                             <td>
                                                 <div className="project-actions text-right">
                                                     <Link to={`/admin/san-pham/${model.id}`}>
-                                                        <button className="btn btn-success btn-sm mr-2">
-                                                            <i className="fas fa-arrow-circle-right"></i>
+                                                        <button className="btn btn-gray btn-sm mr-2">
+                                                            <i className="fas fa-list-ul"></i>
                                                         </button>
                                                     </Link>
-                                                    <button
+                                                    {/* <button
                                                         className="btn btn-gray btn-sm mr-2"
                                                         onClick={() => handleDetailClick(model)}
                                                     >
                                                         <i className="fas fa-info-circle"></i>
-                                                    </button>
+                                                    </button> */}
                                                     <button
                                                         className="btn btn-blue btn-sm mr-2"
                                                         onClick={() => handleEditClick(model)}

@@ -589,25 +589,40 @@ const Customer: React.FC = () => {
                                             <td>
                                                 <img
                                                     src={avatarSrc}
-                                                    className="img-thumbnail"
+                                                    className="img-thumbnail cursor-pointer"
                                                     width={50}
                                                     height={50}
+                                                    onClick={() => handleDetailClick(customer)}
                                                     alt="Avatar"
                                                 />
                                             </td>
-                                            <td>{customer.userName}</td>
-                                            <td>{customer.name}</td>
+                                            <td>
+                                                <span
+                                                    className="cursor-pointer underline-on-hover"
+                                                    onClick={() => handleDetailClick(customer)}
+                                                >
+                                                    {customer.userName}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    className="cursor-pointer underline-on-hover"
+                                                    onClick={() => handleDetailClick(customer)}
+                                                >
+                                                    {customer.name}
+                                                </span>
+                                            </td>
                                             <td>{customer.phoneNumber}</td>
                                             <td>{customer.email}</td>
                                             <td>{customer.status === 1 ? 'Hoạt động' : 'Bị khoá'}</td>
                                             <td>
                                                 <div className="project-actions text-right">
-                                                    <button
+                                                    {/* <button
                                                         className="btn btn-gray btn-sm mr-2"
                                                         onClick={() => handleDetailClick(customer)}
                                                     >
                                                         <i className="fas fa-info-circle"></i>
-                                                    </button>
+                                                    </button> */}
                                                     <button
                                                         className="btn btn-blue btn-sm mr-2"
                                                         onClick={() => handleEditClick(customer)}

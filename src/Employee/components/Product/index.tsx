@@ -607,23 +607,31 @@ const Product: React.FC = () => {
                                             <td>
                                                 <img
                                                     src={imageSrc}
-                                                    className="img img-thumbnail"
+                                                    className="img img-thumbnail cursor-pointer"
                                                     style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                                    onClick={() => handleDetailClick(product)}
                                                     alt="Ảnh sản phẩm"
                                                 />
                                             </td>
-                                            <td>{product.name}</td>
+                                            <td>
+                                                <span
+                                                    className="cursor-pointer underline-on-hover"
+                                                    onClick={() => handleDetailClick(product)}
+                                                >
+                                                    {product.name}
+                                                </span>
+                                            </td>
                                             <td>{colorName}</td>
                                             <td>{sizeName}</td>
                                             <td>{product.quantity}</td>
                                             <td>
                                                 <div className="project-actions text-right">
-                                                    <button
+                                                    {/* <button
                                                         className="btn btn-gray btn-sm mr-2"
                                                         onClick={() => handleDetailClick(product)}
                                                     >
                                                         <i className="fas fa-info-circle"></i>
-                                                    </button>
+                                                    </button> */}
                                                     <button
                                                         className="btn btn-blue btn-sm mr-2"
                                                         onClick={() => handleEditClick(product)}

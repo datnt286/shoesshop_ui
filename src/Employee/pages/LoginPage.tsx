@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import AxiosInstance from '../../services/AxiosInstance';
@@ -12,6 +13,10 @@ import '../resources/dist/css/adminlte.min.css';
 import '../resources/plugins/jquery-ui/jquery-ui.min.js';
 import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
+
+interface User {
+    role: string;
+}
 
 const LoginPage: React.FC = () => {
     const [credentials, setCredentials] = useState({
@@ -85,7 +90,26 @@ const LoginPage: React.FC = () => {
 
             if (response.status === 200) {
                 localStorage.setItem('employeeToken', response.data.token);
-                navigate('/admin');
+                const decodedToken: User = jwtDecode<User>(response.data.token);
+                const userRole = decodedToken.role;
+                let url;
+
+                switch (userRole) {
+                    case 'Manager':
+                        url = '/admin';
+                        break;
+                    case 'WarehouseStaff':
+                        url = '/admin/giay';
+                        break;
+                    case 'SalesStaff':
+                    case 'Shipper':
+                        url = '/admin/hoa-don';
+                        break;
+                    default:
+                        url = '/403';
+                }
+
+                navigate(url);
 
                 Swal.fire({
                     title: 'Đăng nhập thành công!',

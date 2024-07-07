@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import AxiosInstance from '../../../services/AxiosInstance';
 import TableRow from './TableRow';
+import VNPayImg from './../../resources/img/vn-pay.jpg';
+import MomoImg from './../../resources/img/momo.png';
 
 interface User {
     id: string;
@@ -709,8 +711,8 @@ const Checkout: React.FC = () => {
                                 </tbody>
                             </table>
                         </div>
-                        <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                            <div className="col-12">
+                        <div className="row g-4 align-items-center border-bottom py-3">
+                            <div className="col-xl-3 col-12">
                                 <div className="form-check text-start my-3">
                                     <input
                                         type="radio"
@@ -721,19 +723,13 @@ const Checkout: React.FC = () => {
                                         onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                                         checked={selectedPaymentMethod === 'VN Pay'}
                                     />
-                                    <label className="form-check-label" htmlFor="vn-pay">
-                                        Chuyển khoản trực tiếp
+                                    <img src={VNPayImg} style={{ width: '30px' }} alt="VN Pay" />
+                                    <label className="form-check-label ml-2" htmlFor="vn-pay">
+                                        VN Pay
                                     </label>
                                 </div>
-                                <p className="text-start text-dark">
-                                    Make your payment directly into our bank account. Please use your Order ID as the
-                                    payment reference. Your order will not be shipped until the funds have cleared in
-                                    our account.
-                                </p>
                             </div>
-                        </div>
-                        <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                            <div className="col-12">
+                            <div className="col-xl-3 col-12">
                                 <div className="form-check text-start my-3">
                                     <input
                                         type="radio"
@@ -744,14 +740,13 @@ const Checkout: React.FC = () => {
                                         onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                                         checked={selectedPaymentMethod === 'Momo'}
                                     />
-                                    <label className="form-check-label" htmlFor="momo">
+                                    <img src={MomoImg} style={{ width: '30px' }} alt="Momo" />
+                                    <label className="form-check-label ml-2" htmlFor="momo">
                                         Momo
                                     </label>
                                 </div>
                             </div>
-                        </div>
-                        <div className="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                            <div className="col-12">
+                            <div className="col-xl-6 col-12">
                                 <div className="form-check text-start my-3">
                                     <input
                                         type="radio"
@@ -762,7 +757,8 @@ const Checkout: React.FC = () => {
                                         onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                                         checked={selectedPaymentMethod === 'COD'}
                                     />
-                                    <label className="form-check-label" htmlFor="cod">
+                                    <i className="fas fa-truck-moving text-primary" style={{ fontSize: '18px' }}></i>
+                                    <label className="form-check-label ml-2" htmlFor="cod">
                                         Thanh Toán Khi Giao Hàng
                                     </label>
                                 </div>

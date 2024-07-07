@@ -707,7 +707,6 @@ const Employee: React.FC = () => {
                                 <th>Ảnh đại diện</th>
                                 <th>Tên đăng nhập</th>
                                 <th>Họ tên</th>
-                                <th>Email</th>
                                 <th>Chức vụ</th>
                                 <th>Trạng thái</th>
                                 <th></th>
@@ -726,24 +725,38 @@ const Employee: React.FC = () => {
                                             <td>
                                                 <img
                                                     src={avatarSrc}
-                                                    className="img-thumbnail"
+                                                    className="img-thumbnail cursor-pointer"
                                                     width={50}
                                                     height={50}
+                                                    onClick={() => handleDetailClick(employee)}
                                                     alt="Avatar"
                                                 />
                                             </td>
-                                            <td>{employee.userName}</td>
-                                            <td>{employee.name}</td>
-                                            <td>{employee.email}</td>
+                                            <td>
+                                                <span
+                                                    className="cursor-pointer underline-on-hover"
+                                                    onClick={() => handleDetailClick(employee)}
+                                                >
+                                                    {employee.userName}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    className="cursor-pointer underline-on-hover"
+                                                    onClick={() => handleDetailClick(employee)}
+                                                >
+                                                    {employee.name}
+                                                </span>
+                                            </td>
                                             <td>{getRoleText(employee.role)}</td>
                                             <td>{employee.status === 1 ? 'Hoạt động' : 'Không hoạt động'}</td>
                                             <td>
-                                                <button
+                                                {/* <button
                                                     className="btn btn-gray btn-sm mr-2"
                                                     onClick={() => handleDetailClick(employee)}
                                                 >
                                                     <i className="fas fa-info-circle"></i>
-                                                </button>
+                                                </button> */}
                                                 <button
                                                     className="btn btn-blue btn-sm mr-2"
                                                     onClick={() => handleEditClick(employee)}

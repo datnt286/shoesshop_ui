@@ -42,6 +42,9 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAct
     return (
         <tr>
             <td>{index + 1}</td>
+            <td className="cursor-pointer underline-on-hover" onClick={onDetail}>
+                {invoice.id}
+            </td>
             <td>{invoice.customerName}</td>
             <td>{invoice.createDate}</td>
             <td>{invoice.total.toLocaleString() + ' ₫'}</td>
@@ -50,9 +53,9 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAct
             </td>
             <td>
                 <div className="d-flex justify-content-between">
-                    <button className="btn btn-gray btn-sm mr-2" onClick={onDetail}>
+                    {/* <button className="btn btn-gray btn-sm mr-2" onClick={onDetail}>
                         <i className="fas fa-info-circle"></i> Chi tiết
-                    </button>
+                    </button> */}
                     <button
                         className={`btn btn-sm ${getActionBtnClassName(invoice.status)} mr-2`}
                         onClick={onAction}
@@ -61,7 +64,7 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAct
                         <i className={`${getActionBtnIcon(invoice.status)}`}></i> {getActionButtonText(invoice.status)}
                     </button>
                     <button className="btn btn-danger btn-sm" onClick={onCancel} disabled={isCancelDisabled}>
-                        <i className="fas fa-times"></i> Huỷ đơn
+                        <i className="fas fa-trash-alt"></i> Huỷ
                     </button>
                 </div>
             </td>

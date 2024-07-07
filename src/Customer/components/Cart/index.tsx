@@ -153,7 +153,7 @@ const Cart: React.FC = () => {
                             </table>
                         </div>
                         <div className="row g-4 justify-content-end">
-                            <div className="col-sm-12 col-md-6 col-lg-6 col-xl-7">
+                            {/* <div className="col-sm-12 col-md-6 col-lg-6 col-xl-7">
                                 <div className="mt-5">
                                     <input
                                         type="text"
@@ -167,7 +167,7 @@ const Cart: React.FC = () => {
                                         Áp dụng
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="col-sm-12 col-md-6 col-lg-6 col-xl-5">
                                 <div className="bg-light rounded">
                                     <div className="p-4">

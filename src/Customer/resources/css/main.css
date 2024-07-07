@@ -216,6 +216,18 @@ img {
     color: #fff;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.underline-on-hover {
+    text-decoration: none;
+}
+
+.underline-on-hover:hover {
+    text-decoration: underline;
+}
+
 .form-control {
     height: auto;
 }

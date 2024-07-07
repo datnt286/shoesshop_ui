@@ -9,7 +9,7 @@ import '../resources/dist/css/adminlte.min.css';
 const ForbiddenPage: React.FC = () => {
     return (
         <>
-            <HelmetInstance title="404" />
+            <HelmetInstance title="403" />
             <div className="container-fluid py-5">
                 <div className="container py-5 text-center">
                     <div className="row justify-content-center">
