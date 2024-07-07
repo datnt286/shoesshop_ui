@@ -116,7 +116,6 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
         } else {
             setIsEditing(false);
             setRating(5);
-            setReviewContent('Nội dung *');
         }
     }, [user.id, reviews]);
 
