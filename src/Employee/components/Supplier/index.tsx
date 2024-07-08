@@ -14,6 +14,7 @@ interface Supplier {
     phoneNumber: string;
     email: string;
     address: string;
+    status: number;
 }
 
 interface City {
@@ -45,6 +46,7 @@ const Supplier: React.FC = () => {
         phoneNumber: '',
         email: '',
         address: '',
+        status: 1,
     });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
@@ -127,6 +129,7 @@ const Supplier: React.FC = () => {
             phoneNumber: supplier.phoneNumber,
             email: supplier.email,
             address: supplier.address,
+            status: supplier.status,
         });
 
         const addressParts = supplier.address.split(',').map((part) => part.trim());
@@ -171,7 +174,7 @@ const Supplier: React.FC = () => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/Suppliers/${id}`);
+        setDeleteEndpoint(`/Suppliers/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -433,6 +436,7 @@ const Supplier: React.FC = () => {
             phoneNumber: '',
             email: '',
             address: '',
+            status: 1,
         });
         setSelectedCity('');
         setSelectedDistrict('');

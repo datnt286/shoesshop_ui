@@ -230,7 +230,7 @@ const Employee: React.FC = () => {
     };
 
     const handleDeleteClick = (id: string | null) => {
-        setDeleteEndpoint(`/Users/Employees/${id}`);
+        setDeleteEndpoint(`/Users/Employees/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 

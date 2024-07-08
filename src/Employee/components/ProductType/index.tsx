@@ -12,6 +12,7 @@ interface ProductType {
     id: number | null;
     name: string;
     parentProductTypeId: number;
+    status: number;
 }
 
 const ProductType: React.FC = () => {
@@ -25,6 +26,7 @@ const ProductType: React.FC = () => {
         id: null,
         name: '',
         parentProductTypeId: 0,
+        status: 1,
     });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
@@ -109,6 +111,7 @@ const ProductType: React.FC = () => {
             id: productType.id,
             name: productType.name,
             parentProductTypeId: productType.parentProductTypeId,
+            status: productType.status,
         });
     };
 
@@ -119,7 +122,7 @@ const ProductType: React.FC = () => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/ProductTypes/${id}`);
+        setDeleteEndpoint(`/ProductTypes/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -243,6 +246,7 @@ const ProductType: React.FC = () => {
             id: null,
             name: '',
             parentProductTypeId: 0,
+            status: 1,
         });
         setErrors({});
     };

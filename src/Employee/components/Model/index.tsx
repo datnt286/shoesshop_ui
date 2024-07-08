@@ -23,6 +23,7 @@ interface Model {
     importPrice: number | null;
     price: number | null;
     description: string;
+    status: number;
     images: File[];
 }
 
@@ -64,6 +65,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         importPrice: null,
         price: null,
         description: '',
+        status: 1,
         images: [],
     });
     const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
@@ -211,6 +213,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             importPrice: model.importPrice,
             price: model.price,
             description: model.description,
+            status: model.status,
             images: [],
         });
         const existingImagePreviews = model.images.map((image) => `${config.baseURL}/images/model/${image.name}`);
@@ -224,7 +227,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/Models/${id}`);
+        setDeleteEndpoint(`/Models/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -416,6 +419,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             formData.append('importPrice', modelData.importPrice?.toString() || '');
             formData.append('price', modelData.price?.toString() || '');
             formData.append('description', modelData.description);
+            formData.append('status', modelData.status.toString());
 
             if (modelData.images) {
                 modelData.images.forEach((image) => {
@@ -494,6 +498,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             importPrice: null,
             price: null,
             description: '',
+            status: 1,
             images: [],
         });
         setImagePreviews([]);

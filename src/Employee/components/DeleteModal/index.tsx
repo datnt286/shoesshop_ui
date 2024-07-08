@@ -16,7 +16,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, endpoint, handleClose, 
         event.preventDefault();
 
         try {
-            const response = await AxiosInstance.delete(endpoint);
+            const response = await AxiosInstance.put(endpoint);
 
             if (response.status === 204) {
                 handleClose();
@@ -55,7 +55,6 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, endpoint, handleClose, 
             </Modal.Header>
             <Modal.Body>
                 <h3>Bạn có chắc muốn xoá?</h3>
-                <h5>Xoá vĩnh viễn sẽ không thể khôi phục!</h5>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="gray" onClick={handleClose}>

@@ -11,6 +11,7 @@ import ExportExcelButton from './../ExportExcelButton/index';
 interface Brand {
     id: number | null;
     name: string;
+    status: number;
 }
 
 const Brand: React.FC = () => {
@@ -22,6 +23,7 @@ const Brand: React.FC = () => {
     const [brandData, setBrandData] = useState<Brand>({
         id: null,
         name: '',
+        status: 1,
     });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
@@ -77,6 +79,7 @@ const Brand: React.FC = () => {
             ...brandData,
             id: brand.id,
             name: brand.name,
+            status: brand.status,
         });
     };
 
@@ -87,7 +90,7 @@ const Brand: React.FC = () => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/Brands/${id}`);
+        setDeleteEndpoint(`/Brands/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -196,6 +199,7 @@ const Brand: React.FC = () => {
         setBrandData({
             id: null,
             name: '',
+            status: 1,
         });
         setErrors({});
     };

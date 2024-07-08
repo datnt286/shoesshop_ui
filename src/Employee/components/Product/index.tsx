@@ -24,6 +24,7 @@ interface Product {
     price: number | null;
     quantity: number | null;
     description: string;
+    status: number;
     image: File | null;
 }
 
@@ -70,6 +71,7 @@ const Product: React.FC = () => {
         price: model?.price || null,
         quantity: null,
         description: '',
+        status: 1,
         image: null,
     });
     const [imagePreview, setImagePreview] = useState(DefaultImage);
@@ -239,6 +241,7 @@ const Product: React.FC = () => {
             price: product.price,
             quantity: product.quantity,
             description: product.description,
+            status: product.status,
         });
         setImagePreview(imageSrc);
     };
@@ -250,7 +253,7 @@ const Product: React.FC = () => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/Products/${id}`);
+        setDeleteEndpoint(`/Products/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -439,6 +442,7 @@ const Product: React.FC = () => {
             formData.append('price', productData.price!.toString());
             formData.append('quantity', productData.quantity!.toString());
             formData.append('description', productData.description);
+            formData.append('status', productData.status.toString());
             if (productData.image) {
                 formData.append('image', productData.image);
             }
@@ -521,6 +525,7 @@ const Product: React.FC = () => {
             price: model?.price || null,
             quantity: null,
             description: '',
+            status: 1,
             image: null,
         });
         setImagePreview(DefaultImage);

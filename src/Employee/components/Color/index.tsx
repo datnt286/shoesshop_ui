@@ -11,6 +11,7 @@ import ExportExcelButton from './../ExportExcelButton/index';
 interface Color {
     id: number | null;
     name: string;
+    status: number;
 }
 
 const Color: React.FC = () => {
@@ -22,6 +23,7 @@ const Color: React.FC = () => {
     const [colorData, setColorData] = useState<Color>({
         id: null,
         name: '',
+        status: 1,
     });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
@@ -77,6 +79,7 @@ const Color: React.FC = () => {
             ...colorData,
             id: color.id,
             name: color.name,
+            status: color.status,
         });
     };
 
@@ -87,7 +90,7 @@ const Color: React.FC = () => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/Colors/${id}`);
+        setDeleteEndpoint(`/Colors/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -196,6 +199,7 @@ const Color: React.FC = () => {
         setColorData({
             id: null,
             name: '',
+            status: 1,
         });
         setErrors({});
     };

@@ -11,6 +11,7 @@ import ExportExcelButton from './../ExportExcelButton/index';
 interface Size {
     id: number | null;
     name: string;
+    status: number;
 }
 
 const Size: React.FC = () => {
@@ -22,6 +23,7 @@ const Size: React.FC = () => {
     const [sizeData, setSizeData] = useState<Size>({
         id: null,
         name: '',
+        status: 1,
     });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteEndpoint, setDeleteEndpoint] = useState('');
@@ -77,6 +79,7 @@ const Size: React.FC = () => {
             ...sizeData,
             id: size.id,
             name: size.name,
+            status: size.status,
         });
     };
 
@@ -87,7 +90,7 @@ const Size: React.FC = () => {
     };
 
     const handleDeleteClick = (id: number | null) => {
-        setDeleteEndpoint(`/Sizes/${id}`);
+        setDeleteEndpoint(`/Sizes/SoftDelete/${id}`);
         setShowDeleteModal(true);
     };
 
@@ -195,6 +198,7 @@ const Size: React.FC = () => {
         setSizeData({
             id: null,
             name: '',
+            status: 1,
         });
         setErrors({});
     };
