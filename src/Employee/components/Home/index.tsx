@@ -140,7 +140,7 @@ const Home: React.FC = () => {
             });
         }
     }, [report.monthlyRevenue]);
-    console.log(topSellingProducts);
+
     return (
         <>
             <div className="mt-3">

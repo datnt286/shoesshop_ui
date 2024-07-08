@@ -420,7 +420,6 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             formData.append('price', modelData.price?.toString() || '');
             formData.append('description', modelData.description);
             formData.append('status', modelData.status.toString());
-
             if (modelData.images) {
                 modelData.images.forEach((image) => {
                     formData.append('images', image);
