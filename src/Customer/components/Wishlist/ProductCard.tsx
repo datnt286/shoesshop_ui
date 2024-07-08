@@ -88,14 +88,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ wishlistDetail, token, onDele
                 </div>
                 <div className="p-4 border border-secondary border-top-0 rounded-bottom">
                     <h4 className="line-clamp line-clamp-2">{wishlistDetail.productName}</h4>
-                    <div className="d-flex justify-content-between flex-lg-wrap">
+                    <div className="d-flex justify-content-center flex-lg-wrap">
                         <p className="text-dark fs-5 fw-bold mb-0">{wishlistDetail.price.toLocaleString() + ' ₫'}</p>
-                        <button
+                        {/* <button
                             className="btn border border-secondary rounded-pill px-3 text-primary"
                             onClick={handleAddToCart}
                         >
                             <i className="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ hàng
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>

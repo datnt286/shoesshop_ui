@@ -413,6 +413,14 @@ const Checkout: React.FC = () => {
         }
     };
 
+    const handleVnPayPayment = async () => {
+        try {
+            const response = await AxiosInstance.post('/VnPay', { requiredAmount: total + 15000 });
+        } catch (error) {
+            console.error('Error during MoMo payment request:', error);
+        }
+    };
+
     const handleMoMoPayment = async () => {
         try {
             const response = await AxiosInstance.post(
@@ -427,7 +435,6 @@ const Checkout: React.FC = () => {
 
             if (response.status === 200) {
                 const paymentResponse = response.data;
-                // Assuming paymentResponse contains the redirect URL to MoMo
                 window.location.href = paymentResponse.payUrl;
             } else {
                 console.error('Payment creation failed:', response.status);
@@ -437,7 +444,7 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const handlePostOrder = async () => {
+    const handleCreateInvoice = async () => {
         const accountUpdated = await updateAccount();
 
         if (!accountUpdated) {
@@ -446,60 +453,67 @@ const Checkout: React.FC = () => {
 
         fetchCartDetails();
 
-        try {
-            const data = {
-                paymentMethod: selectedPaymentMethod,
-                total: total,
-                note: note,
-                cartDetails: cartDetails.map((cartDetail) => ({
-                    productId: cartDetail.productId,
-                    price: cartDetail.price,
-                    quantity: cartDetail.quantity,
-                    amount: cartDetail.amount,
-                })),
-            };
-
-            const response = await AxiosInstance.post('/Invoices', data, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 200) {
-                navigate('/hoa-don');
-
-                Swal.fire({
-                    title: 'Đặt hàng thành công!',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+        if (selectedPaymentMethod === 'VN Pay') {
+            handleVnPayPayment();
+        } else if (selectedPaymentMethod === 'Momo') {
+            handleMoMoPayment();
+        } else {
+            try {
+                const data = {
+                    paymentMethod: selectedPaymentMethod,
+                    total: total,
+                    note: note,
+                    cartDetails: cartDetails.map((cartDetail) => ({
+                        productId: cartDetail.productId,
+                        price: cartDetail.price,
+                        quantity: cartDetail.quantity,
+                        amount: cartDetail.amount,
+                    })),
+                };
+    
+                const response = await AxiosInstance.post('/Invoices', data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
-            }
-        } catch (error) {
-            console.error('Lỗi khi đặt hàng: ', error);
-
-            if (axios.isAxiosError(error)) {
-                if (error.response && error.response.status === 400) {
-                    const apiError = error.response.data;
-
-                    if (apiError === 'Product not available or insufficient quantity.') {
-                        Swal.fire({
-                            title: 'Số lượng sản phẩm không đủ! Vui lòng thử lại.',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#3085d6',
-                        });
-                    }
+    
+                if (response.status === 200) {
+                    navigate('/hoa-don');
+    
+                    Swal.fire({
+                        title: 'Đặt hàng thành công!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6',
+                    });
                 }
-            } else {
-                Swal.fire({
-                    title: 'Đặt hàng thất bại! Vui lòng thử lại.',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
-                });
+            } catch (error) {
+                console.error('Lỗi khi đặt hàng: ', error);
+    
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.status === 400) {
+                        const apiError = error.response.data;
+    
+                        if (apiError === 'Product not available or insufficient quantity.') {
+                            Swal.fire({
+                                title: 'Số lượng sản phẩm không đủ! Vui lòng thử lại.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#3085d6',
+                            });
+                        }
+                    }
+                } else {
+                    Swal.fire({
+                        title: 'Đặt hàng thất bại! Vui lòng thử lại.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6',
+                    });
+                }
             }
         }
+
     };
 
     return (
@@ -768,7 +782,7 @@ const Checkout: React.FC = () => {
                             <button
                                 type="button"
                                 className="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
-                                onClick={selectedPaymentMethod === 'Momo' ? handleMoMoPayment : handlePostOrder}
+                                onClick={handleCreateInvoice}
                                 disabled={!canProceedToCheckout}
                             >
                                 Đặt Hàng
