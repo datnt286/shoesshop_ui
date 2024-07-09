@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import Swal from 'sweetalert2';
 import { jwtDecode } from 'jwt-decode';
+import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import Pagination from '../Pagination/index';
 import InvoiceRow from './InvoiceRow';

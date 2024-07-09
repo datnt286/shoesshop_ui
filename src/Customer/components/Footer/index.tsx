@@ -1,5 +1,5 @@
 import React from 'react';
-import PaymentImg from '../../resources/img/payment.png';
+import PaymentImage from '../../resources/img/payment.png';
 
 const Footer: React.FC = () => {
     return (
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
                                 <p>Email: doube.d.shop@gmail.com</p>
                                 <p>Điện thoại: +0123 4567 8910</p>
                                 <p>Phương thức thanh toán</p>
-                                <img src={PaymentImg} className="img-fluid" alt="Hình ảnh" />
+                                <img src={PaymentImage} className="img-fluid" alt="Hình ảnh" />
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import AxiosInstance from '../../services/AxiosInstance';
 import HelmetInstance from '../../utils/HelmetInstance';
 

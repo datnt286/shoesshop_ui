@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import TableRow from './TableRow';
 import VNPayImg from './../../resources/img/vn-pay.jpg';
@@ -418,7 +418,7 @@ const Checkout: React.FC = () => {
 
     const handleVnPayPayment = async () => {
         try {
-            const response = await AxiosInstance.post('/VnPay', { requiredAmount: total + 15000 });
+            const response = await AxiosInstance.post('/Payment/VNPay', { requiredAmount: total + 15000 });
 
             if (response.status === 200) {
                 window.location.href = response.data.data;
@@ -432,11 +432,10 @@ const Checkout: React.FC = () => {
 
     const handleMoMoPayment = async () => {
         try {
-            const response = await AxiosInstance.post('/Payment', { requiredAmount: total + 15000 });
+            const response = await AxiosInstance.post('/Payment/Momo', { requiredAmount: total + 15000 });
 
             if (response.status === 200) {
-                const paymentResponse = response.data;
-                window.location.href = paymentResponse.payUrl;
+                window.location.href = response.data.payUrl;
             } else {
                 console.error('Payment creation failed:', response.status);
             }

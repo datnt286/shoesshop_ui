@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 
 const ChangePassword: React.FC = () => {
