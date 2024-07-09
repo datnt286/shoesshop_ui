@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -57,7 +57,7 @@ const Checkout: React.FC = () => {
         address: '',
     });
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('VN Pay');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('VNPay');
     const [total, setTotal] = useState(0);
     const [note, setNote] = useState('');
     const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
@@ -416,22 +416,20 @@ const Checkout: React.FC = () => {
     const handleVnPayPayment = async () => {
         try {
             const response = await AxiosInstance.post('/VnPay', { requiredAmount: total + 15000 });
+
+            if (response.status === 200) {
+                window.location.href = response.data.data;
+            } else {
+                console.error('Payment creation failed:', response.status);
+            }
         } catch (error) {
-            console.error('Error during MoMo payment request:', error);
+            console.error('Error during payment request:', error);
         }
     };
 
     const handleMoMoPayment = async () => {
         try {
-            const response = await AxiosInstance.post(
-                '/Payment',
-                { requiredAmount: total + 15000 },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                },
-            );
+            const response = await AxiosInstance.post('/Payment', { requiredAmount: total + 15000 });
 
             if (response.status === 200) {
                 const paymentResponse = response.data;
@@ -440,7 +438,7 @@ const Checkout: React.FC = () => {
                 console.error('Payment creation failed:', response.status);
             }
         } catch (error) {
-            console.error('Error during MoMo payment request:', error);
+            console.error('Error during payment request:', error);
         }
     };
 
@@ -453,7 +451,7 @@ const Checkout: React.FC = () => {
 
         fetchCartDetails();
 
-        if (selectedPaymentMethod === 'VN Pay') {
+        if (selectedPaymentMethod === 'VNPay') {
             handleVnPayPayment();
         } else if (selectedPaymentMethod === 'Momo') {
             handleMoMoPayment();
@@ -470,16 +468,16 @@ const Checkout: React.FC = () => {
                         amount: cartDetail.amount,
                     })),
                 };
-    
+
                 const response = await AxiosInstance.post('/Invoices', data, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-    
+
                 if (response.status === 200) {
                     navigate('/hoa-don');
-    
+
                     Swal.fire({
                         title: 'Đặt hàng thành công!',
                         icon: 'success',
@@ -489,11 +487,11 @@ const Checkout: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Lỗi khi đặt hàng: ', error);
-    
+
                 if (axios.isAxiosError(error)) {
                     if (error.response && error.response.status === 400) {
                         const apiError = error.response.data;
-    
+
                         if (apiError === 'Product not available or insufficient quantity.') {
                             Swal.fire({
                                 title: 'Số lượng sản phẩm không đủ! Vui lòng thử lại.',
@@ -513,7 +511,6 @@ const Checkout: React.FC = () => {
                 }
             }
         }
-
     };
 
     return (
@@ -652,12 +649,12 @@ const Checkout: React.FC = () => {
                             </div>
                         </form>
                         <hr />
-                        <div className="form-check my-3">
+                        {/* <div className="form-check my-3">
                             <input type="checkbox" id="other-address" className="form-check-input" />
                             <label htmlFor="other-address" className="form-check-label">
                                 Giao tới một địa chỉ khác?
                             </label>
-                        </div>
+                        </div> */}
                         <div className="form-item">
                             <textarea
                                 name="note"
@@ -670,124 +667,142 @@ const Checkout: React.FC = () => {
                         </div>
                     </div>
                     <div className="col-md-12 col-lg-7 col-xl-7">
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Sản phẩm</th>
-                                        <th scope="col">Tên</th>
-                                        <th scope="col">Giá</th>
-                                        <th scope="col">Số lượng</th>
-                                        <th scope="col">Tổng cộng</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cartDetails.map((cartDetail) => (
-                                        <TableRow key={cartDetail.id} cartDetail={cartDetail} />
-                                    ))}
-                                    <tr>
-                                        <th scope="row"></th>
-                                        <td className="py-5" colSpan={2}>
-                                            <p className="mb-0 text-dark py-3">Thành tiền</p>
-                                        </td>
-                                        <td className="py-5" colSpan={2}>
-                                            <div className="py-3 border-bottom border-top text-center">
-                                                <p className="mb-0 text-dark">{total.toLocaleString() + ' ₫'}</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"></th>
-                                        <td className="py-5" colSpan={2}>
-                                            <p className="mb-0 text-dark py-3">Phí vận chuyển</p>
-                                        </td>
-                                        <td className="py-5" colSpan={2}>
-                                            <div className="py-3 border-bottom border-top text-center">
-                                                <p className="mb-0 text-dark">
-                                                    Phí cố định: {(15000).toLocaleString() + ' ₫'}
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"></th>
-                                        <td className="py-5" colSpan={2}>
-                                            <p className="mb-0 text-dark text-uppercase py-3">Tổng thành tiền</p>
-                                        </td>
-                                        <td className="py-5" colSpan={2}>
-                                            <div className="py-3 border-bottom border-top text-center">
-                                                <p className="mb-0 text-dark">
-                                                    {(total + 15000).toLocaleString() + ' ₫'}
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="row g-4 align-items-center border-bottom py-3">
-                            <div className="col-xl-3 col-12">
-                                <div className="form-check text-start my-3">
-                                    <input
-                                        type="radio"
-                                        name="paymentMethod"
-                                        id="vn-pay"
-                                        className="form-check-input"
-                                        value="VN Pay"
-                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                        checked={selectedPaymentMethod === 'VN Pay'}
-                                    />
-                                    <img src={VNPayImg} style={{ width: '30px' }} alt="VN Pay" />
-                                    <label className="form-check-label ml-2" htmlFor="vn-pay">
-                                        VN Pay
-                                    </label>
+                        {cartDetails.length > 0 ? (
+                            <>
+                                <div className="table-responsive">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Sản phẩm</th>
+                                                <th scope="col">Tên</th>
+                                                <th scope="col">Giá</th>
+                                                <th scope="col">Số lượng</th>
+                                                <th scope="col">Tổng cộng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {cartDetails.map((cartDetail) => (
+                                                <TableRow key={cartDetail.id} cartDetail={cartDetail} />
+                                            ))}
+                                            <tr>
+                                                <th scope="row"></th>
+                                                <td className="py-5" colSpan={2}>
+                                                    <p className="mb-0 text-dark py-3">Thành tiền</p>
+                                                </td>
+                                                <td className="py-5" colSpan={2}>
+                                                    <div className="py-3 border-bottom border-top text-center">
+                                                        <p className="mb-0 text-dark">
+                                                            {total.toLocaleString() + ' ₫'}
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"></th>
+                                                <td className="py-5" colSpan={2}>
+                                                    <p className="mb-0 text-dark py-3">Phí vận chuyển</p>
+                                                </td>
+                                                <td className="py-5" colSpan={2}>
+                                                    <div className="py-3 border-bottom border-top text-center">
+                                                        <p className="mb-0 text-dark">
+                                                            Phí cố định: {(15000).toLocaleString() + ' ₫'}
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"></th>
+                                                <td className="py-5" colSpan={2}>
+                                                    <p className="mb-0 text-dark text-uppercase py-3">
+                                                        Tổng thành tiền
+                                                    </p>
+                                                </td>
+                                                <td className="py-5" colSpan={2}>
+                                                    <div className="py-3 border-bottom border-top text-center">
+                                                        <p className="mb-0 text-dark">
+                                                            {(total + 15000).toLocaleString() + ' ₫'}
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div>
-                            <div className="col-xl-3 col-12">
-                                <div className="form-check text-start my-3">
-                                    <input
-                                        type="radio"
-                                        name="paymentMethod"
-                                        id="momo"
-                                        className="form-check-input"
-                                        value="Momo"
-                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                        checked={selectedPaymentMethod === 'Momo'}
-                                    />
-                                    <img src={MomoImg} style={{ width: '30px' }} alt="Momo" />
-                                    <label className="form-check-label ml-2" htmlFor="momo">
-                                        Momo
-                                    </label>
+                                <div className="row g-4 align-items-center border-bottom py-3">
+                                    <div className="col-xl-3 col-12">
+                                        <div className="form-check text-start my-3">
+                                            <input
+                                                type="radio"
+                                                name="paymentMethod"
+                                                id="vnpay"
+                                                className="form-check-input"
+                                                value="VNPay"
+                                                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                                checked={selectedPaymentMethod === 'VNPay'}
+                                            />
+                                            <label htmlFor="vnpay" className="form-check-label text-primary">
+                                                <img src={VNPayImg} style={{ width: '30px' }} alt="VNPay" /> VNPay
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="col-xl-3 col-12">
+                                        <div className="form-check text-start my-3">
+                                            <input
+                                                type="radio"
+                                                name="paymentMethod"
+                                                id="momo"
+                                                className="form-check-input"
+                                                value="Momo"
+                                                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                                checked={selectedPaymentMethod === 'Momo'}
+                                            />
+                                            <label htmlFor="momo" className="form-check-label text-primary">
+                                                <img src={MomoImg} style={{ width: '30px' }} alt="Momo" /> Momo
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="col-xl-6 col-12">
+                                        <div className="form-check text-start my-3">
+                                            <input
+                                                type="radio"
+                                                name="paymentMethod"
+                                                id="cod"
+                                                className="form-check-input"
+                                                value="COD"
+                                                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                                checked={selectedPaymentMethod === 'COD'}
+                                            />
+                                            <label htmlFor="cod" className="form-check-label text-primary">
+                                                <i className="fas fa-truck-moving" style={{ fontSize: '18px' }}></i>{' '}
+                                                Thanh Toán Khi Giao Hàng
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-xl-6 col-12">
-                                <div className="form-check text-start my-3">
-                                    <input
-                                        type="radio"
-                                        name="paymentMethod"
-                                        id="cod"
-                                        className="form-check-input"
-                                        value="COD"
-                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                        checked={selectedPaymentMethod === 'COD'}
-                                    />
-                                    <i className="fas fa-truck-moving text-primary" style={{ fontSize: '18px' }}></i>
-                                    <label className="form-check-label ml-2" htmlFor="cod">
-                                        Thanh Toán Khi Giao Hàng
-                                    </label>
+                                <div className="row g-4 text-center align-items-center justify-content-center pt-4">
+                                    <button
+                                        type="button"
+                                        className="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
+                                        onClick={handleCreateInvoice}
+                                        disabled={!canProceedToCheckout}
+                                    >
+                                        Đặt Hàng
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="row g-4 text-center align-items-center justify-content-center pt-4">
-                            <button
-                                type="button"
-                                className="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
-                                onClick={handleCreateInvoice}
-                                disabled={!canProceedToCheckout}
-                            >
-                                Đặt Hàng
-                            </button>
-                        </div>
+                            </>
+                        ) : (
+                            <>
+                                <h3>Bạn chưa thêm sản phẩm vào giỏ hàng.</h3>
+                                <div className="row g-4 text-center align-items-center justify-content-center pt-4">
+                                    <Link
+                                        to="/"
+                                        className="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"
+                                    >
+                                        Quay lại trang chủ
+                                    </Link>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
