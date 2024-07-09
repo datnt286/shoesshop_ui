@@ -81,8 +81,11 @@ const Login: React.FC = () => {
                 Swal.fire({
                     title: 'Đăng nhập thành công!',
                     icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 1000,
                 });
             }
         } catch (error) {
@@ -100,8 +103,11 @@ const Login: React.FC = () => {
                 Swal.fire({
                     title: 'Đăng nhập thất bại! Vui lòng thử lại.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         }
@@ -112,16 +118,17 @@ const Login: React.FC = () => {
 
         try {
             const response = await AxiosInstance.get('/Users/google-login');
-        
-            
         } catch (error) {
             console.error('Lỗi đăng nhập: ', error);
 
             Swal.fire({
                 title: 'Đăng nhập thất bại! Vui lòng thử lại.',
                 icon: 'error',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 3000,
             });
         }
     };

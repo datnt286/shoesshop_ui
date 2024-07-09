@@ -104,8 +104,11 @@ const Invoice: React.FC = () => {
                 Swal.fire({
                     title: 'Xác nhận đơn hàng thành công!',
                     icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 1000,
                 });
 
                 fetchInvoices();
@@ -116,8 +119,11 @@ const Invoice: React.FC = () => {
             Swal.fire({
                 title: 'Lỗi khi xác nhận đơn hàng! Vui lòng thử lại.',
                 icon: 'error',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 3000,
             });
         }
     };
@@ -142,8 +148,11 @@ const Invoice: React.FC = () => {
                     Swal.fire({
                         title: 'Huỷ đơn thành công!',
                         icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
 
                     fetchInvoices();
@@ -154,8 +163,11 @@ const Invoice: React.FC = () => {
                 Swal.fire({
                     title: 'Lỗi khi huỷ đơn! Vui lòng thử lại.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         }

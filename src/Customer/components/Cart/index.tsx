@@ -93,6 +93,16 @@ const Cart: React.FC = () => {
             }
         } catch (error) {
             console.error('Lỗi khi cập nhật số lượng sản phẩm: ', error);
+
+            Swal.fire({
+                title: 'Đã xảy ra lỗi khi cập nhật số lượng sản phẩm!',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 3000,
+            });
         }
     };
 
@@ -119,6 +129,16 @@ const Cart: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Lỗi khi xoá sản phẩm: ', error);
+
+                Swal.fire({
+                    title: 'Đã xảy ra lỗi khi xoá sản phẩm khỏi giỏ hàng!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
             }
         }
     };

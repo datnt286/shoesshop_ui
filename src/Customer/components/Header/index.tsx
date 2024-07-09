@@ -115,14 +115,6 @@ const Header: React.FC = () => {
             setIsLoggedIn(false);
             setAvatar('');
             navigate('/');
-
-            Swal.fire({
-                title: 'Đăng xuất thành công!',
-                icon: 'success',
-                timer: 2000,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-            });
         }
     };
 

@@ -53,8 +53,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                     Swal.fire({
                         title: 'Đã thêm sản phẩm vào giỏ hàng!',
                         icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
                 }
             } catch (error) {
@@ -63,8 +66,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                 Swal.fire({
                     title: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng! Vui lòng thử lại sau.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         } else {
@@ -106,8 +112,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                         Swal.fire({
                             title: 'Đã thêm sản phẩm vào Wishlist!',
                             icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#3085d6',
+                            toast: true,
+                            position: 'top-end',
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                            timer: 1000,
                         });
                     }
                 } catch (error) {
@@ -116,8 +125,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                     Swal.fire({
                         title: 'Đã xảy ra lỗi khi thêm sản phẩm vào Wishlist!',
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 3000,
                     });
                 }
             } else {
@@ -134,8 +146,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                         Swal.fire({
                             title: 'Đã xoá sản phẩm khỏi Wishlist!',
                             icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#3085d6',
+                            toast: true,
+                            position: 'top-end',
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                            timer: 1000,
                         });
                     }
                 } catch (error) {
@@ -144,8 +159,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
                     Swal.fire({
                         title: 'Đã xảy ra lỗi khi xoá sản phẩm khỏi Wishlist!',
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 3000,
                     });
                 }
             }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import ProductCard from './ProductCard';
@@ -79,6 +78,16 @@ const Wishlist: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Lỗi khi xoá sản phẩm: ', error);
+
+                Swal.fire({
+                    title: 'Đã xảy ra lỗi khi xoá sản phẩm khỏi Wishlist!',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
             }
         }
     };

@@ -57,8 +57,11 @@ const ForgotPassword: React.FC = () => {
                 Swal.fire({
                     title: 'Gửi email thành công!',
                     icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 1000,
                 });
             }
         } catch (error) {
@@ -76,8 +79,11 @@ const ForgotPassword: React.FC = () => {
                 Swal.fire({
                     title: 'Gửi email thất bại! Vui lòng thử lại.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         }

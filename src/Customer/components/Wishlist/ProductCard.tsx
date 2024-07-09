@@ -44,18 +44,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ wishlistDetail, token, onDele
                     Swal.fire({
                         title: 'Đã thêm sản phẩm vào giỏ hàng!',
                         icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
                 }
             } catch (error) {
                 console.error('Lỗi khi thêm sản phẩm vào giỏ hàng: ', error);
 
                 Swal.fire({
-                    title: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!',
+                    title: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng! Vui lòng thử lại sau.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         }

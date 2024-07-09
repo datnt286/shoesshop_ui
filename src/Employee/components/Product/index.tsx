@@ -128,6 +128,7 @@ const Product: React.FC = () => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -149,6 +150,7 @@ const Product: React.FC = () => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -170,6 +172,7 @@ const Product: React.FC = () => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -191,6 +194,7 @@ const Product: React.FC = () => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -457,6 +461,7 @@ const Product: React.FC = () => {
                         icon: 'success',
                         toast: true,
                         position: 'top-end',
+                        timerProgressBar: true,
                         showConfirmButton: false,
                         timer: 3000,
                     });
@@ -470,6 +475,7 @@ const Product: React.FC = () => {
                         icon: 'success',
                         toast: true,
                         position: 'top-end',
+                        timerProgressBar: true,
                         showConfirmButton: false,
                         timer: 3000,
                     });
@@ -497,6 +503,7 @@ const Product: React.FC = () => {
                         icon: 'error',
                         toast: true,
                         position: 'top-end',
+                        timerProgressBar: true,
                         showConfirmButton: false,
                         timer: 3000,
                     });
@@ -507,6 +514,7 @@ const Product: React.FC = () => {
                     icon: 'error',
                     toast: true,
                     position: 'top-end',
+                    timerProgressBar: true,
                     showConfirmButton: false,
                     timer: 3000,
                 });

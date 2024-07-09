@@ -378,8 +378,11 @@ const Account: React.FC = () => {
                 Swal.fire({
                     title: 'Cập nhật thông tin tài khoản thành công!',
                     icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 1000,
                 });
             }
         } catch (error) {
@@ -407,8 +410,11 @@ const Account: React.FC = () => {
                 Swal.fire({
                     title: 'Cập nhật thông tin tài khoản thất bại! Vui lòng thử lại.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         }

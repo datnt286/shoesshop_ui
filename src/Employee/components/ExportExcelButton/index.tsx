@@ -71,6 +71,7 @@ const ExportExcelButton: React.FC<ExportExcelButtonProps> = ({ endpoint, filenam
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });

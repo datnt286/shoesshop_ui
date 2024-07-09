@@ -113,6 +113,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -134,6 +135,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -155,6 +157,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -176,6 +179,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -436,6 +440,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         icon: 'success',
                         toast: true,
                         position: 'top-end',
+                        timerProgressBar: true,
                         showConfirmButton: false,
                         timer: 3000,
                     });
@@ -449,6 +454,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         icon: 'success',
                         toast: true,
                         position: 'top-end',
+                        timerProgressBar: true,
                         showConfirmButton: false,
                         timer: 3000,
                     });
@@ -470,6 +476,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         icon: 'error',
                         toast: true,
                         position: 'top-end',
+                        timerProgressBar: true,
                         showConfirmButton: false,
                         timer: 3000,
                     });
@@ -480,6 +487,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                     icon: 'error',
                     toast: true,
                     position: 'top-end',
+                    timerProgressBar: true,
                     showConfirmButton: false,
                     timer: 3000,
                 });

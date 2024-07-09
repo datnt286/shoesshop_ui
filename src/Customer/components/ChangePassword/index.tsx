@@ -110,8 +110,11 @@ const ChangePassword: React.FC = () => {
                 Swal.fire({
                     title: 'Đổi mật khẩu thành công!',
                     icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 1000,
                 });
 
                 setPasswordData({
@@ -138,8 +141,11 @@ const ChangePassword: React.FC = () => {
                 Swal.fire({
                     title: 'Đổi mật khẩu thất bại! Vui lòng thử lại.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         }

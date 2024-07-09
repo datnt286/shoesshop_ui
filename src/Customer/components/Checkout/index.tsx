@@ -407,8 +407,11 @@ const Checkout: React.FC = () => {
             Swal.fire({
                 title: 'Cập nhật thông tin tài khoản thành công!',
                 icon: 'success',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 1000,
             });
         }
     };
@@ -481,8 +484,11 @@ const Checkout: React.FC = () => {
                     Swal.fire({
                         title: 'Đặt hàng thành công!',
                         icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
                 }
             } catch (error) {
@@ -496,8 +502,11 @@ const Checkout: React.FC = () => {
                             Swal.fire({
                                 title: 'Số lượng sản phẩm không đủ! Vui lòng thử lại.',
                                 icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#3085d6',
+                                toast: true,
+                                position: 'top-end',
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                                timer: 3000,
                             });
                         }
                     }
@@ -505,8 +514,11 @@ const Checkout: React.FC = () => {
                     Swal.fire({
                         title: 'Đặt hàng thất bại! Vui lòng thử lại.',
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 3000,
                     });
                 }
             }

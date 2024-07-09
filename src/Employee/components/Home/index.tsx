@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Chart, { ChartOptions, ChartData } from 'chart.js/auto'; // Import Chart.js 3
+import Chart, { ChartOptions, ChartData } from 'chart.js/auto';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
@@ -49,6 +49,7 @@ const Home: React.FC = () => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });
@@ -72,6 +73,7 @@ const Home: React.FC = () => {
                 icon: 'error',
                 toast: true,
                 position: 'top-end',
+                timerProgressBar: true,
                 showConfirmButton: false,
                 timer: 3000,
             });

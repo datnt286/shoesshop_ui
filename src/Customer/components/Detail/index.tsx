@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
@@ -242,16 +242,6 @@ const Detail: React.FC = () => {
     };
 
     const handleAddToCart = async () => {
-        if (!selectedProduct) {
-            Swal.fire({
-                title: 'Bạn chưa chọn màu hoặc size!',
-                icon: 'warning',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-            });
-            return;
-        }
-
         if (isLoggedIn && selectedProduct) {
             try {
                 const data = {
@@ -271,8 +261,11 @@ const Detail: React.FC = () => {
                     Swal.fire({
                         title: 'Đã thêm sản phẩm vào giỏ hàng!',
                         icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
                 }
             } catch (error) {
@@ -281,8 +274,11 @@ const Detail: React.FC = () => {
                 Swal.fire({
                     title: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
             }
         } else {
@@ -302,16 +298,6 @@ const Detail: React.FC = () => {
     };
 
     const handleAddToWishlist = async () => {
-        if (!selectedProduct) {
-            Swal.fire({
-                title: 'Bạn chưa chọn màu hoặc size!',
-                icon: 'warning',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-            });
-            return;
-        }
-
         if (isLoggedIn && selectedProduct) {
             if (!selectedProduct.isInWishlist) {
                 try {
@@ -329,12 +315,17 @@ const Detail: React.FC = () => {
                         Swal.fire({
                             title: 'Đã thêm sản phẩm vào Wishlist!',
                             icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#3085d6',
+                            toast: true,
+                            position: 'top-end',
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                            timer: 1000,
                         });
+
                         const updatedProducts = products.map((product) =>
                             product.id === selectedProduct.id ? { ...product, isInWishlist: true } : product,
                         );
+
                         setProducts(updatedProducts);
                     }
                 } catch (error) {
@@ -343,8 +334,11 @@ const Detail: React.FC = () => {
                     Swal.fire({
                         title: 'Đã xảy ra lỗi khi thêm sản phẩm vào Wishlist!',
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 3000,
                     });
                 }
             } else {
@@ -362,8 +356,11 @@ const Detail: React.FC = () => {
                         Swal.fire({
                             title: 'Đã xoá sản phẩm khỏi Wishlist!',
                             icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#3085d6',
+                            toast: true,
+                            position: 'top-end',
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                            timer: 1000,
                         });
 
                         const updatedProducts = products.map((product) =>
@@ -377,8 +374,11 @@ const Detail: React.FC = () => {
                     Swal.fire({
                         title: 'Đã xảy ra lỗi khi xoá sản phẩm khỏi Wishlist!',
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#3085d6',
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        timer: 3000,
                     });
                 }
             }
