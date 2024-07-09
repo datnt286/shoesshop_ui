@@ -18,6 +18,7 @@ import InvoicePage from './../pages/InvoicePage';
 import ForgotPasswordPage from './../pages/ForgotPasswordPage';
 import ContactPage from './../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
+import PaymentReturn from './../components/Checkout/PaymentReturn';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -42,6 +43,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/thanh-toan" element={<CheckoutPage />} />
                 <Route path="/hoa-don" element={<InvoicePage />} />
+                <Route path="/payment-return" element={<PaymentReturn />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

@@ -454,24 +454,26 @@ const Checkout: React.FC = () => {
 
         fetchCartDetails();
 
+        const data = {
+            paymentMethod: selectedPaymentMethod,
+            total: total,
+            note: note,
+            cartDetails: cartDetails.map((cartDetail) => ({
+                productId: cartDetail.productId,
+                price: cartDetail.price,
+                quantity: cartDetail.quantity,
+                amount: cartDetail.amount,
+            })),
+        };
+
+        localStorage.setItem('InvoiceData', JSON.stringify(data));
+
         if (selectedPaymentMethod === 'VNPay') {
             handleVnPayPayment();
         } else if (selectedPaymentMethod === 'Momo') {
             handleMoMoPayment();
         } else {
             try {
-                const data = {
-                    paymentMethod: selectedPaymentMethod,
-                    total: total,
-                    note: note,
-                    cartDetails: cartDetails.map((cartDetail) => ({
-                        productId: cartDetail.productId,
-                        price: cartDetail.price,
-                        quantity: cartDetail.quantity,
-                        amount: cartDetail.amount,
-                    })),
-                };
-
                 const response = await AxiosInstance.post('/Invoices', data, {
                     headers: {
                         Authorization: `Bearer ${token}`,
