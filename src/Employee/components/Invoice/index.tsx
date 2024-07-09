@@ -153,7 +153,7 @@ const Invoice: React.FC = () => {
                         position: 'top-end',
                         timerProgressBar: true,
                         showConfirmButton: false,
-                        timer: 3000,
+                        timer: 1000,
                     });
 
                     fetchInvoices();
@@ -199,7 +199,7 @@ const Invoice: React.FC = () => {
                         position: 'top-end',
                         timerProgressBar: true,
                         showConfirmButton: false,
-                        timer: 3000,
+                        timer: 1000,
                     });
 
                     fetchInvoices();

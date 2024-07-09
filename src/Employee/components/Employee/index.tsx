@@ -574,7 +574,7 @@ const Employee: React.FC = () => {
                         position: 'top-end',
                         timerProgressBar: true,
                         showConfirmButton: false,
-                        timer: 3000,
+                        timer: 1000,
                     });
                 }
             } else {
@@ -588,7 +588,7 @@ const Employee: React.FC = () => {
                         position: 'top-end',
                         timerProgressBar: true,
                         showConfirmButton: false,
-                        timer: 3000,
+                        timer: 1000,
                     });
                 }
             }
