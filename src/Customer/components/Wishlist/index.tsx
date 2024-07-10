@@ -115,7 +115,7 @@ const Wishlist: React.FC = () => {
                         </div>
                     </div>
                 ) : (
-                    <h1 className="mb-4">Bạn chưa có sản phẩm nào trong Wishlist!</h1>
+                    <h1 className="mb-4">Wishlist trống.</h1>
                 )}
             </div>
         </div>

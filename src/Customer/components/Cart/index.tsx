@@ -238,7 +238,7 @@ const Cart: React.FC = () => {
                         </div>
                     </>
                 ) : (
-                    <h1 className="mb-4">Bạn chưa có sản phẩm nào trong giỏ hàng!</h1>
+                    <h1 className="mb-4">Giỏ hàng trống.</h1>
                 )}
             </div>
         </div>
