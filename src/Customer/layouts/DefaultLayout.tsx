@@ -9,9 +9,11 @@ import '../resources/css/bootstrap.min.css';
 import '../resources/css/style.css';
 import '../resources/css/main.css';
 
+import '../resources/js/jquery.min.js';
 import '../resources/lib/easing/easing.min.js';
 import '../resources/lib/waypoints/waypoints.min.js';
 import '../resources/lib/lightbox/js/lightbox.min.js';
+import '../resources/js/bootstrap.min.js';
 import '../resources/js/main.js';
 
 interface DefaultLayoutProps {

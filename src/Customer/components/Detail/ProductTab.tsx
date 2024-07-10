@@ -271,7 +271,7 @@ const ProductTab: React.FC<ProductTabProps> = ({ token, user, model }) => {
 
         if (confirmed.isConfirmed) {
             try {
-                const response = await AxiosInstance.put(`/Comments/SoftDelete/${id}`, {
+                const response = await AxiosInstance.put(`/Comments/UpdateStatus/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

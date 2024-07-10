@@ -5,3 +5,5 @@ src/Employee/resources/dist/js/demo.js
 src/Customer/resources/lib/easing/easing.min.js
 src/Customer/resources/lib/lightbox/js/lightbox.min.js
 src/Customer/resources/lib/waypoints/waypoints.min.js
+src/Customer/resources/js/bootstrap.min.js
+src/Customer/resources/js/jquery.min.js
