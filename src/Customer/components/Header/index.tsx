@@ -57,6 +57,16 @@ const Header: React.FC = () => {
     };
 
     useEffect(() => {
+        setTimeout(() => {
+            const spinnerElement = document.getElementById('spinner');
+
+            if (spinnerElement) {
+                spinnerElement.classList.remove('show');
+            }
+        }, 1000);
+    }, []);
+
+    useEffect(() => {
         const token = localStorage.getItem('customerToken');
 
         if (token) {
@@ -120,6 +130,13 @@ const Header: React.FC = () => {
 
     return (
         <>
+            <div
+                id="spinner"
+                className="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50 d-flex align-items-center justify-content-center"
+            >
+                <div className="spinner-grow text-primary" role="status"></div>
+            </div>
+
             <div className="container-fluid fixed-top">
                 <div className="container topbar bg-primary d-none d-lg-block">
                     <div className="d-flex justify-content-between">
@@ -150,6 +167,7 @@ const Header: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className="container px-0">
                     <nav className="navbar navbar-light bg-white navbar-expand-xl">
                         <Link to="/" className="navbar-brand d-flex">

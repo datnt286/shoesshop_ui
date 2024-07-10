@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import Header from './../components/Header';
 import Footer from './../components/Footer';
 
@@ -14,41 +14,21 @@ import '../resources/lib/easing/easing.min.js';
 import '../resources/lib/waypoints/waypoints.min.js';
 import '../resources/lib/lightbox/js/lightbox.min.js';
 import '../resources/js/bootstrap.min.js';
-import '../resources/js/main.js';
 
 interface DefaultLayoutProps {
     children: ReactNode;
 }
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
-    const [loading, setLoading] = useState(true);
-
     useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, []);
+        window.scrollTo(0, 0);
+    }, [children]);
 
     return (
         <>
-            {loading ? (
-                <div className="spinner-container">
-                    <div className="spinner">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                </div>
-            ) : (
-                <>
-                    <Header />
-                    <main>{children}</main>
-                    <Footer />
-                </>
-            )}
+            <Header />
+            <main>{children}</main>
+            <Footer />
         </>
     );
 };
