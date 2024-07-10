@@ -130,6 +130,8 @@ const LoginPage: React.FC = () => {
 
                     if (apiError === 'Invalid username or password.') {
                         setErrorMessage('Sai tên đăng nhập hoặc mật khẩu.');
+                    } else if (apiError === 'Account is not active.') {
+                        setErrorMessage('Tài khoản không hoạt động.');
                     } else if (apiError === 'User is not an employee.') {
                         setErrorMessage('Tài khoản không có quyền truy cập.');
                     }
