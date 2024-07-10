@@ -404,19 +404,25 @@ const Shop: React.FC<ShopProps> = ({ keyword, productTypeId, heading }) => {
                             </div>
                             <div className="col-lg-9">
                                 <div className="row g-4 justify-content-center">
-                                    {models?.map((model) => (
-                                        <div key={model.id} className="col-md-6 col-lg-6 col-xl-4">
-                                            <ProductCard
-                                                key={model.id}
-                                                model={model}
-                                                token={token || ''}
-                                                onWishlistChange={handleWishlistChange}
-                                            />
-                                        </div>
-                                    ))}
-                                    <div className="col-12">
-                                        <Pagination totalPages={totalPages} onPageChange={handlePageChange} />
-                                    </div>
+                                    {models.length > 0 ? (
+                                        <>
+                                            {models.map((model) => (
+                                                <div key={model.id} className="col-md-6 col-lg-6 col-xl-4">
+                                                    <ProductCard
+                                                        key={model.id}
+                                                        model={model}
+                                                        token={token || ''}
+                                                        onWishlistChange={handleWishlistChange}
+                                                    />
+                                                </div>
+                                            ))}
+                                            <div className="col-12">
+                                                <Pagination totalPages={totalPages} onPageChange={handlePageChange} />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <h3 className="text-center mt-4">Danh sách sản phẩm trống.</h3>
+                                    )}
                                 </div>
                             </div>
                         </div>
