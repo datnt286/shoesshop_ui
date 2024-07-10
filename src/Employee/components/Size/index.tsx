@@ -102,16 +102,7 @@ const Size: React.FC = () => {
             if (!value) {
                 setErrors((prevErrors) => ({ ...prevErrors, name: 'Tên size không được để trống.' }));
             } else {
-                const numberRegex = /^(3[0-9]|4[0-9]|50)$/;
-
-                if (!numberRegex.test(value)) {
-                    setErrors((prevErrors) => ({
-                        ...prevErrors,
-                        name: 'Tên size chỉ được chứa số từ 30 tới 50.',
-                    }));
-                } else {
-                    setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
-                }
+                setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
             }
         }
 
