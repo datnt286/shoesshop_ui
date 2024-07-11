@@ -1,4 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import Navbar from './../components/Navbar/index';
 import Sidebar from './../components/Sidebar/index';
 import Footer from './../components/Footer/index';
@@ -13,11 +15,40 @@ import '../resources/plugins/jquery-ui/jquery-ui.min.js';
 import '../resources/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import '../resources/dist/js/adminlte.js';
 
+interface User {
+    exp?: number;
+}
+
 interface DefaultLayoutProps {
     children: ReactNode;
 }
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('employeeToken');
+
+        if (token) {
+            try {
+                const decodedToken: User = jwtDecode<User>(token);
+                const currentTime = Date.now() / 1000;
+
+                if (decodedToken.exp && decodedToken.exp < currentTime) {
+                    console.log('Token đã hết hạn: ', token);
+                    localStorage.removeItem('employeeToken');
+                    navigate('/admin/dang-nhap');
+                }
+            } catch (error) {
+                console.error('Token không hợp lệ: ', token);
+                localStorage.removeItem('employeeToken');
+                navigate('/admin/dang-nhap');
+            }
+        } else {
+            navigate('/admin/dang-nhap');
+        }
+    }, [navigate]);
+
     useEffect(() => {
         const preloadDuration = 300;
         const preloader = document.querySelector('.preloader');
