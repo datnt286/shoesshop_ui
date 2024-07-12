@@ -37,7 +37,6 @@ const InvoiceDetailRow: React.FC<InvoiceDetailRowProps> = ({ invoiceDetail, inde
             <td>{invoiceDetail.price.toLocaleString() + ' ₫'}</td>
             <td>{invoiceDetail.quantity}</td>
             <td>{invoiceDetail.amount.toLocaleString() + ' ₫'}</td>
-            <td></td>
         </tr>
     );
 };

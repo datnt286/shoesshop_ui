@@ -112,7 +112,7 @@ const Footer: React.FC = () => {
                                 <h4 className="text-light mb-3">Liên Hệ</h4>
                                 <p>Địa chỉ: 123 TP. HCM</p>
                                 <p>Email: doube.d.shop@gmail.com</p>
-                                <p>Điện thoại: +0123 4567 8910</p>
+                                <p>Điện thoại: +0123 456 789</p>
                                 <p>Phương thức thanh toán</p>
                                 <img src={PaymentImage} className="img-fluid" alt="Hình ảnh" />
                             </div>

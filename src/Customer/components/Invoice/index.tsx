@@ -284,7 +284,7 @@ const Invoice: React.FC = () => {
                                                 <th>Giá bán</th>
                                                 <th>Số lượng</th>
                                                 <th>Thành tiền</th>
-                                                <th></th>
+                                                {selectedInvoice.status === 4 && <th></th>}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -314,18 +314,20 @@ const Invoice: React.FC = () => {
                                                         <td>{invoiceDetail.price.toLocaleString() + ' ₫'}</td>
                                                         <td>{invoiceDetail.quantity}</td>
                                                         <td>{invoiceDetail.amount.toLocaleString() + ' ₫'}</td>
-                                                        <td>
-                                                            <Link to={`/san-pham/${invoiceDetail.modelId}`}>
-                                                                <button className="btn border border-secondary rounded-pill px-3 text-primary">
-                                                                    Đánh giá
-                                                                </button>
-                                                            </Link>
-                                                        </td>
+                                                        {selectedInvoice.status === 4 && (
+                                                            <td>
+                                                                <Link to={`/san-pham/${invoiceDetail.modelId}`}>
+                                                                    <button className="btn border border-secondary rounded-pill px-3 text-primary">
+                                                                        Đánh giá
+                                                                    </button>
+                                                                </Link>
+                                                            </td>
+                                                        )}
                                                     </tr>
                                                 );
                                             })}
                                             <tr>
-                                                <td colSpan={6} className="text-end">
+                                                <td colSpan={selectedInvoice.status === 4 ? 6 : 5} className="text-end">
                                                     Tổng hoá đơn:
                                                 </td>
                                                 <td>{selectedInvoice.total.toLocaleString() + ' ₫'}</td>

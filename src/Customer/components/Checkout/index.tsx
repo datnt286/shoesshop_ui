@@ -642,7 +642,7 @@ const Checkout: React.FC = () => {
                             </div>
                             <div className="form-item">
                                 <label htmlFor="address" className="form-label my-3">
-                                    Địa chỉ<sup>*</sup>
+                                    Địa chỉ
                                 </label>
                                 <textarea
                                     name="address"

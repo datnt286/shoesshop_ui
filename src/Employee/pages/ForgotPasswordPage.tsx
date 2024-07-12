@@ -116,7 +116,7 @@ const ForgotPasswordPage: React.FC = () => {
                                             className="form-control"
                                             value={email}
                                             onChange={handleInputChange}
-                                            placeholder="Nhập email"
+                                            placeholder="Nhập email của bạn"
                                         />
                                     </div>
                                     {errors.email && <div className="text-danger mt-1 ml-1">{errors.email}</div>}
@@ -130,12 +130,12 @@ const ForgotPasswordPage: React.FC = () => {
                                     <div className="col-7">
                                         <p className="mt-2">
                                             Trở lại trang
-                                            <Link to="/dang-nhap"> Đăng nhập</Link>
+                                            <Link to="/admin/dang-nhap"> Đăng nhập</Link>
                                         </p>
                                     </div>
                                     <div className="col-5 text-right">
                                         <button type="submit" className="btn btn-blue">
-                                            Gửi email
+                                            Gửi Email
                                         </button>
                                     </div>
                                 </div>

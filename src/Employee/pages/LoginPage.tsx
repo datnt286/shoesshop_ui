@@ -204,14 +204,17 @@ const LoginPage: React.FC = () => {
                                 )}
                                 <div className="row">
                                     <div className="col-6">
-                                        <div className="icheck-primary">
+                                        <div className="custom-control custom-checkbox">
                                             <input
                                                 type="checkbox"
                                                 id="show-password"
-                                                className="mr-1"
+                                                className="custom-control-input"
                                                 onChange={() => setShowPassword(!showPassword)}
                                             />
-                                            <label htmlFor="show-password"> Hiện mật khẩu</label>
+                                            <label htmlFor="show-password" className="custom-control-label">
+                                                {' '}
+                                                Hiện mật khẩu
+                                            </label>
                                         </div>
                                     </div>
                                     <div className="col-6 text-right">

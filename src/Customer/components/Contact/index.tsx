@@ -63,7 +63,7 @@ const Contact: React.FC = () => {
                                 <i className="fa fa-phone-alt fa-2x text-primary me-4"></i>
                                 <div>
                                     <h4>Điện thoại</h4>
-                                    <p className="mb-2">(+012) 3456 7890</p>
+                                    <p className="mb-2">(+084) 0123 456 789</p>
                                 </div>
                             </div>
                         </div>

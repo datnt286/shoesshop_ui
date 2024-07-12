@@ -459,9 +459,7 @@ const Account: React.FC = () => {
                                     </div>
                                     <div className="col-md-12 col-lg-8 col-xl-8">
                                         <div className="form-item">
-                                            <label className="form-label mb-3">
-                                                Tên đăng nhập<sup>*</sup>
-                                            </label>
+                                            <label className="form-label mb-3">Tên đăng nhập</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -583,7 +581,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="form-item">
                                             <label htmlFor="address" className="form-label my-3">
-                                                Địa chỉ<sup>*</sup>
+                                                Địa chỉ
                                             </label>
                                             <textarea
                                                 name="address"

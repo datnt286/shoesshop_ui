@@ -633,7 +633,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="name" className="col-md-3 mt-2">
-                                                Họ tên:
+                                                Họ tên:<sup>*</sup>
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -651,7 +651,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="phone-number" className="col-md-3 mt-2">
-                                                Điện thoại:
+                                                Điện thoại:<sup>*</sup>
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -669,7 +669,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="email" className="col-md-3 mt-2">
-                                                Email:
+                                                Email:<sup>*</sup>
                                             </label>
                                             <div className="col-md-6">
                                                 <input
