@@ -140,9 +140,17 @@ const Invoice: React.FC = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await AxiosInstance.put(`/Invoices/${invoiceId}/status`, {
-                    status: 5,
-                });
+                const response = await AxiosInstance.put(
+                    `/Invoices/${invoiceId}/status`,
+                    {
+                        status: 5,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
 
                 if (response.status === 200) {
                     Swal.fire({

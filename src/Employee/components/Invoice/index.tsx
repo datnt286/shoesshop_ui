@@ -121,13 +121,6 @@ const Invoice: React.FC = () => {
 
     const handleCloseModal = () => setShowModal(false);
 
-    const handleDetailClick = (invoice: Invoice) => {
-        setSelectedInvoice(invoice);
-        setShowDetailModal(true);
-    };
-
-    const handleCloseDetailModal = () => setShowDetailModal(false);
-
     const handleStatusChange = async () => {
         if (selectedInvoice) {
             const newStatus = (selectedInvoice.status += 1);
@@ -187,9 +180,17 @@ const Invoice: React.FC = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await AxiosInstance.put(`/Invoices/${invoiceId}/status`, {
-                    status: 5,
-                });
+                const response = await AxiosInstance.put(
+                    `/Invoices/${invoiceId}/status`,
+                    {
+                        status: 5,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
 
                 if (response.status === 200) {
                     Swal.fire({
@@ -268,7 +269,6 @@ const Invoice: React.FC = () => {
                                             index={index}
                                             invoice={invoice}
                                             userRole={userRole || ''}
-                                            onDetail={() => handleDetailClick(invoice)}
                                             onAction={() => handleActionClick(invoice)}
                                             onCancel={() => handleCancelInvoice(invoice.id)}
                                         />
@@ -388,93 +388,6 @@ const Invoice: React.FC = () => {
                                 {getActionButtonText(selectedInvoice.status)}
                             </Button>
                         )}
-                </Modal.Footer>
-            </Modal>
-
-            <Modal size="lg" show={showDetailModal} onHide={handleCloseDetailModal}>
-                <Modal.Header>
-                    <Modal.Title>Chi tiết hoá đơn</Modal.Title>
-                    <Button variant="light" className="close" aria-label="Close" onClick={handleCloseDetailModal}>
-                        <span>&times;</span>
-                    </Button>
-                </Modal.Header>
-                <Modal.Body>
-                    {selectedInvoice && (
-                        <div className="row">
-                            <div className="col-xl-6">
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Họ tên: </span>
-                                    <span className="text-lg">{selectedInvoice.customerName}</span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Điện thoại: </span>
-                                    <span className="text-lg">{selectedInvoice.phoneNumber}</span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Địa chỉ: </span>
-                                    <span className="text-lg">{selectedInvoice.address}</span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Ghi chú: </span>
-                                    <span className="text-lg">{selectedInvoice.note}</span>
-                                </div>
-                            </div>
-                            <div className="col-xl-6">
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Phương thức thanh toán: </span>
-                                    <span className="text-lg">{selectedInvoice.paymentMethod}</span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Tổng tiền: </span>
-                                    <span className="text-lg">{selectedInvoice.total.toLocaleString() + ' ₫'}</span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Phí vận chuyển: </span>
-                                    <span className="text-lg">
-                                        {selectedInvoice.shippingFee.toLocaleString() + ' ₫'}
-                                    </span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Tổng thanh toán: </span>
-                                    <span className="text-lg">
-                                        {selectedInvoice.totalPayment.toLocaleString() + ' ₫'}
-                                    </span>
-                                </div>
-                                <div className="form-group">
-                                    <span className="text-lg font-weight-bold">Trạng thái: </span>
-                                    <span className="text-lg">{getStatusText(selectedInvoice.status)}</span>
-                                </div>
-                            </div>
-                            <table className="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Hình ảnh</th>
-                                        <th>Tên</th>
-                                        <th>Giá bán</th>
-                                        <th>Số lượng</th>
-                                        <th>Thành tiền</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {selectedInvoice.invoiceDetails.map((invoiceDetail, index) => {
-                                        return (
-                                            <InvoiceDetailRow
-                                                key={invoiceDetail.id}
-                                                index={index}
-                                                invoiceDetail={invoiceDetail}
-                                            />
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="light" onClick={handleCloseDetailModal}>
-                        <i className="fas fa-times-circle"></i> Đóng
-                    </Button>
                 </Modal.Footer>
             </Modal>
         </>

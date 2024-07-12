@@ -26,10 +26,9 @@ interface InvoiceRowProps {
     userRole: string;
     onAction: () => void;
     onCancel: () => void;
-    onDetail: () => void;
 }
 
-const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAction, onCancel, onDetail }) => {
+const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAction, onCancel }) => {
     const isActionDisabled = invoice.status === InvoiceStatus.Received || invoice.status === InvoiceStatus.Cancelled;
 
     const isCancelDisabled =
@@ -42,7 +41,7 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAct
     return (
         <tr>
             <td>{index + 1}</td>
-            <td className="cursor-pointer underline-on-hover" onClick={onDetail}>
+            <td className="cursor-pointer underline-on-hover" onClick={onAction}>
                 {invoice.id}
             </td>
             <td>{invoice.customerName}</td>
