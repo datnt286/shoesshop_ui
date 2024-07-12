@@ -157,7 +157,7 @@ const Comment: React.FC = () => {
                                                     className="btn btn-gray btn-sm mr-2"
                                                     onClick={() => handleDetailClick(comment)}
                                                 >
-                                                    <i className="fas fa-info-circle"></i> Chi tiết
+                                                    <i className="fas fa-info-circle"></i> Xem phản hồi
                                                 </button>
                                                 <button
                                                     className={`btn ${
@@ -189,7 +189,7 @@ const Comment: React.FC = () => {
 
             <Modal size="lg" show={showModal} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title>Chi tiết bình luận</Modal.Title>
+                    <Modal.Title>Danh sách phản hồi</Modal.Title>
                     <Button variant="light" className="close" aria-label="Close" onClick={handleClose}>
                         <span>&times;</span>
                     </Button>
