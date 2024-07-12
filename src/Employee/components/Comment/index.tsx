@@ -236,7 +236,7 @@ const Comment: React.FC = () => {
                                         </tr>
                                     ))
                                 ) : (
-                                    <h3 className="m-2">Danh sách phản hồi trống</h3>
+                                    <h3 className="m-2">Danh sách phản hồi trống.</h3>
                                 )}
                             </tbody>
                         </table>
