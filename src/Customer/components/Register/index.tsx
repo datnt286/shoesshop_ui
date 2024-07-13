@@ -156,7 +156,7 @@ const Register: React.FC = () => {
 
                     apiErrors.forEach((errorMessage: string) => {
                         if (errorMessage.includes('DuplicateUserName')) {
-                            newApiErrors.userName = 'Tên tài khoản đã tồn tại.';
+                            newApiErrors.userName = 'Tên đăng nhập đã tồn tại.';
                         } else if (errorMessage.includes('Email')) {
                             newApiErrors.email = 'Email đã tồn tại.';
                         }

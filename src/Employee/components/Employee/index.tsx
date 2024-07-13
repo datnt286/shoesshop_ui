@@ -610,7 +610,7 @@ const Employee: React.FC = () => {
 
                     apiErrors.forEach((errorMessage: string) => {
                         if (errorMessage.includes('DuplicateUserName')) {
-                            newApiErrors.userName = 'Tên tài khoản đã tồn tại.';
+                            newApiErrors.userName = 'Tên đăng nhập đã tồn tại.';
                         } else if (errorMessage.includes('PhoneNumber')) {
                             newApiErrors.phoneNumber = 'Số điện thoại đã tồn tại.';
                         } else if (errorMessage.includes('Email')) {
