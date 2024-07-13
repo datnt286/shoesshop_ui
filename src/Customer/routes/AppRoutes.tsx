@@ -19,6 +19,8 @@ import ForgotPasswordPage from './../pages/ForgotPasswordPage';
 import ContactPage from './../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import PaymentReturn from './../components/Checkout/PaymentReturn';
+import MomoReturn from './../components/Checkout/MomoReturn';
+import VnpaytReturn from './../components/Checkout/VnpayReturn';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -43,7 +45,8 @@ const AppRoutes: React.FC = () => {
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/thanh-toan" element={<CheckoutPage />} />
                 <Route path="/hoa-don" element={<InvoicePage />} />
-                <Route path="/payment-return" element={<PaymentReturn />} />
+                <Route path="/momo-return" element={<MomoReturn />} />
+                <Route path="/vnpay-return" element={<VnpaytReturn />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />
