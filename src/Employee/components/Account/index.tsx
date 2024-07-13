@@ -633,7 +633,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="name" className="col-md-3 mt-2">
-                                                Họ tên:<sup>*</sup>
+                                                Họ tên:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -651,7 +651,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="phone-number" className="col-md-3 mt-2">
-                                                Điện thoại:<sup>*</sup>
+                                                Điện thoại:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -669,7 +669,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="email" className="col-md-3 mt-2">
-                                                Email:<sup>*</sup>
+                                                Email:
                                             </label>
                                             <div className="col-md-6">
                                                 <input
@@ -687,7 +687,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="city" className="col-md-3 mt-2">
-                                                Tỉnh/Thành phố<sup>*</sup>
+                                                Tỉnh/Thành phố
                                             </label>
                                             <div className="col-md-6">
                                                 <select
@@ -712,7 +712,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="district" className="col-md-3 mt-2">
-                                                Quận/Huyện<sup>*</sup>
+                                                Quận/Huyện
                                             </label>
                                             <div className="col-md-6">
                                                 <select
@@ -741,7 +741,7 @@ const Account: React.FC = () => {
                                         </div>
                                         <div className="row my-4">
                                             <label htmlFor="ward" className="col-md-3 mt-2">
-                                                Phường/Xã<sup>*</sup>
+                                                Phường/Xã
                                             </label>
                                             <div className="col-md-6">
                                                 <select
