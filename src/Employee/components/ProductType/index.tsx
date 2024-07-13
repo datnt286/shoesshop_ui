@@ -339,7 +339,7 @@ const ProductType: React.FC = () => {
                     <Modal.Body>
                         <input type="hidden" name="id" id="id" value={productTypeData.id || ''} />
                         <div className="form-group">
-                            <label htmlFor="name">Nhãn hiệu: </label>
+                            <label htmlFor="name">Loại sản phẩm: </label>
                             <input
                                 type="text"
                                 name="name"
