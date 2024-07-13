@@ -54,7 +54,7 @@ const Register: React.FC = () => {
 
         if (name === 'password') {
             if (!value) {
-                setErrors((prevErrors) => ({ ...prevErrors, email: 'Mật khẩu không được để trống.' }));
+                setErrors((prevErrors) => ({ ...prevErrors, password: 'Mật khẩu không được để trống.' }));
             } else {
                 const passwordRegex =
                     /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;

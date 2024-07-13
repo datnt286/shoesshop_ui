@@ -456,7 +456,18 @@ const Account: React.FC = () => {
                     newPassword: 'Mật khẩu mới không được để trống.',
                 }));
             } else {
-                setPasswordErrors((prevErrors) => ({ ...prevErrors, newPassword: undefined }));
+                const passwordRegex =
+                    /^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$/;
+
+                if (!passwordRegex.test(value)) {
+                    setPasswordErrors((prevErrors) => ({
+                        ...prevErrors,
+                        newPassword:
+                            'Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số hoặc ký tự đặc biệt.',
+                    }));
+                } else {
+                    setPasswordErrors((prevErrors) => ({ ...prevErrors, newPassword: undefined }));
+                }
             }
         }
 
