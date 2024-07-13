@@ -398,6 +398,11 @@ const Detail: React.FC = () => {
         }
     };
 
+    const handleBuyNow = () => {
+        handleAddToCart();
+        navigate('/thanh-toan');
+    };
+
     return (
         <>
             <HelmetInstance title={model?.name || 'Sản phẩm'} />
@@ -536,21 +541,32 @@ const Detail: React.FC = () => {
                                             ? `Có sẵn: ${selectedProduct.quantity} đôi`
                                             : 'Vui lòng chọn màu và size.'}
                                     </div>
+                                    <div>
+                                        <button
+                                            className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"
+                                            onClick={handleAddToCart}
+                                            disabled={(selectedProduct?.quantity ?? 0) < 1}
+                                        >
+                                            <i className="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
+                                        </button>
+                                        <button
+                                            className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 ${
+                                                selectedProduct?.isInWishlist ? 'text-danger' : 'text-primary'
+                                            }`}
+                                            onClick={handleAddToWishlist}
+                                            disabled={!selectedProduct}
+                                        >
+                                            <i
+                                                className={`${selectedProduct?.isInWishlist ? 'fas' : 'far'} fa-heart`}
+                                            ></i>
+                                        </button>
+                                    </div>
                                     <button
                                         className="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"
-                                        onClick={handleAddToCart}
+                                        onClick={handleBuyNow}
                                         disabled={(selectedProduct?.quantity ?? 0) < 1}
                                     >
-                                        <i className="fa fa-shopping-bag me-2"></i> Thêm vào giỏ hàng
-                                    </button>
-                                    <button
-                                        className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 ${
-                                            selectedProduct?.isInWishlist ? 'text-danger' : 'text-primary'
-                                        }`}
-                                        onClick={handleAddToWishlist}
-                                        disabled={!selectedProduct}
-                                    >
-                                        <i className={`${selectedProduct?.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>
+                                        <i className="fas fa-money-check-alt me-2"></i> Mua ngay
                                     </button>
                                 </div>
                                 <ProductTab token={token} model={model} user={user} />
