@@ -5,24 +5,14 @@ import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 
 const VnpayReturn: React.FC = () => {
-    const navigate = useNavigate();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const handleVnpayReturn = async () => {
         const searchParams = new URLSearchParams(location.search);
         const vnp_ResponseCode = searchParams.get('vnp_ResponseCode');
-        if (vnp_ResponseCode !== '00') {
-            navigate('/thanh-toan');
-            Swal.fire({
-                title: 'Đặt hàng thất bại! Vui lòng thử lại.',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                timerProgressBar: true,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-        } else {
+
+        if (vnp_ResponseCode === '00') {
             try {
                 const token = localStorage.getItem('customerToken');
                 const InvoiceDataString = localStorage.getItem('InvoiceData');
@@ -84,6 +74,18 @@ const VnpayReturn: React.FC = () => {
                     });
                 }
             }
+        } else {
+            navigate('/thanh-toan');
+
+            Swal.fire({
+                title: 'Đặt hàng thất bại! Vui lòng thử lại.',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 3000,
+            });
         }
     };
 

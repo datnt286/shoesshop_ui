@@ -5,40 +5,34 @@ import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 
 const MomoReturn: React.FC = () => {
-    const navigate = useNavigate();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const handleMomoReturn = async () => {
         const searchParams = new URLSearchParams(location.search);
         const resultCode = searchParams.get('resultCode');
-        console.log(resultCode);
-        if (resultCode !== '9000') {
-            navigate('/thanh-toan');
-            Swal.fire({
-                title: 'Đặt hàng thất bại! Vui lòng thử lại.',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                timerProgressBar: true,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-        } else {
+
+        if (resultCode === '9000') {
             try {
                 const token = localStorage.getItem('customerToken');
                 const InvoiceDataString = localStorage.getItem('InvoiceData');
+
                 if (!InvoiceDataString) {
                     throw new Error('No InvoiceData found in localStorage');
                 }
+
                 const InvoiceData = JSON.parse(InvoiceDataString);
+
                 const response = await AxiosInstance.post('/Invoices', InvoiceData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+
                 if (response.status === 200) {
                     localStorage.removeItem('InvoiceData');
                     navigate('/hoa-don');
+
                     Swal.fire({
                         title: 'Đặt hàng thành công!',
                         icon: 'success',
@@ -51,6 +45,7 @@ const MomoReturn: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Lỗi khi đặt hàng: ', error);
+
                 if (axios.isAxiosError(error)) {
                     if (error.response && error.response.status === 400) {
                         const apiError = error.response.data;
@@ -78,6 +73,18 @@ const MomoReturn: React.FC = () => {
                     });
                 }
             }
+        } else {
+            navigate('/thanh-toan');
+
+            Swal.fire({
+                title: 'Đặt hàng thất bại! Vui lòng thử lại.',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 3000,
+            });
         }
     };
 
