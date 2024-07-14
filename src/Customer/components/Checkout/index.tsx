@@ -323,7 +323,7 @@ const Checkout: React.FC = () => {
             city?: string;
             district?: string;
             ward?: string;
-        } = {};
+        } = { ...errors };
 
         if (!userData.name) {
             newErrors.name = 'Họ tên không được để trống.';

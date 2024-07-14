@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
         const newErrors: {
             userName?: string;
             password?: string;
-        } = {};
+        } = { ...errors };
 
         if (!credentials.userName) {
             newErrors.userName = 'Tên đăng nhập không được để trống.';

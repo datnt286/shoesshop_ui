@@ -81,7 +81,7 @@ const ChangePassword: React.FC = () => {
             currentPassword?: string;
             newPassword?: string;
             confirmPassword?: string;
-        } = {};
+        } = { ...errors };
 
         if (!passwordData.currentPassword) {
             newErrors.currentPassword = 'Mật khẩu cũ không được để trống.';

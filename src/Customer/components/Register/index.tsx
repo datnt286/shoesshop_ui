@@ -97,7 +97,7 @@ const Register: React.FC = () => {
             email?: string;
             password?: string;
             confirmPassword?: string;
-        } = {};
+        } = { ...errors };
 
         if (!credentials.userName) {
             newErrors.userName = 'Tên đăng nhập không được để trống.';

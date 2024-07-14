@@ -319,7 +319,7 @@ const Account: React.FC = () => {
             district?: string;
             ward?: string;
             avatar?: string;
-        } = {};
+        } = { ...errors };
 
         if (!userData.name) {
             newErrors.name = 'Họ tên không được để trống.';

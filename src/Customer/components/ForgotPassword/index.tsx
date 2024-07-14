@@ -38,7 +38,7 @@ const ForgotPassword: React.FC = () => {
 
         const newErrors: {
             email?: string;
-        } = {};
+        } = { ...errors };
 
         if (!email) {
             newErrors.email = 'Email không được để trống.';

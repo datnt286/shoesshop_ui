@@ -335,7 +335,7 @@ const Account: React.FC = () => {
             district?: string;
             ward?: string;
             avatar?: string;
-        } = {};
+        } = { ...userErrors };
 
         if (!userData.name) {
             newErrors.name = 'Họ tên không được để trống.';
@@ -495,7 +495,7 @@ const Account: React.FC = () => {
             currentPassword?: string;
             newPassword?: string;
             confirmPassword?: string;
-        } = {};
+        } = { ...passwordErrors };
 
         if (!passwordData.currentPassword) {
             newErrors.currentPassword = 'Mật khẩu cũ không được để trống.';
