@@ -165,7 +165,7 @@ const ProductType: React.FC = () => {
         const newErrors: {
             name?: string;
             parentProductType?: string;
-        } = {};
+        } = { ...errors };
 
         if (!productTypeData.name) {
             newErrors.name = 'Tên loại sản phẩm không được để trống.';

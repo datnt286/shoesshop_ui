@@ -405,7 +405,7 @@ const Customer: React.FC = () => {
             district?: string;
             ward?: string;
             avatar?: string;
-        } = {};
+        } = { ...errors };
 
         if (!customerData.name) {
             newErrors.name = 'Họ tên không được để trống.';

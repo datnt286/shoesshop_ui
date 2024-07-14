@@ -180,7 +180,7 @@ const Slider: React.FC = () => {
         const newErrors: {
             name?: string;
             image?: string;
-        } = {};
+        } = { ...errors };
 
         if (!sliderData.name) {
             newErrors.name = 'Tên slider không được để trống.';

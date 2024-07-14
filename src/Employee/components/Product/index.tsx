@@ -410,7 +410,7 @@ const Product: React.FC = () => {
             price?: string;
             quantity?: string;
             image?: string;
-        } = {};
+        } = { ...errors };
 
         if (!productData.name) {
             newErrors.name = 'Tên sản phẩm không được để trống.';

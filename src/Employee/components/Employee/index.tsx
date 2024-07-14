@@ -504,7 +504,7 @@ const Employee: React.FC = () => {
             role?: string;
             salary?: string;
             avatar?: string;
-        } = {};
+        } = { ...errors };
 
         if (!employeeData.userName) {
             newErrors.userName = 'Tên đăng nhập không được để trống.';

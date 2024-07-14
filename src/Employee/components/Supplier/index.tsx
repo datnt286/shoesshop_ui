@@ -328,7 +328,7 @@ const Supplier: React.FC = () => {
             city?: string;
             district?: string;
             ward?: string;
-        } = {};
+        } = { ...errors };
 
         if (!supplierData.name) {
             newErrors.name = 'Tên nhà cung cấp không được để trống.';

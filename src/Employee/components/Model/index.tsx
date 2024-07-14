@@ -391,7 +391,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
             importPrice?: string;
             price?: string;
             images?: string;
-        } = {};
+        } = { ...errors };
 
         if (!modelData.name) {
             newErrors.name = 'Tên mẫu sản phẩm không được để trống.';
