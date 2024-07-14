@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { NumericFormat } from 'react-number-format';
 import AxiosInstance from './../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from './../Pagination/index';
@@ -235,8 +236,17 @@ const Employee: React.FC = () => {
         setShowDeleteModal(true);
     };
 
+    const parseNumericValue = (value: string): string => {
+        return value.replace(/[^\d]/g, '');
+    };
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = event.target;
+        let processedValue = value;
+
+        if (name === 'salary') {
+            processedValue = parseNumericValue(value);
+        }
 
         if (type === 'checkbox') {
             const checkboxValue = (event.currentTarget as HTMLInputElement).checked ? 1 : 0;
@@ -328,15 +338,15 @@ const Employee: React.FC = () => {
             }
 
             if (name === 'salary') {
-                if (!value) {
+                if (!processedValue) {
                     setErrors((prevErrors) => ({ ...prevErrors, salary: 'Lương không được để trống.' }));
                 } else {
                     const salaryRegex = /^(?:[1-9]\d{0,7}|0)$/;
 
-                    if (!salaryRegex.test(value)) {
+                    if (!salaryRegex.test(processedValue)) {
                         setErrors((prevErrors) => ({
                             ...prevErrors,
-                            salary: 'Lương phải là số nhỏ hơn 100.000.000.',
+                            salary: 'Lương phải là số nhỏ hơn 100.000.000',
                         }));
                     } else {
                         setErrors((prevErrors) => ({ ...prevErrors, salary: undefined }));
@@ -359,7 +369,7 @@ const Employee: React.FC = () => {
             } else {
                 setEmployeeData({
                     ...employeeData,
-                    [name]: value,
+                    [name]: processedValue,
                 });
             }
         }
@@ -986,13 +996,16 @@ const Employee: React.FC = () => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="address">Lương: </label>
-                            <input
+                            <NumericFormat
                                 type="text"
                                 name="salary"
                                 id="salary"
                                 className="form-control"
                                 value={employeeData.salary}
                                 onChange={handleInputChange}
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                suffix=" ₫"
                             />
                             {errors.salary && <div className="text-danger">{errors.salary}</div>}
                         </div>

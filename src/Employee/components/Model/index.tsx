@@ -265,7 +265,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 if (!importPriceRegex.test(processedValue)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
-                        importPrice: 'Giá nhập phải là số nhỏ hơn 100.000.000.',
+                        importPrice: 'Giá nhập phải là số nhỏ hơn 100.000.000',
                     }));
                 } else {
                     setErrors((prevErrors) => ({ ...prevErrors, importPrice: undefined }));
@@ -282,7 +282,7 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                 if (!priceRegex.test(processedValue)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
-                        price: 'Giá bán phải là số nhỏ hơn 100.000.000.',
+                        price: 'Giá bán phải là số nhỏ hơn 100.000.000',
                     }));
                 } else {
                     setErrors((prevErrors) => ({ ...prevErrors, price: undefined }));
