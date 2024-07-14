@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { NumericFormat } from 'react-number-format';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination/index';
@@ -261,12 +262,21 @@ const Product: React.FC = () => {
         setShowDeleteModal(true);
     };
 
+    const parseNumericValue = (value: string): string => {
+        return value.replace(/[^\d]/g, '');
+    };
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
+        let processedValue = value;
+
+        if (name === 'importPrice' || name === 'price') {
+            processedValue = parseNumericValue(value);
+        }
 
         let updatedProductData = {
             ...productData,
-            [name]: name === 'colorId' || name === 'sizeId' ? parseInt(value) : value,
+            [name]: name === 'colorId' || name === 'sizeId' ? parseInt(value) : processedValue,
         };
 
         if (name === 'colorId' || name === 'sizeId') {
@@ -292,12 +302,12 @@ const Product: React.FC = () => {
         }
 
         if (name === 'importPrice') {
-            if (!value) {
+            if (!processedValue) {
                 setErrors((prevErrors) => ({ ...prevErrors, importPrice: 'Giá nhập không được để trống.' }));
             } else {
                 const importPriceRegex = /^(?:[1-9]\d{0,7}|0)$/;
 
-                if (!importPriceRegex.test(value)) {
+                if (!importPriceRegex.test(processedValue)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
                         importPrice: 'Giá nhập phải là số nhỏ hơn 100.000.000.',
@@ -309,12 +319,12 @@ const Product: React.FC = () => {
         }
 
         if (name === 'price') {
-            if (!value) {
+            if (!processedValue) {
                 setErrors((prevErrors) => ({ ...prevErrors, price: 'Giá bán không được để trống.' }));
             } else {
                 const priceRegex = /^(?:[1-9]\d{0,7}|0)$/;
 
-                if (!priceRegex.test(value)) {
+                if (!priceRegex.test(processedValue)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
                         price: 'Giá bán phải là số nhỏ hơn 100.000.000.',
@@ -767,25 +777,31 @@ const Product: React.FC = () => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="import-price">Giá nhập: </label>
-                            <input
+                            <NumericFormat
                                 type="text"
                                 name="importPrice"
                                 id="import-price"
                                 className="form-control"
                                 value={productData.importPrice || ''}
                                 onChange={handleInputChange}
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                suffix=" ₫"
                             />
                             {errors.importPrice && <div className="text-danger">{errors.importPrice}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="import-price">Giá bán: </label>
-                            <input
+                            <NumericFormat
                                 type="text"
                                 name="price"
                                 id="price"
                                 className="form-control"
                                 value={productData.price || ''}
                                 onChange={handleInputChange}
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                suffix=" ₫"
                             />
                             {errors.price && <div className="text-danger">{errors.price}</div>}
                         </div>

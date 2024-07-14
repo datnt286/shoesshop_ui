@@ -416,9 +416,9 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const handleVnPayPayment = async () => {
+    const handleVnpayPayment = async () => {
         try {
-            const response = await AxiosInstance.post('/Payment/VNPay', { requiredAmount: total + 15000 });
+            const response = await AxiosInstance.post('/Payment/Vnpay', { requiredAmount: total + 15000 });
 
             if (response.status === 200) {
                 window.location.href = response.data.data;
@@ -430,7 +430,7 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const handleMoMoPayment = async () => {
+    const handleMomoPayment = async () => {
         try {
             const response = await AxiosInstance.post('/Payment/Momo', { requiredAmount: total + 15000 });
 
@@ -468,9 +468,9 @@ const Checkout: React.FC = () => {
         localStorage.setItem('InvoiceData', JSON.stringify(data));
 
         if (selectedPaymentMethod === 'VNPay') {
-            handleVnPayPayment();
+            handleVnpayPayment();
         } else if (selectedPaymentMethod === 'Momo') {
-            handleMoMoPayment();
+            handleMomoPayment();
         } else {
             try {
                 const response = await AxiosInstance.post('/Invoices', data, {

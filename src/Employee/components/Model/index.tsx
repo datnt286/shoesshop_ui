@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { NumericFormat } from 'react-number-format';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
 import Pagination from '../Pagination/index';
@@ -235,8 +236,17 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         setShowDeleteModal(true);
     };
 
+    const parseNumericValue = (value: string): string => {
+        return value.replace(/[^\d]/g, '');
+    };
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
+        let processedValue = value;
+
+        if (name === 'importPrice' || name === 'price') {
+            processedValue = parseNumericValue(value);
+        }
 
         if (name === 'name') {
             if (!value) {
@@ -247,12 +257,12 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         }
 
         if (name === 'importPrice') {
-            if (!value) {
+            if (!processedValue) {
                 setErrors((prevErrors) => ({ ...prevErrors, importPrice: 'Giá nhập không được để trống.' }));
             } else {
                 const importPriceRegex = /^(?:[1-9]\d{0,7}|0)$/;
 
-                if (!importPriceRegex.test(value)) {
+                if (!importPriceRegex.test(processedValue)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
                         importPrice: 'Giá nhập phải là số nhỏ hơn 100.000.000.',
@@ -264,12 +274,12 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
         }
 
         if (name === 'price') {
-            if (!value) {
+            if (!processedValue) {
                 setErrors((prevErrors) => ({ ...prevErrors, price: 'Giá bán không được để trống.' }));
             } else {
                 const priceRegex = /^(?:[1-9]\d{0,7}|0)$/;
 
-                if (!priceRegex.test(value)) {
+                if (!priceRegex.test(processedValue)) {
                     setErrors((prevErrors) => ({
                         ...prevErrors,
                         price: 'Giá bán phải là số nhỏ hơn 100.000.000.',
@@ -294,7 +304,10 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
 
         setModelData({
             ...modelData,
-            [name]: name === 'productTypeId' || name === 'brandId' || name === 'supplierId' ? parseInt(value) : value,
+            [name]:
+                name === 'productTypeId' || name === 'brandId' || name === 'supplierId'
+                    ? parseInt(value)
+                    : processedValue,
         });
     };
 
@@ -778,25 +791,31 @@ const Model: React.FC<ModelProps> = ({ productTypeId, title }) => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="import-price">Giá nhập: </label>
-                            <input
+                            <NumericFormat
                                 type="text"
                                 name="importPrice"
                                 id="import-price"
                                 className="form-control"
                                 value={modelData.importPrice || ''}
                                 onChange={handleInputChange}
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                suffix=" ₫"
                             />
                             {errors.importPrice && <div className="text-danger">{errors.importPrice}</div>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="price">Giá bán: </label>
-                            <input
+                            <NumericFormat
                                 type="text"
                                 name="price"
                                 id="price"
                                 className="form-control"
                                 value={modelData.price || ''}
                                 onChange={handleInputChange}
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                suffix=" ₫"
                             />
                             {errors.price && <div className="text-danger">{errors.price}</div>}
                         </div>
