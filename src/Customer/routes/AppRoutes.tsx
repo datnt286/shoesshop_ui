@@ -20,7 +20,7 @@ import ContactPage from './../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import VnpayReturn from './../components/Checkout/VnpayReturn';
 import MomoReturn from './../components/Checkout/MomoReturn';
-
+import ResetPasswordPage from './../pages/ResetPasswordPage';
 const AppRoutes: React.FC = () => {
     return (
         <Routes>
@@ -31,7 +31,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/san-pham/:modelId" element={<DetailPage />} />
             <Route path="/dang-ky" element={<RegisterPage />} />
             <Route path="/lien-he" element={<ContactPage />} />
-
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route element={<AuthenticatedWrapper />}>
                 <Route path="/dang-nhap" element={<LoginPage />} />
                 <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />

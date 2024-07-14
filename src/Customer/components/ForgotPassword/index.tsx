@@ -51,7 +51,7 @@ const ForgotPassword: React.FC = () => {
         }
 
         try {
-            const response = await AxiosInstance.post('');
+            const response = await AxiosInstance.post('/Users/ForgotPassword', { email });
 
             if (response.status === 200) {
                 Swal.fire({
@@ -61,7 +61,7 @@ const ForgotPassword: React.FC = () => {
                     position: 'top-end',
                     timerProgressBar: true,
                     showConfirmButton: false,
-                    timer: 1000,
+                    timer: 3000,
                 });
             }
         } catch (error) {
