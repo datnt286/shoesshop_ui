@@ -19,9 +19,6 @@ const ResetPassword: React.FC = () => {
     const token = queryParams.get('token');
     const email = queryParams.get('email');
 
-    console.log('Token:', token);
-    console.log('Email:', email);
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
@@ -55,40 +52,71 @@ const ResetPassword: React.FC = () => {
             }
         }
 
-        if (name === 'password') setPassword(value);
-        if (name === 'confirmPassword') setConfirmPassword(value);
+        if (name === 'password') {
+            setPassword(value);
+        }
+
+        if (name === 'confirmPassword') {
+            setConfirmPassword(value);
+        }
+
         setErrorMessage('');
     };
 
-    const handleResetPassword = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleResetPassword = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        const newErrors: {
+            password?: string;
+            confirmPassword?: string;
+        } = { ...errors };
+
+        if (!password) {
+            newErrors.password = 'Mật khẩu không được để trống.';
+        }
+
+        if (!confirmPassword) {
+            newErrors.confirmPassword = 'Xác nhận mật khẩu không được để trống.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
 
         if (!token || !email) {
-            setErrorMessage('Invalid token or email');
+            setErrorMessage('Sai email hoặc token.');
             return;
         }
 
         if (password !== confirmPassword) {
-            setErrorMessage('Passwords do not match');
+            setErrorMessage('Mật khẩu và xác nhận mật khẩu không khớp.');
             return;
         }
 
         try {
-            const response = await AxiosInstance.post('/Users/ResetPassword', {
+            const data = {
                 email: decodeURIComponent(email),
                 token: decodeURIComponent(token),
                 password: password,
-            });
-            Swal.fire({
-                title: 'Đổi mật khẩu thành công',
-                icon: 'success',
-                toast: true,
-                position: 'top-end',
-                timerProgressBar: true,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-            navigate('/dang-nhap');
+            };
+
+            const response = await AxiosInstance.post('/Users/ResetPassword', data);
+
+            if (response.status === 200) {
+                navigate('/dang-nhap');
+
+                Swal.fire({
+                    title: 'Đặt lại mật khẩu thành công!',
+                    icon: 'success',
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+            }
         } catch (error) {
             Swal.fire({
                 title: 'Đặt lại mật khẩu thất bại! Vui lòng thử lại.',

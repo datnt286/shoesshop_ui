@@ -122,7 +122,7 @@ const Register: React.FC = () => {
         }
 
         if (credentials.password !== credentials.confirmPassword) {
-            setErrorMessage('Mật khẩu và xác nhận mật khẩu không khớp'!);
+            setErrorMessage('Mật khẩu và xác nhận mật khẩu không khớp.');
             return;
         }
 

@@ -14,9 +14,9 @@ import RegisterPage from './../pages/RegisterPage';
 import LoginPage from './../pages/LoginPage';
 import AccountPage from '../pages/AccountPage';
 import ChangePasswordPage from './../pages/ChangePasswordPage';
-import InvoicePage from './../pages/InvoicePage';
 import ForgotPasswordPage from './../pages/ForgotPasswordPage';
 import ResetPasswordPage from './../pages/ResetPasswordPage';
+import InvoicePage from './../pages/InvoicePage';
 import ContactPage from './../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import VnpayReturn from './../components/Checkout/VnpayReturn';
@@ -32,10 +32,11 @@ const AppRoutes: React.FC = () => {
             <Route path="/san-pham/:modelId" element={<DetailPage />} />
             <Route path="/dang-ky" element={<RegisterPage />} />
             <Route path="/lien-he" element={<ContactPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+
             <Route element={<AuthenticatedWrapper />}>
                 <Route path="/dang-nhap" element={<LoginPage />} />
                 <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
+                <Route path="/dat-lai-mat-khau" element={<ResetPasswordPage />} />
             </Route>
 
             <Route element={<PrivateWrapper />}>
