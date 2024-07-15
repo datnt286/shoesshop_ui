@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AuthenticatedWrapper from './AuthenticatedWrapper';
 import AuthorizationWrapper from './AuthorizationWrapper';
+import AdminRedirectWrapper from './AdminRedirectWrapper';
 import PrivateWrapper from './PrivateWrapper';
 import HomePage from '../pages/HomePage';
 import LoginPage from './../pages/LoginPage';
@@ -32,6 +33,10 @@ const AppRoutes: React.FC = () => {
             </Route>
 
             <Route element={<PrivateWrapper />}>
+                <Route element={<AdminRedirectWrapper />}>
+                    <Route path="/" element={<HomePage />} />
+                </Route>
+
                 <Route path="/tai-khoan" element={<AccountPage />} />
 
                 <Route element={<AuthorizationWrapper allowedRoles={['Manager']} />}>
