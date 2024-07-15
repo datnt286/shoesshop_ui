@@ -21,6 +21,7 @@ import NotFoundPage from '../pages/NotFoundPage';
 import VnpayReturn from './../components/Checkout/VnpayReturn';
 import MomoReturn from './../components/Checkout/MomoReturn';
 import ResetPasswordPage from './../pages/ResetPasswordPage';
+
 const AppRoutes: React.FC = () => {
     return (
         <Routes>
