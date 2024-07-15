@@ -39,6 +39,7 @@ const Invoice: React.FC = () => {
         placedInvoices: [],
         approvedInvoices: [],
         shippedInvoices: [],
+        deliveredInvoices: [],
         receivedInvoices: [],
         cancelledInvoices: [],
     });
@@ -59,6 +60,7 @@ const Invoice: React.FC = () => {
                     placedInvoices: response.data.shippedInvoices,
                     approvedInvoices: response.data.approvedInvoices,
                     shippedInvoices: response.data.shippedInvoices,
+                    deliveredInvoices: response.data.deliveredInvoices,
                     receivedInvoices: response.data.receivedInvoices,
                     cancelledInvoices: response.data.cancelledInvoices,
                 });
@@ -91,7 +93,7 @@ const Invoice: React.FC = () => {
             const response = await AxiosInstance.put(
                 `/Invoices/${invoiceId}/status`,
                 {
-                    status: 4,
+                    status: 5,
                 },
                 {
                     headers: {
@@ -143,7 +145,7 @@ const Invoice: React.FC = () => {
                 const response = await AxiosInstance.put(
                     `/Invoices/${invoiceId}/status`,
                     {
-                        status: 5,
+                        status: 6,
                     },
                     {
                         headers: {
@@ -211,8 +213,13 @@ const Invoice: React.FC = () => {
                                             </a>
                                         </li>
                                         <li className="nav-item">
+                                            <a href="#delivered" className="nav-link" data-bs-toggle="tab">
+                                                Đang giao
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
                                             <a href="#received" className="nav-link" data-bs-toggle="tab">
-                                                Đã giao
+                                                Đã nhận
                                             </a>
                                         </li>
                                         <li className="nav-item">
@@ -249,6 +256,13 @@ const Invoice: React.FC = () => {
                                         <InvoiceTable
                                             tab="shipped"
                                             invoices={invoices.shippedInvoices}
+                                            onDetail={handleDetailClick}
+                                            onConfirm={handleConfirmInvoice}
+                                            onCancel={handleCancelInvoice}
+                                        />
+                                        <InvoiceTable
+                                            tab="delivered"
+                                            invoices={invoices.deliveredInvoices}
                                             onDetail={handleDetailClick}
                                             onConfirm={handleConfirmInvoice}
                                             onCancel={handleCancelInvoice}

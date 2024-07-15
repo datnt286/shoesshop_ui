@@ -29,10 +29,14 @@ interface InvoiceRowProps {
 }
 
 const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAction, onCancel }) => {
-    const isActionDisabled = invoice.status === InvoiceStatus.Received || invoice.status === InvoiceStatus.Cancelled;
+    const isActionDisabled =
+        invoice.status === InvoiceStatus.Delivered ||
+        invoice.status === InvoiceStatus.Received ||
+        invoice.status === InvoiceStatus.Cancelled;
 
     const isCancelDisabled =
         invoice.status === InvoiceStatus.Shipped ||
+        invoice.status === InvoiceStatus.Delivered ||
         invoice.status === InvoiceStatus.Received ||
         invoice.status === InvoiceStatus.Cancelled;
 

@@ -42,6 +42,8 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                 return 'bg-info';
             case InvoiceStatus.Shipped:
                 return 'bg-primary';
+            case InvoiceStatus.Delivered:
+                return 'bg-success';
             case InvoiceStatus.Received:
                 return 'bg-success';
             case InvoiceStatus.Cancelled:
@@ -95,7 +97,7 @@ const InvoiceTable: React.FC<InvoiceTableProps> = ({ tab, invoices, onDetail, on
                                     </button>
                                 </td>
                                 <td>
-                                    {invoice.status === 3 && (
+                                    {invoice.status === 4 && (
                                         <button
                                             className="btn btn-sm btn-success"
                                             style={{ whiteSpace: 'nowrap' }}

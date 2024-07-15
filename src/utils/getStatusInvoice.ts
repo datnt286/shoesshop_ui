@@ -2,6 +2,7 @@ export enum InvoiceStatus {
     Placed = 1,
     Approved,
     Shipped,
+    Delivered,
     Received,
     Cancelled,
 }
@@ -14,6 +15,8 @@ export const getStatusText = (status: InvoiceStatus): string => {
             return 'Đã duyệt';
         case InvoiceStatus.Shipped:
             return 'Đang vận chuyển';
+        case InvoiceStatus.Delivered:
+            return 'Đã giao';
         case InvoiceStatus.Received:
             return 'Đã nhận';
         case InvoiceStatus.Cancelled:
@@ -31,6 +34,8 @@ export const getActionButtonText = (status: InvoiceStatus): string => {
             return 'Vận chuyển';
         case InvoiceStatus.Shipped:
             return 'Xác nhận';
+        case InvoiceStatus.Delivered:
+            return 'Đã giao';
         case InvoiceStatus.Received:
             return 'Đã nhận';
         case InvoiceStatus.Cancelled:
@@ -50,6 +55,8 @@ export const getActionBtnClassName = (status: InvoiceStatus): string => {
             return 'btn-warning';
         case InvoiceStatus.Received:
             return 'btn-success';
+        case InvoiceStatus.Delivered:
+            return 'btn-success';
         case InvoiceStatus.Cancelled:
             return 'btn-gray';
         default:
@@ -65,6 +72,8 @@ export const getActionBtnIcon = (status: InvoiceStatus): string => {
             return 'fas fa-shipping-fast';
         case InvoiceStatus.Shipped:
             return 'fas fa-check';
+        case InvoiceStatus.Delivered:
+            return 'fas fa-check-circle';
         case InvoiceStatus.Received:
             return 'fas fa-check-circle';
         case InvoiceStatus.Cancelled:
@@ -82,6 +91,8 @@ export const getStatusBadgeClass = (status: InvoiceStatus): string => {
             return 'badge-info';
         case InvoiceStatus.Shipped:
             return 'badge-warning';
+        case InvoiceStatus.Delivered:
+            return 'badge-success';
         case InvoiceStatus.Received:
             return 'badge-success';
         case InvoiceStatus.Cancelled:

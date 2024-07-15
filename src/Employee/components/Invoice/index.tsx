@@ -183,7 +183,7 @@ const Invoice: React.FC = () => {
                 const response = await AxiosInstance.put(
                     `/Invoices/${invoiceId}/status`,
                     {
-                        status: 5,
+                        status: 6,
                     },
                     {
                         headers: {
@@ -242,8 +242,9 @@ const Invoice: React.FC = () => {
                                 </>
                             )}
                             <option value={3}>Đang vận chuyển</option>
-                            <option value={4}>Đã nhận</option>
-                            <option value={5}>Đã huỷ</option>
+                            <option value={4}>Đã giao</option>
+                            <option value={5}>Đã nhận</option>
+                            <option value={6}>Đã huỷ</option>
                         </select>
                     </div>
                 </div>
