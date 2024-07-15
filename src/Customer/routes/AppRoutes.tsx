@@ -16,11 +16,11 @@ import AccountPage from '../pages/AccountPage';
 import ChangePasswordPage from './../pages/ChangePasswordPage';
 import InvoicePage from './../pages/InvoicePage';
 import ForgotPasswordPage from './../pages/ForgotPasswordPage';
+import ResetPasswordPage from './../pages/ResetPasswordPage';
 import ContactPage from './../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import VnpayReturn from './../components/Checkout/VnpayReturn';
 import MomoReturn from './../components/Checkout/MomoReturn';
-import ResetPasswordPage from './../pages/ResetPasswordPage';
 
 const AppRoutes: React.FC = () => {
     return (
