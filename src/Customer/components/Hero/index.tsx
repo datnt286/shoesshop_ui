@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OwlCarousel from 'react-owl-carousel';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
@@ -19,6 +19,7 @@ interface Slider {
     id: number | null;
     name: string;
     image: string | null;
+    modelId: number;
 }
 
 const Hero: React.FC = () => {
@@ -105,14 +106,16 @@ const Hero: React.FC = () => {
                                         : DefaultImage;
 
                                     return (
-                                        <div key={index} className={`carousel-item active rounded`}>
-                                            <img
-                                                src={imageSrc}
-                                                className="img-fluid w-100 h-100 bg-secondary rounded"
-                                                style={{ width: '600px', height: '400px' }}
-                                                alt="Hình ảnh"
-                                            />
-                                        </div>
+                                        <Link key={index} to={`/san-pham/${slider.modelId}`}>
+                                            <div className={`carousel-item active rounded`}>
+                                                <img
+                                                    src={imageSrc}
+                                                    className="img-fluid w-100 h-100 bg-secondary rounded"
+                                                    style={{ width: '600px', height: '400px' }}
+                                                    alt="Hình ảnh"
+                                                />
+                                            </div>
+                                        </Link>
                                     );
                                 })}
                             </OwlCarousel>

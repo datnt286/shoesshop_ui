@@ -17,11 +17,18 @@ interface Slider {
     id: number | null;
     name: string;
     status: number;
+    modelId: number;
     image: File | null;
+}
+
+interface Model {
+    id: number;
+    name: string;
 }
 
 const Slider: React.FC = () => {
     const [sliders, setSliders] = useState<Slider[]>([]);
+    const [models, setModels] = useState<Model[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedSlider, setSelectedSlider] = useState<Slider | null>(null);
     const [showModal, setShowModal] = useState(false);
@@ -30,6 +37,7 @@ const Slider: React.FC = () => {
         id: null,
         name: '',
         image: null,
+        modelId: 0,
         status: 1,
     });
     const [imagePreview, setImagePreview] = useState(DefaultImage);
@@ -40,6 +48,7 @@ const Slider: React.FC = () => {
     const [errors, setErrors] = useState<{
         name?: string;
         image?: string;
+        modelId?: string;
     }>({});
 
     const fetchSliders = async (currentPage = 1, pageSize = 10) => {
@@ -70,9 +79,35 @@ const Slider: React.FC = () => {
         }
     };
 
+    const fetchModels = async () => {
+        try {
+            const response = await AxiosInstance.get('/Models');
+
+            if (response.status === 200) {
+                setModels(response.data);
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải dữ liệu: ', error);
+
+            Swal.fire({
+                title: 'Lỗi khi tải dữ liệu!',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        }
+    };
+
     useEffect(() => {
         fetchSliders();
     }, [deletedSuccessfully]);
+
+    useEffect(() => {
+        fetchModels();
+    }, []);
 
     const handlePageChange = ({ selected }: { selected: number }) => {
         const currentPage = selected + 1;
@@ -96,6 +131,7 @@ const Slider: React.FC = () => {
             ...sliderData,
             id: slider.id,
             name: slider.name,
+            modelId: slider.modelId,
             status: slider.status,
         });
         setImagePreview(imageSrc);
@@ -112,7 +148,7 @@ const Slider: React.FC = () => {
         setShowDeleteModal(true);
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = event.target;
 
         if (type === 'checkbox') {
@@ -129,6 +165,10 @@ const Slider: React.FC = () => {
                 } else {
                     setErrors((prevErrors) => ({ ...prevErrors, name: undefined }));
                 }
+            }
+
+            if (name === 'modelId' && parseInt(value) !== 0) {
+                setErrors((prevErrors) => ({ ...prevErrors, modelId: undefined }));
             }
 
             setSliderData({
@@ -180,6 +220,7 @@ const Slider: React.FC = () => {
         const newErrors: {
             name?: string;
             image?: string;
+            modelId?: string;
         } = { ...errors };
 
         if (!sliderData.name) {
@@ -188,6 +229,10 @@ const Slider: React.FC = () => {
 
         if (!sliderData.image && !isEditMode) {
             newErrors.image = 'Vui lòng chọn hình ảnh.';
+        }
+
+        if (!sliderData.modelId) {
+            newErrors.modelId = 'Vui lòng chọn mẫu sản phẩm.';
         }
 
         setErrors(newErrors);
@@ -199,6 +244,7 @@ const Slider: React.FC = () => {
         try {
             const formData = new FormData();
             formData.append('name', sliderData.name);
+            formData.append('modelId', sliderData.modelId.toString());
             formData.append('status', sliderData.status.toString());
             if (sliderData.image) {
                 formData.append('image', sliderData.image);
@@ -305,8 +351,9 @@ const Slider: React.FC = () => {
         setSliderData({
             id: null,
             name: '',
-            status: 1,
             image: null,
+            modelId: 0,
+            status: 1,
         });
         setImagePreview(DefaultImage);
         setIsEditMode(false);
@@ -337,6 +384,7 @@ const Slider: React.FC = () => {
                                 <th>#</th>
                                 <th>Hình ảnh</th>
                                 <th>Tên</th>
+                                <th>Mẫu sản phẩm</th>
                                 <th>Trạng thái</th>
                                 <th></th>
                             </tr>
@@ -347,6 +395,8 @@ const Slider: React.FC = () => {
                                     const imageSrc = slider.image
                                         ? `${config.baseURL}/images/slider/${slider.image}`
                                         : DefaultImage;
+                                    const modelName =
+                                        models.find((model) => model.id === slider.modelId)?.name || 'N/A';
 
                                     return (
                                         <tr key={index}>
@@ -360,6 +410,7 @@ const Slider: React.FC = () => {
                                                 />
                                             </td>
                                             <td>{slider.name}</td>
+                                            <td>{modelName}</td>
                                             <td>{slider.status === 1 ? 'Đã hiện' : 'Đã ẩn'}</td>
                                             <td>
                                                 <div className="project-actions text-right">
@@ -382,12 +433,12 @@ const Slider: React.FC = () => {
                                                     >
                                                         <i className="fas fa-edit"></i>
                                                     </button>
-                                                    <button
+                                                    {/* <button
                                                         className="btn btn-danger btn-sm"
                                                         onClick={() => handleDeleteClick(slider.id)}
                                                     >
                                                         <i className="fas fa-trash-alt"></i>
-                                                    </button>
+                                                    </button> */}
                                                 </div>
                                             </td>
                                         </tr>
@@ -449,6 +500,26 @@ const Slider: React.FC = () => {
                                 onChange={handleInputChange}
                             />
                             {errors.name && <div className="text-danger">{errors.name}</div>}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="model-id">Mẫu sản phẩm: </label>
+                            <select
+                                name="modelId"
+                                id="model-id"
+                                className="form-select"
+                                value={sliderData.modelId}
+                                onChange={handleInputChange}
+                            >
+                                <option value={0} disabled>
+                                    -- Chọn mẫu sản phẩm --
+                                </option>
+                                {models.map((model) => (
+                                    <option key={model.id} value={model.id}>
+                                        {model.name}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.modelId && <div className="text-danger">{errors.modelId}</div>}
                         </div>
                         <div className="custom-control custom-checkbox text-center">
                             <input
