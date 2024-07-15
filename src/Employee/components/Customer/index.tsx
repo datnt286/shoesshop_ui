@@ -159,7 +159,7 @@ const Customer: React.FC = () => {
         const avatarSrc = customer.avatar ? `${config.baseURL}/images/avatar/${customer.avatar}` : DefaultAvatar;
         setAvatarPreview(avatarSrc);
 
-        const addressParts = customer.address.split(',').map((part) => part.trim());
+        const addressParts = (customer.address || '').split(',').map((part) => part.trim());
         const wardName = addressParts[0];
         const districtName = addressParts[1];
         const cityName = addressParts[2];
