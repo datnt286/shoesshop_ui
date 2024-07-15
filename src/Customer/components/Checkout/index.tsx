@@ -57,7 +57,7 @@ const Checkout: React.FC = () => {
         address: '',
     });
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('VNPay');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('COD');
     const [total, setTotal] = useState(0);
     const [note, setNote] = useState('');
     const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
@@ -742,6 +742,23 @@ const Checkout: React.FC = () => {
                                     </table>
                                 </div>
                                 <div className="row g-4 align-items-center border-bottom py-3">
+                                    <div className="col-xl-6 col-12">
+                                        <div className="form-check text-start my-3">
+                                            <input
+                                                type="radio"
+                                                name="paymentMethod"
+                                                id="cod"
+                                                className="form-check-input"
+                                                value="COD"
+                                                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                                checked={selectedPaymentMethod === 'COD'}
+                                            />
+                                            <label htmlFor="cod" className="form-check-label text-primary">
+                                                <i className="fas fa-truck-moving" style={{ fontSize: '18px' }}></i>{' '}
+                                                Thanh Toán Khi Giao Hàng
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div className="col-xl-3 col-12">
                                         <div className="form-check text-start my-3">
                                             <input
@@ -771,23 +788,6 @@ const Checkout: React.FC = () => {
                                             />
                                             <label htmlFor="momo" className="form-check-label text-primary">
                                                 <img src={MomoImg} style={{ width: '30px' }} alt="Momo" /> Momo
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-6 col-12">
-                                        <div className="form-check text-start my-3">
-                                            <input
-                                                type="radio"
-                                                name="paymentMethod"
-                                                id="cod"
-                                                className="form-check-input"
-                                                value="COD"
-                                                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                                checked={selectedPaymentMethod === 'COD'}
-                                            />
-                                            <label htmlFor="cod" className="form-check-label text-primary">
-                                                <i className="fas fa-truck-moving" style={{ fontSize: '18px' }}></i>{' '}
-                                                Thanh Toán Khi Giao Hàng
                                             </label>
                                         </div>
                                     </div>

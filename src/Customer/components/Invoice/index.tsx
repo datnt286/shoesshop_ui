@@ -214,7 +214,7 @@ const Invoice: React.FC = () => {
                                         </li>
                                         <li className="nav-item">
                                             <a href="#delivered" className="nav-link" data-bs-toggle="tab">
-                                                Đang giao
+                                                Đã giao
                                             </a>
                                         </li>
                                         <li className="nav-item">
@@ -336,7 +336,7 @@ const Invoice: React.FC = () => {
                                                         <td>{invoiceDetail.price.toLocaleString() + ' ₫'}</td>
                                                         <td>{invoiceDetail.quantity}</td>
                                                         <td>{invoiceDetail.amount.toLocaleString() + ' ₫'}</td>
-                                                        {selectedInvoice.status === 4 && (
+                                                        {selectedInvoice.status === 5 && (
                                                             <td>
                                                                 <Link to={`/san-pham/${invoiceDetail.modelId}`}>
                                                                     <button className="btn border border-secondary rounded-pill px-3 text-primary">
