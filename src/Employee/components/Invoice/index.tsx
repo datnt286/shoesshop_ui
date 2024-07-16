@@ -349,7 +349,6 @@ const Invoice: React.FC = () => {
                                         <th>Giá bán</th>
                                         <th>Số lượng</th>
                                         <th>Thành tiền</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>

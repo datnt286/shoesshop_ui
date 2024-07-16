@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import AxiosInstance from '../../../services/AxiosInstance';
 import config from '../../../services/config';
@@ -32,6 +32,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
         model.images && model.images.length > 0
             ? `${config.baseURL}/images/model/${model.images[0].name}`
             : DefaultImage;
+
+    const handleClick = () => {
+        navigate(`/san-pham/${model.id}`);
+        window.location.reload();
+    };
 
     const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
@@ -184,46 +189,44 @@ const ProductCard: React.FC<ProductCardProps> = ({ model, token, onWishlistChang
     };
 
     return (
-        <Link to={`/san-pham/${model.id}`}>
-            <div className="rounded position-relative product-item">
-                <div className="product-img">
-                    <img
-                        src={imageSrc}
-                        className="img-fluid w-100 rounded-top"
-                        style={{ maxHeight: '260px' }}
-                        loading="lazy"
-                        alt="Ảnh sản phẩm"
-                    />
-                </div>
-                {/* <div
+        <div className="rounded position-relative product-item cursor-pointer" onClick={handleClick}>
+            <div className="product-img">
+                <img
+                    src={imageSrc}
+                    className="img-fluid w-100 rounded-top"
+                    style={{ maxHeight: '260px' }}
+                    loading="lazy"
+                    alt="Ảnh sản phẩm"
+                />
+            </div>
+            {/* <div
                     className="text-white bg-danger px-3 py-1 rounded position-absolute"
                     style={{ top: '10px', left: '10px' }}
                 >
                     -20%
                 </div> */}
-                <button
-                    className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 position-absolute ${
-                        model?.isInWishlist ? 'text-danger' : 'text-primary'
-                    }`}
-                    style={{ top: '10px', right: '10px' }}
-                    onClick={handleAddToWishlist}
-                >
-                    <i className={`${model.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>
-                </button>
-                <div className="p-4 border border-secondary border-top-0 rounded-bottom">
-                    <h4 className="line-clamp line-clamp-2">{model.name}</h4>
-                    <div className="d-flex justify-content-center flex-lg-wrap">
-                        <p className="text-dark fs-5 fw-bold mb-0">{model.price.toLocaleString() + ' ₫'}</p>
-                        {/* <button
+            <button
+                className={`btn border border-secondary rounded-pill px-3 py-2 ml-3 mb-4 position-absolute ${
+                    model?.isInWishlist ? 'text-danger' : 'text-primary'
+                }`}
+                style={{ top: '10px', right: '10px' }}
+                onClick={handleAddToWishlist}
+            >
+                <i className={`${model.isInWishlist ? 'fas' : 'far'} fa-heart`}></i>
+            </button>
+            <div className="p-4 border border-secondary border-top-0 rounded-bottom">
+                <h4 className="line-clamp line-clamp-2">{model.name}</h4>
+                <div className="d-flex justify-content-center flex-lg-wrap">
+                    <p className="text-dark fs-5 fw-bold mb-0">{model.price.toLocaleString() + ' ₫'}</p>
+                    {/* <button
                             className="btn border border-secondary rounded-pill px-3 text-primary"
                             onClick={handleAddToCart}
                         >
                             <i className="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ hàng
                         </button> */}
-                    </div>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 };
 
