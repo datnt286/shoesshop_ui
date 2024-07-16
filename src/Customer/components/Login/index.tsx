@@ -85,7 +85,7 @@ const Login: React.FC = () => {
                     position: 'top-end',
                     timerProgressBar: true,
                     showConfirmButton: false,
-                    timer: 1000,
+                    timer: 3000,
                 });
             }
         } catch (error) {
