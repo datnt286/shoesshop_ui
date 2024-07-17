@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import { NumericFormat } from 'react-number-format';
 import AxiosInstance from './../../../services/AxiosInstance';
@@ -47,6 +48,10 @@ interface Ward {
     Name: string;
 }
 
+interface User {
+    userName?: string;
+}
+
 const Employee: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -75,6 +80,7 @@ const Employee: React.FC = () => {
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [keyword, setKeyword] = useState('');
+    const [userName, setUserName] = useState('');
 
     const [cities, setCities] = useState<City[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
@@ -146,6 +152,20 @@ const Employee: React.FC = () => {
                 setCities(data);
             })
             .catch((error) => console.error('Lỗi khi tải dữ liệu địa chỉ: ', error));
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem('employeeToken');
+
+        if (token) {
+            try {
+                const decodedToken: User = jwtDecode<User>(token);
+
+                setUserName(decodedToken.userName || '');
+            } catch (error) {
+                console.error('Token không hợp lệ: ', token);
+            }
+        }
     }, []);
 
     function getRoleText(name: string) {
@@ -1028,6 +1048,7 @@ const Employee: React.FC = () => {
                                 className="custom-control-input"
                                 onChange={handleInputChange}
                                 checked={employeeData.status === 1}
+                                disabled={employeeData.userName === userName}
                             />
                             <label htmlFor="status" className="custom-control-label">
                                 Còn hoạt động
