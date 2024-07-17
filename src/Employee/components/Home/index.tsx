@@ -18,7 +18,7 @@ const Home: React.FC = () => {
         totalRevenue: 0,
         totalSoldProducts: 0,
         totalCustomers: 0,
-        totalEmployees: 0,
+        totalRevenueToday: 0,
         topSellingProducts: [] as Product[],
         monthlyRevenue: [] as number[],
     });
@@ -36,7 +36,7 @@ const Home: React.FC = () => {
                     totalRevenue: response.data.totalRevenue,
                     totalSoldProducts: response.data.totalSoldProducts,
                     totalCustomers: response.data.totalCustomers,
-                    totalEmployees: response.data.totalEmployees,
+                    totalRevenueToday: response.data.totalRevenueToday,
                     topSellingProducts: response.data.topSellingProducts,
                     monthlyRevenue: response.data.monthlyRevenue,
                 });
@@ -183,8 +183,8 @@ const Home: React.FC = () => {
                     <div className="col-lg-3 col-6">
                         <div className="small-box bg-danger">
                             <div className="inner">
-                                <h3>{report.totalEmployees}</h3>
-                                <p>Tổng nhân viên</p>
+                                <h3>{report.totalRevenueToday.toLocaleString() + ' ₫'}</h3>
+                                <p>Tổng doanh thu hôm nay</p>
                             </div>
                             <div className="icon">
                                 <i className="ion ion-pie-graph"></i>
