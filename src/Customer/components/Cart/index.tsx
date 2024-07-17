@@ -23,6 +23,7 @@ interface CartDetail {
 const Cart: React.FC = () => {
     const [token, setToken] = useState<string | null>(null);
     const [userAddress, setUserAddress] = useState('');
+    const [shippingFee, setShippingFee] = useState(0);
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
     const [total, setTotal] = useState(0);
     const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
@@ -71,6 +72,18 @@ const Cart: React.FC = () => {
         const hasError = cartDetails.some((detail) => detail.quantity > detail.quantityAvailable);
         setCanProceedToCheckout(!hasError);
     }, [cartDetails]);
+
+    useEffect(() => {
+        if (userAddress) {
+            const city = userAddress.split(',').pop()?.trim();
+
+            if (city === 'Thành phố Hồ Chí Minh') {
+                setShippingFee(15000);
+            } else {
+                setShippingFee(30000);
+            }
+        }
+    }, [userAddress]);
 
     const handleUpdateCartDetailQuantity = async (id: number, quantity: number, amount: number) => {
         try {
@@ -201,16 +214,14 @@ const Cart: React.FC = () => {
                                         <div className="d-flex justify-content-between">
                                             <h5 className="mb-0 me-4">Phí vận chuyển:</h5>
                                             <div className="">
-                                                <p className="mb-0">Phí cố định: 15.000 ₫</p>
+                                                <p className="mb-0">{shippingFee.toLocaleString() + ' ₫'}</p>
                                             </div>
                                         </div>
-                                        {userAddress && (
-                                            <p className="mb-0 mt-2 text-end">Vận chuyển đến: {userAddress}</p>
-                                        )}
+                                        {userAddress && <p className="mb-0 mt-2 text-end">{userAddress}</p>}
                                     </div>
                                     <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                         <h5 className="mb-0 ps-4 me-4">Tổng thành tiền:</h5>
-                                        <p className="mb-0 pe-4">{(total + 15000).toLocaleString() + ' ₫'}</p>
+                                        <p className="mb-0 pe-4">{(total + shippingFee).toLocaleString() + ' ₫'}</p>
                                     </div>
                                     <div className="d-flex justify-content-center">
                                         {canProceedToCheckout && (

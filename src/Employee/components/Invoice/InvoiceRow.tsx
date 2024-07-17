@@ -50,7 +50,7 @@ const InvoiceRow: React.FC<InvoiceRowProps> = ({ invoice, index, userRole, onAct
             </td>
             <td>{invoice.customerName}</td>
             <td>{invoice.createDate}</td>
-            <td>{invoice.total.toLocaleString() + ' ₫'}</td>
+            <td>{invoice.totalPayment.toLocaleString() + ' ₫'}</td>
             <td className="text-center">
                 <span className={`badge ${getStatusBadgeClass(invoice.status)}`}>{getStatusText(invoice.status)}</span>
             </td>

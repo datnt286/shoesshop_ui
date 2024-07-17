@@ -59,6 +59,7 @@ const Checkout: React.FC = () => {
     const [cartDetails, setCartDetails] = useState<CartDetail[]>([]);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('COD');
     const [total, setTotal] = useState(0);
+    const [shippingFee, setShippingFee] = useState(0);
     const [note, setNote] = useState('');
     const [canProceedToCheckout, setCanProceedToCheckout] = useState(false);
 
@@ -175,6 +176,18 @@ const Checkout: React.FC = () => {
         const hasError = cartDetails.some((detail) => detail.quantity > detail.quantityAvailable);
         setCanProceedToCheckout(!hasError);
     }, [cartDetails]);
+
+    useEffect(() => {
+        if (userData.address) {
+            const city = userData.address.split(',').pop()?.trim();
+
+            if (city === 'Thành phố Hồ Chí Minh') {
+                setShippingFee(15000);
+            } else {
+                setShippingFee(30000);
+            }
+        }
+    }, [userData]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
@@ -418,7 +431,7 @@ const Checkout: React.FC = () => {
 
     const handleVnpayPayment = async () => {
         try {
-            const response = await AxiosInstance.post('/Payment/Vnpay', { requiredAmount: total + 15000 });
+            const response = await AxiosInstance.post('/Payment/Vnpay', { requiredAmount: total + shippingFee });
 
             if (response.status === 200) {
                 window.location.href = response.data.data;
@@ -432,7 +445,7 @@ const Checkout: React.FC = () => {
 
     const handleMomoPayment = async () => {
         try {
-            const response = await AxiosInstance.post('/Payment/Momo', { requiredAmount: total + 15000 });
+            const response = await AxiosInstance.post('/Payment/Momo', { requiredAmount: total + shippingFee });
 
             if (response.status === 200) {
                 window.location.href = response.data.payUrl;
@@ -456,6 +469,7 @@ const Checkout: React.FC = () => {
         const data = {
             paymentMethod: selectedPaymentMethod,
             total: total,
+            shippingFee: shippingFee,
             note: note,
             cartDetails: cartDetails.map((cartDetail) => ({
                 productId: cartDetail.productId,
@@ -718,7 +732,7 @@ const Checkout: React.FC = () => {
                                                 <td className="py-5" colSpan={2}>
                                                     <div className="py-3 border-bottom border-top text-center">
                                                         <p className="mb-0 text-dark">
-                                                            Phí cố định: {(15000).toLocaleString() + ' ₫'}
+                                                            {shippingFee.toLocaleString() + ' ₫'}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -733,7 +747,7 @@ const Checkout: React.FC = () => {
                                                 <td className="py-5" colSpan={2}>
                                                     <div className="py-3 border-bottom border-top text-center">
                                                         <p className="mb-0 text-dark">
-                                                            {(total + 15000).toLocaleString() + ' ₫'}
+                                                            {(total + shippingFee).toLocaleString() + ' ₫'}
                                                         </p>
                                                     </div>
                                                 </td>
