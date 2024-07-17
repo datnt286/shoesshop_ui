@@ -23,7 +23,7 @@ const Home: React.FC = () => {
         monthlyRevenue: [] as number[],
     });
     const [topSellingProducts, setTopSellingProducts] = useState<Product[]>([]);
-    const [topSellingProductsFilter, setTopSellingProductsFilter] = useState(0);
+    const [topSellingProductsFilter, setTopSellingProductsFilter] = useState(1);
 
     const chartRef = useRef<Chart | null>(null);
 
@@ -59,7 +59,7 @@ const Home: React.FC = () => {
     const fetchTopSellingProducts = async () => {
         try {
             const response = await AxiosInstance.get('/Report/TopSellingProducts', {
-                params: { topSellingProductsFilter },
+                params: { filter: topSellingProductsFilter },
             });
 
             if (response.status === 200) {
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
                     <div className="col-lg-3 col-6">
                         <div className="small-box bg-success">
                             <div className="inner">
-                                <h3>{report.totalRevenue.toLocaleString() + ' ₫'}</h3>
+                                <h3>{report.totalRevenue.toLocaleString() + '₫'}</h3>
                                 <p>Tổng doanh thu</p>
                             </div>
                             <div className="icon">
