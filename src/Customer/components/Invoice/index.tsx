@@ -306,7 +306,7 @@ const Invoice: React.FC = () => {
                                                 <th>Giá bán</th>
                                                 <th>Số lượng</th>
                                                 <th>Thành tiền</th>
-                                                {selectedInvoice.status === 4 && <th></th>}
+                                                {selectedInvoice.status === 5 && <th></th>}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -349,7 +349,7 @@ const Invoice: React.FC = () => {
                                                 );
                                             })}
                                             <tr>
-                                                <td colSpan={selectedInvoice.status === 4 ? 6 : 5} className="text-end">
+                                                <td colSpan={selectedInvoice.status === 5 ? 6 : 5} className="text-end">
                                                     Tổng hoá đơn:
                                                 </td>
                                                 <td>{selectedInvoice.total.toLocaleString() + ' ₫'}</td>
